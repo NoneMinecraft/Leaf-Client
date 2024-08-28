@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "leaf",
+    "name": "Leaf Client",
+    "description": "Minecraft 1.8 Utility mod",
+    "version": "${3.4}",
+    "mcversion": "${1.8.9}",
+    "url": "https://github.com/NoneMinecraft/Leaf-Client",
+    "updateUrl": "",
+    "authorList": ["N0neMc"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
