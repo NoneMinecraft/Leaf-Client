@@ -24,12 +24,14 @@ import net.minecraft.network.play.server.S0BPacketAnimation
 
 @ModuleInfo(name = "Criticals", category = ModuleCategory.COMBAT, autoDisable = EnumAutoDisableType.FLAG)
 class Criticals : Module() {
-    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","SetPos","FastMotion","Packet","Diff"), "C04")
+    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","Diff","SetPos","FastMotion","Packet","More"), "C04")
     private val MotionValue = FloatValue("MotionValue",0.1F,0.01F,0.42F)
     private val hurttime = IntegerValue("HurtTime",7,1,10)
     private var LastRegen = 0
+    private val delayValue = IntegerValue("Delay", 0, 0, 1000)
     private var reverse = false
     var tick = 0
+    private val timer = MSTimer()
     override fun onDisable() {
         tick = 0
         reverse = false
@@ -38,19 +40,7 @@ class Criticals : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-
-
         val player = mc.thePlayer
-        val hungerLevel = player.foodStats.foodLevel
-        val saturationLevel = player.foodStats.saturationLevel
-
-        val currentHealth = player.health
-        val maxHealth = player.maxHealth
-        val ticks = updateRegenTimer(hungerLevel, saturationLevel, currentHealth, maxHealth)
-        if (ticks >= 79 && mc.thePlayer.foodStats.foodLevel > 18){
-            ChatPrint("玩家回血")
-        }
-
         when(Mode.get()){
             "FastMotion" ->{
                 if (mc.thePlayer.hurtTime!=0){
@@ -88,24 +78,44 @@ class Criticals : Module() {
     @EventTarget
     fun onAttack(event: AttackEvent) {
        val target = event.targetEntity as? EntityLivingBase ?: return
-        when(Mode.get()){
-            "Diff" -> {
-                val health = target.health
-                val hurtTime = target.hurtTime
 
-                val healthDiff = onceFunc(intArrayOf(0, 20), intArrayOf(8, 2))
-                val finalDiff = (healthDiff[0] * health + healthDiff[1]).toInt()
-                if (mc.thePlayer.onGround) {
-                    if (inRange(hurtTime, 0, finalDiff) && !reverse) {
-                        setPos(0.0, 0.234, 0.0)
-                        reverse = true
-                    }
-                    if ((hurtTime == 0 || inRange(hurtTime, finalDiff + 1, 10)) && reverse) {
-                        setPos(0.0, 0.234, 0.0)
-                        reverse = false
-                    }
+        when(Mode.get()){
+
+            "More" ->{
+                sendCriticalPacket(yOffset = 0.00000000001, ground = false)
+                sendCriticalPacket(ground = false)
             }
+            "NCP"->{
+                sendCriticalPacket(yOffset = 0.11, ground = false)
+                sendCriticalPacket(yOffset = 0.1100013579, ground = false)
+                sendCriticalPacket(yOffset = 0.0000013579, ground = false)
             }
+
+            "Diff" -> {
+                if (criticalCondition() && (delayValue.get() <= 0 || (delayValue.get() > 0 && timer.hasTimePassed(delayValue.get().toLong())))) {
+                        val target = event.targetEntity as? EntityLivingBase ?: return
+                        val health = target.health
+                        val hurtTime = target.hurtTime
+                        val healthDiff = onceFunc(arrayOf(0.0, 20.0), arrayOf(8.0, 2.0))
+                        val finalDiff = (healthDiff[0] * health + healthDiff[1]).toInt()
+
+                        if (target.onGround) {
+                            if (hurtTime in 0..finalDiff && !reverse) {
+                                sendPositionPacket(0.0, 0.234, 0.0)
+                                reverse = true
+                            }
+
+                            if ((hurtTime == 0 || hurtTime in (finalDiff + 1)..10) && reverse) {
+                                sendPositionPacket(0.0, 0.234, 0.0)
+                                reverse = false
+                            }
+                        }
+                    if (delayValue.get() > 0) {
+                        timer.reset()
+                    }
+                }
+            }
+
             "Packet" ->{
                 mc.thePlayer.sendQueue.addToSendQueue(
                     C03PacketPlayer.C04PacketPlayerPosition(
@@ -128,6 +138,7 @@ class Criticals : Module() {
                 mc.thePlayer.onGround = false
             }
             "C04" -> {
+
                 mc.thePlayer.sendQueue.addToSendQueue(C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY+2.43192168e-14, mc.thePlayer.posZ, true))
                 mc.thePlayer.sendQueue.addToSendQueue(C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY-1.265e-256, mc.thePlayer.posZ, false))
             }
@@ -153,31 +164,6 @@ class Criticals : Module() {
     }override val tag: String
         get() = Mode.get()
 
-    fun updateRegenTimer(hunger: Int, saturation: Float, currentHealth: Float, maxHealth: Float): Int {
-        if (currentHealth < maxHealth) {
-            if (hunger >= 18 && saturation > 0) {
-                LastRegen++
-                if (LastRegen >= 80) {
-                    regenerateHealth()
-                    LastRegen = 0
-                }
-            } else if (hunger >= 20) {
-                LastRegen++
-                if (LastRegen >= 80) {
-                    regenerateHealth()
-                    LastRegen = 0
-                }
-            } else {
-                LastRegen++
-            }
-        } else {
-            LastRegen = 0
-        }
-        return LastRegen
-    }
-    private fun regenerateHealth() {
-        println("Player's health is regenerated.")
-    }
 private fun onceFunc(arr1: IntArray, arr2: IntArray): IntArray {
     return intArrayOf(arr1[0] * arr2[0], arr1[1] * arr2[1])
 }
@@ -187,7 +173,30 @@ private fun onceFunc(arr1: IntArray, arr2: IntArray): IntArray {
     private fun setPos(x: Double, y: Double, z: Double) {
         mc.thePlayer.setPosition(mc.thePlayer.posX + x, mc.thePlayer.posY + y, mc.thePlayer.posZ + z)
     }
-    private fun setGround(state: Boolean) {
-        mc.thePlayer.onGround = state
+    private fun criticalCondition(): Boolean {
+        return true
+    }
+
+    private fun onceFunc(range1: Array<Double>, range2: Array<Double>): Array<Double> {
+        return arrayOf(0.5, 3.0)
+    }
+
+    private fun sendPositionPacket(x: Double, y: Double, z: Double) {
+        mc.netHandler.addToSendQueue(C04PacketPlayerPosition(mc.thePlayer.posX + x, mc.thePlayer.posY + y, mc.thePlayer.posZ + z, mc.thePlayer.onGround))
+    }
+
+    companion object {
+        var reverse = false
+    }
+    fun sendCriticalPacket(
+        xOffset: Double = 0.0,
+        yOffset: Double = 0.0,
+        zOffset: Double = 0.0,
+        ground: Boolean
+    ) {
+        val x = mc.thePlayer.posX + xOffset
+        val y = mc.thePlayer.posY + yOffset
+        val z = mc.thePlayer.posZ + zOffset
+            mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(x, y, z, ground))
     }
 }

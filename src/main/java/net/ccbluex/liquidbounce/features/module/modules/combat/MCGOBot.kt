@@ -35,16 +35,16 @@ import kotlin.math.atan2
 @ModuleInfo(name = "MCGOBot", category = ModuleCategory.COMBAT)
 class MCGOBot : Module() {
 
-    private val PitchOffset = FloatValue("PitchOffset", 0F, -5F, 5F)
-    private val predictsize = FloatValue("PredictSize", 0F, 0F, 10F)
-    private val predictsize2 = FloatValue("PredictSize2", 0F, 15F, 30F)
+    private val PitchOffset = FloatValue("PitchOffset", 1.5F, -5F, 5F)
+    private val predictsize = FloatValue("PredictSize", 4.3F, 0F, 10F)
+    private val predictsize2 = FloatValue("ThroughWallPredictSize", 10F, 0F, 30F)
     private val FireMode = ListValue("FireMode", arrayOf("Use","C08"),"Use")
-    private val AntiAim = BoolValue("AntiAim", true)
+    private val AntiAim = BoolValue("AntiAim", false)
     private val EStop = BoolValue("EStopHelper", true)
     private val Reset = BoolValue("Reset", true)
     private val ResetMode = ListValue("ResetMode", arrayOf("Switch","Spoof"),"Switch")
     private val RestTick = IntegerValue("RestTick",1,0,5)
-    private val rotateValue = BoolValue("SilentRotate", true)
+    private val rotateValue = BoolValue("SilentRotate", false)
 
     var targetPlayer: EntityPlayer? = null
     var tick = 0

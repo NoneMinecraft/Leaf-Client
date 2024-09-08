@@ -45,7 +45,7 @@ class AntiAim : Module() {
             mc.thePlayer.sendQueue.addToSendQueue(
                 C03PacketPlayer.C04PacketPlayerPosition(
                     mc.thePlayer.posX,
-                    mc.thePlayer.posY + 0.0001,
+                    mc.thePlayer.posY + 0.001,
                     mc.thePlayer.posZ,
                     true
                 )
@@ -54,7 +54,7 @@ class AntiAim : Module() {
             mc.thePlayer.sendQueue.addToSendQueue(
                 C03PacketPlayer.C04PacketPlayerPosition(
                     mc.thePlayer.posX,
-                    mc.thePlayer.posY - 0.0001,
+                    mc.thePlayer.posY - 0.001,
                     mc.thePlayer.posZ,
                     false
                 )

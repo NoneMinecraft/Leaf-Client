@@ -23,9 +23,9 @@ import kotlin.random.Random
 object AutoDuel : Module() {
     private val Tick = IntegerValue("Tick",100,0,2000)
     private val Tick2 = IntegerValue("Tick2",1,0,2000)
-    private val target = TextValue("target","N0ne")
-    private val acceptTarget = TextValue("AcceptTarget","rathor")
-    private val leaveTarget = TextValue("leaveTarget","rathor")
+    private val target = TextValue("target","targetName")
+    private val acceptTarget = TextValue("AcceptTarget","AcceptTarget")
+    private val leaveTarget = TextValue("leaveTarget","leaveTarget")
     var tick = 0
     var tick2 =0
     override fun onDisable() {

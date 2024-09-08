@@ -3,8 +3,6 @@ package net.ccbluex.liquidbounce.features.module.modules.combat
 import net.ccbluex.liquidbounce.event.EventTarget
 import net.ccbluex.liquidbounce.event.MoveEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent
-import net.ccbluex.liquidbounce.features.MainLib.strictStrafeX
-import net.ccbluex.liquidbounce.features.MainLib.strictStrafeZ
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
@@ -99,8 +97,6 @@ class HackAura : Module() {
     @EventTarget
     fun onMove(event: MoveEvent) {
         if (isAim && Strafe.get() == "Strict"){
-            event.x = strictStrafeX(rotation!!.yaw,event.x,event.z)
-            event.z = strictStrafeZ(rotation!!.yaw,event.x,event.z)
     }
     }
 }

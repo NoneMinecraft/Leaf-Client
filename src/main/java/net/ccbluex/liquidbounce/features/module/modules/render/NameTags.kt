@@ -9,7 +9,6 @@ import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.features.module.modules.misc.AntiBot
 import net.ccbluex.liquidbounce.features.module.modules.misc.Teams
-import net.ccbluex.liquidbounce.features.module.modules.player.HackerDetector
 import net.ccbluex.liquidbounce.ui.font.Fonts
 import net.ccbluex.liquidbounce.utils.EntityUtils
 import net.ccbluex.liquidbounce.utils.extensions.ping
@@ -63,11 +62,6 @@ class NameTags : Module() {
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
         for (entity in mc.theWorld.loadedEntityList) {
-            if (EntityUtils.isSelected(entity, false)) {
-                renderNameTag(entity as EntityLivingBase,
-                    if (hackerValue.get() && LiquidBounce.moduleManager[HackerDetector::class.java]!!.isHacker(entity)) { "§c" } else { "" } + if (!modeValue.equals("Liquid") && AntiBot.isBot(entity)) { "§e" } else { "" } +
-                            if (clearNamesValue.get()) { entity.name } else { entity.getDisplayName().unformattedText })
-            }
         }
     }
 
