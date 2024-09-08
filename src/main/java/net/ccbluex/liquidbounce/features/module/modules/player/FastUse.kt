@@ -18,13 +18,19 @@ import net.minecraft.network.play.client.C03PacketPlayer
 @ModuleInfo(name = "FastUse", category = ModuleCategory.PLAYER)
 class FastUse : Module() {
 
-    private val modeValue = ListValue("Mode", arrayOf("NCP","Instant", "Timer", "CustomDelay", "DelayedInstant", "MinemoraTest", "AAC", "NewAAC","Medusa","Matrix","Fast"), "DelayedInstant")
+    private val modeValue = ListValue("Mode", arrayOf("NCP","Instant", "Timer", "CustomDelay", "DelayedInstant", "MinemoraTest", "AAC", "NewAAC","Medusa","Matrix","Fast","Intave"), "DelayedInstant")
     private val timerValue = FloatValue("Timer", 1.22F, 0.1F, 2.0F).displayable { modeValue.equals("Timer") }
     private val durationValue = IntegerValue("InstantDelay", 14, 0, 35).displayable { modeValue.equals("DelayedInstant") }
     private val delayValue = IntegerValue("CustomDelay", 0, 0, 300).displayable { modeValue.equals("CustomDelay") }
+    private val LowTimer = FloatValue("LowTimer", 0.3F, 0.01F, 10F)
+    private val MaxTimer = FloatValue("MaxTimer", 0.3F, 0.01F, 10F)
+    private val Ticks = FloatValue("Ticks", 1F, 1F, 20F)
+    var iseating = 10
+    var reset = false
 
     private val msTimer = MSTimer()
     private var usedTimer = false
+
 
     private fun send(int: Int) {
         repeat(int) {
@@ -38,6 +44,28 @@ class FastUse : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
+        when (modeValue.get()) {
+            "Intave"->{
+                if(mc.thePlayer.isEating && (mc.thePlayer.heldItem.item is ItemFood || mc.thePlayer.heldItem.item is ItemPotion)){
+                    reset = false
+                    if (iseating>=1){
+                        iseating--
+                        mc.timer.timerSpeed = LowTimer.get()
+
+                    }else{
+                        iseating=10
+                        mc.timer.timerSpeed = MaxTimer.get()
+                    }
+                }else{
+                    iseating = Ticks.get().toInt()
+                    if (!reset) {
+                        mc.timer.timerSpeed = 1F
+                        reset = true
+                    }
+                }
+            }
+        }
+
         if (usedTimer) {
             mc.timer.timerSpeed = 1F
             usedTimer = false
@@ -51,6 +79,7 @@ class FastUse : Module() {
 
         if (usingItem is ItemFood || usingItem is ItemBucketMilk || usingItem is ItemPotion) {
             when (modeValue.get().lowercase()) {
+
                 "matrix" -> {
                     mc.timer.timerSpeed = 0.5f
                     usedTimer = true
@@ -139,6 +168,10 @@ class FastUse : Module() {
         if (usedTimer) {
             mc.timer.timerSpeed = 1F
             usedTimer = false
+                iseating = Ticks.get().toInt()
+                mc.timer.timerSpeed = 1F
+            reset = false
+
         }
     }
 
