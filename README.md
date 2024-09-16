@@ -9,3 +9,4 @@ You are allowed to:
 - modify
 
 Do the above and share your source code with everyone; just like we do!
+You must add the java virtual machine parameter: -noverify before starting
