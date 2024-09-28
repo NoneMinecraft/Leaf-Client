@@ -21,10 +21,11 @@ import net.minecraft.network.play.client.C0EPacketClickWindow
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction
 import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.minecraft.network.play.server.S0BPacketAnimation
+import org.junit.experimental.theories.Theory
 
 @ModuleInfo(name = "Criticals", category = ModuleCategory.COMBAT, autoDisable = EnumAutoDisableType.FLAG)
 class Criticals : Module() {
-    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","Diff","SetPos","FastMotion","Packet","More"), "C04")
+    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","Diff","SetPos","FastMotion","Packet","More","Double","PreDouble","Smart"), "C04")
     private val MotionValue = FloatValue("MotionValue",0.1F,0.01F,0.42F)
     private val hurttime = IntegerValue("HurtTime",7,1,10)
     private var LastRegen = 0
@@ -42,6 +43,120 @@ class Criticals : Module() {
     fun onUpdate(event: UpdateEvent) {
         val player = mc.thePlayer
         when(Mode.get()){
+            "Smart" ->{
+                if (mc.thePlayer.hurtTime!=0){
+                    when(mc.thePlayer.hurtTime){
+                        in 9..10 -> {
+                            mc.thePlayer.motionY = -1.0
+                        }
+                        in 7..8 -> {
+                            mc.thePlayer.motionY = 0.0809
+                        }
+                        in 5..6 -> {
+                            mc.thePlayer.setPosition(
+                                mc.thePlayer.posX ,
+                                mc.thePlayer.posY + 0.345,
+                                mc.thePlayer.posZ
+                            )
+                        }
+                        in 3..4 -> {
+                            mc.thePlayer.setPosition(
+                                mc.thePlayer.posX ,
+                                mc.thePlayer.posY - 0.255,
+                                mc.thePlayer.posZ
+                            )
+                        }
+                        in 1..2 -> {
+                            mc.thePlayer.motionY = -0.42
+                        }
+                    }
+                }else if (mc.thePlayer.onGround && mc.thePlayer.isSwingInProgress){
+                    mc.thePlayer.setPosition(
+                        mc.thePlayer.posX ,
+                        mc.thePlayer.posY + 0.2345,
+                        mc.thePlayer.posZ
+                    )
+                    mc.thePlayer.setPosition(
+                        mc.thePlayer.posX ,
+                        mc.thePlayer.posY - 0.2345,
+                        mc.thePlayer.posZ
+                    )
+                }
+            }
+            "Double" ->{
+                    if (mc.thePlayer.hurtTime != 0) {
+                        if (mc.thePlayer.hurtTime in 9..10) {
+                            if (mc.thePlayer.onGround) {
+                                mc.thePlayer.setPosition(
+                                    mc.thePlayer.posX ,
+                                    mc.thePlayer.posY + 0.514,
+                                    mc.thePlayer.posZ
+                                )
+                            }
+                        } else if (mc.thePlayer.hurtTime in 7..8) {
+                            if (mc.thePlayer.foodStats.foodLevel < 15) {
+                                mc.thePlayer.motionY = -0.783
+                            } else {
+                                mc.thePlayer.motionY = -0.424
+                            }
+                        }
+                        if (mc.thePlayer.hurtTime in 5..6) {
+                            if (mc.thePlayer.onGround) {
+                                mc.thePlayer.setPosition(
+                                    mc.thePlayer.posX ,
+                                    mc.thePlayer.posY + 0.514,
+                                    mc.thePlayer.posZ
+                                )
+                            }
+                        } else if (mc.thePlayer.hurtTime in 3..4) {
+                            if (mc.thePlayer.foodStats.foodLevel < 15) {
+                                mc.thePlayer.motionY = -0.783
+                            } else {
+                                mc.thePlayer.motionY = -0.424
+                            }
+                        }
+                    }
+            }
+            "PreDouble" ->{
+                if (mc.thePlayer.hurtTime != 0) {
+                    if (mc.thePlayer.hurtTime in 9..10) {
+                        if (mc.thePlayer.onGround) {
+                            mc.thePlayer.setPosition(
+                                mc.thePlayer.posX + 0.0561,
+                                mc.thePlayer.posY + 0.514,
+                                mc.thePlayer.posZ + 0.0374
+                            )
+                        }
+                    } else if (mc.thePlayer.hurtTime in 7..8) {
+                        if (mc.thePlayer.foodStats.foodLevel < 18) {
+                            mc.thePlayer.motionY = -0.893
+                        } else {
+                            mc.thePlayer.motionY = -0.524
+                        }
+                    }
+                    if (mc.thePlayer.hurtTime in 5..6) {
+                        if (mc.thePlayer.onGround) {
+                            mc.thePlayer.setPosition(
+                                mc.thePlayer.posX + 0.0561,
+                                mc.thePlayer.posY + 0.514,
+                                mc.thePlayer.posZ + 0.0374
+                            )
+                        }
+                    } else if (mc.thePlayer.hurtTime in 3..4) {
+                        if (mc.thePlayer.foodStats.foodLevel < 15) {
+                            mc.thePlayer.motionY = -0.783
+                        } else {
+                            mc.thePlayer.motionY = -0.424
+                        }
+                    }
+                }else if (mc.thePlayer.isSwingInProgress){
+                    if (mc.thePlayer.onGround){
+                        mc.thePlayer.motionY = 0.34
+                    }else{
+                        mc.thePlayer.motionY = 0.0
+                    }
+                }
+            }
             "FastMotion" ->{
                 if (mc.thePlayer.hurtTime!=0){
                     if (mc.thePlayer.hurtTime.toDouble() in hurttime.get().toDouble()..10.0){
@@ -52,7 +167,7 @@ class Criticals : Module() {
                         if (mc.thePlayer.foodStats.foodLevel < 15){
                             mc.thePlayer.motionY = -0.123
                         }else{
-                            mc.thePlayer.motionY = -0.234
+                            mc.thePlayer.motionY = -0.424
 
                         }
                     }
@@ -75,6 +190,7 @@ class Criticals : Module() {
             }
         }
     }
+
     @EventTarget
     fun onAttack(event: AttackEvent) {
        val target = event.targetEntity as? EntityLivingBase ?: return
