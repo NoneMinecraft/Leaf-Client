@@ -25,11 +25,10 @@ import org.junit.experimental.theories.Theory
 
 @ModuleInfo(name = "Criticals", category = ModuleCategory.COMBAT, autoDisable = EnumAutoDisableType.FLAG)
 class Criticals : Module() {
-    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","Diff","SetPos","FastMotion","Packet","More","Double","PreDouble","Smart"), "C04")
+    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","","SetPos","FastMotion","Packet","More","Double","PreDouble","Smart"), "C04")
     private val MotionValue = FloatValue("MotionValue",0.1F,0.01F,0.42F)
     private val hurttime = IntegerValue("HurtTime",7,1,10)
     private var LastRegen = 0
-    private val delayValue = IntegerValue("Delay", 0, 0, 1000)
     private var reverse = false
     var tick = 0
     private val timer = MSTimer()
@@ -207,30 +206,6 @@ class Criticals : Module() {
                 sendCriticalPacket(yOffset = 0.0000013579, ground = false)
             }
 
-            "Diff" -> {
-                if (criticalCondition() && (delayValue.get() <= 0 || (delayValue.get() > 0 && timer.hasTimePassed(delayValue.get().toLong())))) {
-                        val target = event.targetEntity as? EntityLivingBase ?: return
-                        val health = target.health
-                        val hurtTime = target.hurtTime
-                        val healthDiff = onceFunc(arrayOf(0.0, 20.0), arrayOf(8.0, 2.0))
-                        val finalDiff = (healthDiff[0] * health + healthDiff[1]).toInt()
-
-                        if (target.onGround) {
-                            if (hurtTime in 0..finalDiff && !reverse) {
-                                sendPositionPacket(0.0, 0.234, 0.0)
-                                reverse = true
-                            }
-
-                            if ((hurtTime == 0 || hurtTime in (finalDiff + 1)..10) && reverse) {
-                                sendPositionPacket(0.0, 0.234, 0.0)
-                                reverse = false
-                            }
-                        }
-                    if (delayValue.get() > 0) {
-                        timer.reset()
-                    }
-                }
-            }
 
             "Packet" ->{
                 mc.thePlayer.sendQueue.addToSendQueue(

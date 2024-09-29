@@ -32,8 +32,8 @@ class RageBot : Module() {
     private val predictsize2 = FloatValue("ThroughWallPredictSize", 5F, 0F, 20F)
     private val eyeHeight = FloatValue("EyeHeight", 0.8F, -1F, 1F)
     private val FireMode = ListValue("FireMode", arrayOf("Legit","Packet"),"Packet")
-    private val noSpread = BoolValue("NoSpread", true)
-    private val noSpreadMode = ListValue("NoSpread", arrayOf("Switch","Spoof"),"Switch")
+    private val noSpreadValue = BoolValue("NoSpread", true)
+    private val noSpreadMode = ListValue("NoSpreadMode", arrayOf("Switch","Spoof"),"Switch")
     private val rotateValue = BoolValue("SilentRotate", false)
 
     var targetPlayer: EntityPlayer? = null
@@ -78,7 +78,7 @@ class RageBot : Module() {
             val yaw = rotation.yaw
             val pitch  = rotation.pitch + PitchOffset.get()
 
-            if (noSpread.get()){
+            if (noSpreadValue.get()){
                 if (noSpreadMode.get() == "Switch") {
                     when (type) {
                         0 -> {
@@ -98,15 +98,16 @@ class RageBot : Module() {
                         }
                     }
                 }else if (noSpreadMode.get() == "Spoof"){
-                    if (isWoodenPickaxe() && !isMP7() && !isM4ORAK()) {
-                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem % 8 + 1))
-                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem % 7 + 2))
-                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem))
-                    }else{
-                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem % 8 + 2))
-                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem % 7 + 2))
-                        mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem))
-                    }
+                    when (type) {0 -> {
+                            if (resettick < 2) {
+                                resettick++
+                                if (isWoodenPickaxe() && !isMP7() && !isM4ORAK()){ mc.netHandler.addToSendQueue(C09PacketHeldItemChange(0))
+                                    mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem)) }else{ mc.netHandler.addToSendQueue(C09PacketHeldItemChange(1))
+                                    mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem)) } } else {resettick = 0
+                                type = 1 }}
+
+                        1 -> { mc.netHandler.addToSendQueue(C09PacketHeldItemChange(3))
+                            type = 0 }}
                 }
             }
             if (rotateValue.get()) {

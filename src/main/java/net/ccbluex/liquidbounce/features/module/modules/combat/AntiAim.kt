@@ -18,7 +18,6 @@ import net.minecraft.network.play.client.C03PacketPlayer
 
 @ModuleInfo(name = "AntiAim", category = ModuleCategory.COMBAT)
 class AntiAim : Module() {
-    private val C04 = BoolValue("C04Spoof",false)
     private val Yaw = FloatValue("Yaw",45F,-180F,180F)
     private val Pitch = FloatValue("Pitch",45F,-0F,90F)
     private val SneakOnAir = BoolValue("SneakOnAir",false)
@@ -60,25 +59,6 @@ class AntiAim : Module() {
             }else{
                 mc.gameSettings.keyBindSneak.pressed = true
             }
-        }
-        if (C04.get()){
-            mc.thePlayer.sendQueue.addToSendQueue(
-                C03PacketPlayer.C04PacketPlayerPosition(
-                    mc.thePlayer.posX,
-                    mc.thePlayer.posY + 0.001,
-                    mc.thePlayer.posZ,
-                    true
-                )
-            )
-
-            mc.thePlayer.sendQueue.addToSendQueue(
-                C03PacketPlayer.C04PacketPlayerPosition(
-                    mc.thePlayer.posX,
-                    mc.thePlayer.posY - 0.001,
-                    mc.thePlayer.posZ,
-                    false
-                )
-            )
         }
     }
 }
