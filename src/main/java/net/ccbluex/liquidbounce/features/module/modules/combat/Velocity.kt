@@ -197,11 +197,7 @@ class Velocity : Module() {
             "Cancel" -> {
                     val packet = event.packet
                     if (packet is S12PacketEntityVelocity) {
-                        if (!cancelVertical.get()) mc.thePlayer.motionY = packet.getMotionY().toDouble() / 8000.0
-                        if (!cancelHorizontal.get()) {
-                            mc.thePlayer.motionX = packet.getMotionX().toDouble() / 8000.0
-                            mc.thePlayer.motionZ = packet.getMotionZ().toDouble() / 8000.0
-                        }
+                        event.cancelEvent()
                     }
             }
             "CustomTimer" -> {
