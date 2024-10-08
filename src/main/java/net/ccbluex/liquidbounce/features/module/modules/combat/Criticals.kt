@@ -25,7 +25,7 @@ import org.junit.experimental.theories.Theory
 
 @ModuleInfo(name = "Criticals", category = ModuleCategory.COMBAT, autoDisable = EnumAutoDisableType.FLAG)
 class Criticals : Module() {
-    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","","SetPos","FastMotion","Packet","More","Double","PreDouble","Smart"), "C04")
+    private val Mode = ListValue("Mode", arrayOf("C04", "Motion","LegitJump","FastPos","SetPos","FastMotion","Packet","More","Double","PreDouble","Smart"), "C04")
     private val MotionValue = FloatValue("MotionValue",0.1F,0.01F,0.42F)
     private val hurttime = IntegerValue("HurtTime",7,1,10)
     private var LastRegen = 0

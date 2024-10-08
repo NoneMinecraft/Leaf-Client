@@ -72,25 +72,17 @@ class CounterStrike : Module() {
     private val propy4 = ((234F/ referenceHeight) * screenWidth).toInt()
     private val propx5 =(( 450F/ referenceWidth) * screenWidth).toInt()
     private val propy5 = ((226F/ referenceHeight) * screenWidth).toInt()
-    private val sx = ((62.5F/ referenceWidth) * screenWidth).toInt()
-    private val sy = ((78.13F/ referenceHeight) * screenWidth).toInt()
-    private val ex = ((0F/ referenceWidth) * screenWidth).toInt()
-    private val ey = ((0F/ referenceHeight) * screenWidth).toInt()
-    private val bx = ((416.9F/ referenceWidth) * screenWidth).toInt()
-    private val by = ((15.19F/ referenceHeight) * screenWidth).toInt()
-    private val namex = ((423f/ referenceWidth) * screenWidth).toInt()
-    private val namey =((20/ referenceHeight) * screenWidth).toInt()
 
-    private val xxx = ((-25/ referenceWidth) * screenWidth).toInt()
-    private val yyy = ((-53/ referenceHeight) * screenWidth).toInt()
-    private val vxx = ((-37/ referenceWidth) * screenWidth).toInt()
-    private val vyy = ((-62/ referenceHeight) * screenWidth).toInt()
-    private val vxx2 = ((-12/ referenceWidth) * screenWidth).toInt()
-    private val vyy2 = ((-57/ referenceHeight) * screenWidth).toInt()
-    private val vxx3 = ((-12/ referenceWidth) * screenWidth).toInt()
-    private val vyy3 = ((-50/ referenceHeight) * screenWidth).toInt()
-    private val iggx = ((266/ referenceWidth) * screenWidth).toInt()
-    private val iggy = ((69/ referenceHeight) * screenWidth).toInt()
+    private val xxx =-25
+    private val yyy =-53
+    private val vxx = -37
+    private val vyy = -62
+    private val vxx2 =-12
+    private val vyy2 =-57
+    private val vxx3 =-12
+    private val vyy3 =-50
+    private val iggx = 266
+    private val iggy = 69
     private val vx = ((226.0 / referenceWidth) * screenWidth).toInt()
     private val vy = ((1.0 / referenceHeight) * screenHeight).toInt()
     private val vx2 = ((226.0 / referenceWidth) * screenWidth).toInt()
@@ -544,10 +536,18 @@ class CounterStrike : Module() {
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
+        val packet = event.packet
+        if (packet is S02PacketChat) {
+            val message = packet.chatComponent.unformattedText
+            if (message.contains(text.get()+teamCT.get())){
+                ctwinValue ++
+            }
+            if (message.contains(text.get()+teamT.get())){
+                twinValue ++
+            }
+        }
         val playerArmor = mc.thePlayer.inventory.armorInventory[3]
         val myItemArmor = playerArmor.item as ItemArmor
-        val packet = event.packet
-
 
         if (event.packet is S45PacketTitle) {
             val titlePacket = event.packet as S45PacketTitle
@@ -576,35 +576,6 @@ class CounterStrike : Module() {
                 timerSecounds = 59
                 timerMinute = 1
                 can = false
-                when (Random.nextInt(1, 10)) {
-                    1 -> {
-                        LiquidBounce.tipSoundManager.startSound.asyncPlay()
-                    }
-                    2 -> {
-                        LiquidBounce.tipSoundManager.startSound2.asyncPlay()
-                    }
-                    3 -> {
-                        LiquidBounce.tipSoundManager.startSound3.asyncPlay()
-                    }
-                    4 -> {
-                        LiquidBounce.tipSoundManager.startSound4.asyncPlay()
-                    }
-                    5 -> {
-                        LiquidBounce.tipSoundManager.startSound5.asyncPlay()
-                    }
-                    6 -> {
-                        LiquidBounce.tipSoundManager.startSound6.asyncPlay()
-                    }
-                    7 -> {
-                        LiquidBounce.tipSoundManager.startSound7.asyncPlay()
-                    }
-                    8 -> {
-                        LiquidBounce.tipSoundManager.startSound8.asyncPlay()
-                    }
-                    9 -> {
-                        LiquidBounce.tipSoundManager.startSound9.asyncPlay()
-                    }
-                }
             }
         }
 
@@ -614,21 +585,12 @@ class CounterStrike : Module() {
             val matchResult = regex.find(message)
 
             if (matchResult != null) {
-                 kills = matchResult.groupValues[1].toInt()
-
-            } else {
-
+                kills = matchResult.groupValues[1].toInt()
             }
 
             if (message.contains(resetTitle.get(), ignoreCase = true)) {
                 ctwinValue = 0
                 twinValue =0
-            }
-            if (message.contains(text.get()+teamCT.get())){
-                ctwinValue ++
-            }
-            if (message.contains(text.get()+teamT.get())){
-                twinValue ++
             }
             if (message.contains(text.get()+teamCT.get())&&
                 (myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.IRON || myItemArmor.getColor(playerArmor) == 0x0000FF)) {

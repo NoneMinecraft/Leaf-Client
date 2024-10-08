@@ -28,14 +28,21 @@ import net.minecraft.util.Vec3
 object TimerRange : Module() {
     private val maxRange = IntegerValue("MaxRange", 3, 1, 10)
     private val minRange = IntegerValue("MinRange", 1, 1, 10)
+    private val invalidDistance = IntegerValue("InvalidDistance", 3, 1, 30)
     private val timing = ListValue("Timing", arrayOf("All","Pre","Post"),"All")
     private val Low = FloatValue("LowTimer", 0.1F, 0.05F, 1F)
     private val LowTimerTicks = IntegerValue("LowTimerTicks", 1, 1, 20)
     private val Max = FloatValue("MaxTimer", 100F, 1F, 1000F)
     private var prev = 0.0F
     private var lowtick = 0
+    var invalid = false
+    var invalid2 = false
+    var isres = false
 
     override fun onDisable() {
+        isres = false
+        invalid = false
+        invalid2 = false
         mc.timer.timerSpeed = 1.0f
         prev = 0.0F
         lowtick = 0
@@ -52,24 +59,36 @@ object TimerRange : Module() {
         val  targetPlayer = mc.theWorld.playerEntities
             .filterIsInstance<EntityPlayer>()
             .filter { it != mc.thePlayer && EntityUtils.isSelected(it, true) }
-            .filter { it.getDistanceToEntityBox(mc.thePlayer) <= maxRange.get() }
             .firstOrNull { canSeePlayer(mc.thePlayer, it) }
         targetPlayer?.let {
-            if (lowtick < LowTimerTicks.get()){
-                if (it.getDistanceToEntityBox(mc.thePlayer) > minRange.get()) {
-                    mc.timer.timerSpeed = Low.get()
-                    lowtick++
+            if (it.getDistanceToEntityBox(mc.thePlayer) <= maxRange.get()) {
+
+                if (lowtick < LowTimerTicks.get()) {
+                    if (it.getDistanceToEntityBox(mc.thePlayer) > minRange.get() && !invalid) {
+                        mc.timer.timerSpeed = Low.get()
+                        lowtick++
+                    }
+                } else {
+                    if (it.getDistanceToEntityBox(mc.thePlayer) <= minRange.get() && !invalid) {
+                        mc.timer.timerSpeed = 1F
+                        lowtick = 0
+                    } else {
+                        mc.timer.timerSpeed = Max.get()
+                        invalid2 = true
+                    }
                 }
             }else{
-                if (it.getDistanceToEntityBox(mc.thePlayer) <= minRange.get()){
-                    mc.timer.timerSpeed = 1F
-                    lowtick = 0
-                }else{
-                    mc.timer.timerSpeed = Max.get()
-                }
+                mc.timer.timerSpeed = 1F
+                lowtick = 0
+            }
+            if (it.getDistanceToEntityBox(mc.thePlayer) <= invalidDistance.get() && !invalid2) {
+                invalid = true
+            } else {
+                invalid = false
             }
         }
         if (targetPlayer == null){
+
             mc.timer.timerSpeed = 1F
             lowtick = 0
         }
