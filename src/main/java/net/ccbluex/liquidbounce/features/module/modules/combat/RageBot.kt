@@ -5,7 +5,9 @@
 package net.ccbluex.liquidbounce.features.module.modules.combat
 
 import net.ccbluex.liquidbounce.event.EventTarget
+import net.ccbluex.liquidbounce.event.Render3DEvent
 import net.ccbluex.liquidbounce.event.UpdateEvent
+import net.ccbluex.liquidbounce.features.MainLib.ChatPrint
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
@@ -17,6 +19,7 @@ import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 import net.ccbluex.liquidbounce.value.IntegerValue
 import net.ccbluex.liquidbounce.value.ListValue
+import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.init.Items
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
@@ -25,6 +28,9 @@ import net.minecraft.network.play.client.C0BPacketEntityAction
 import net.minecraft.util.MathHelper
 import net.minecraft.util.MovingObjectPosition
 import net.minecraft.util.Vec3
+import org.lwjgl.opengl.GL11
+import kotlin.math.max
+import kotlin.random.Random
 
 @ModuleInfo(name = "RageBot", category = ModuleCategory.COMBAT)
 class RageBot : Module() {
@@ -49,15 +55,39 @@ class RageBot : Module() {
     private val autoSneakTriggerMode = ListValue("AutoSneakTriggerMode", arrayOf("Always","OnlyFire"),"OnlyFire")
     private val autoSneakOnlyAwp = BoolValue("AutoSneakOnlyAwp", true)
     private val rotateValue = BoolValue("SilentRotate", false)
+    private val fireLimit = BoolValue("FireLimit", false)
+    private val posYValue = FloatValue("FireLimit-TargetVelocityY", 0.8F, -1F, 1F).displayable{fireLimit.get()}
+    private val fallValue = FloatValue("FireLimit-TargetFallVelocity", 0.8F, -1F, 1F).displayable{fireLimit.get()}
+    private val timeLimitedPrediction = BoolValue("FireLimit-TimeLimitedPrediction", false).displayable{fireLimit.get()}
+    private val timeLimitedPredictionTicksValue = IntegerValue("FireLimit-TimeLimitedPredictionTicks", 5, 0, 40).displayable{fireLimit.get()}
+    private val maxRandomRange = IntegerValue("FireLimit-MaxRandomRange", 5, 0, 40).displayable{fireLimit.get()}
+    private val minRandomRange = IntegerValue("FireLimit-MainRandomRange", 1, 0, 40).displayable{fireLimit.get()}
+    private val timeLimitedAwpOnly = BoolValue("FireLimit-AwpOnly", true).displayable{fireLimit.get()}
+    private val jitter = BoolValue("Jitter", false)
+    private val jitterYaw = BoolValue("JitterYaw", true).displayable{jitter.get()}
+    private val jitterPitch = BoolValue("JitterPitch", false).displayable{jitter.get()}
+    private val jitterFrequency = IntegerValue("JitterFrequency", 1, 1, 40).displayable{jitter.get()}
+    private val jitterAmplitude = IntegerValue("JitterAmplitude", 1, 1, 40).displayable{jitter.get()}
+    private val targetDebug = BoolValue("TargetDebug", false)
+    private val targetDebugMaxHurtTime = IntegerValue("TargetDebug-MaxHurtTime", 10, 1, 10)
+    private val targetDebugMinHurtTime = IntegerValue("TargetDebug-MinHurtTime", 10, 1, 10)
     var targetPlayer: EntityPlayer? = null
     var tick = 0
     var ticks = 0
     var type = 0
+    private var time = 0
     var resettick = 0
     var autoSwitchTick = 0
     var target: EntityPlayer? = null
+    var jitterValue = 0
+    var jitterValue2 = 0
+    var jitterTick = 0
+    var jitterTick2 = 0
 
     override fun onDisable() {
+        jitterTick = 0
+        jitterValue = 0
+        time
         resettick = 0
         type = 0
         ticks = 0
@@ -67,7 +97,6 @@ class RageBot : Module() {
         autoSwitchTick = 0
         mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING,0))
     }
-
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         val player = mc.thePlayer ?: return
@@ -78,6 +107,33 @@ class RageBot : Module() {
             .filter { it.getDistanceToEntityBox(player) <= range.get() }
             .firstOrNull { canSeePlayer(player, it) }
         targetPlayer?.let {
+            if (targetDebug.get() && it.hurtTime in targetDebugMinHurtTime.get()..targetDebugMaxHurtTime.get()) ChatPrint("§f[§bHit§f] Name:${it.name} Health:${it.health}")
+            if (jitter.get()){
+                if (jitterPitch.get()){
+                    if (jitterTick < jitterFrequency.get()){
+                        jitterTick ++
+                        jitterValue = -jitterAmplitude.get()
+                    }else{
+                        jitterTick = 0
+                        jitterValue = jitterAmplitude.get()
+                    }
+                }else{
+                    jitterTick = 0
+                    jitterValue = 0
+                }
+                if (jitterYaw.get()){
+                    if (jitterTick2 < jitterFrequency.get()){
+                        jitterTick2 ++
+                        jitterValue2 = -jitterAmplitude.get()
+                    }else{
+                        jitterTick2 = 0
+                        jitterValue2 = jitterAmplitude.get()
+                    }
+                }else{
+                    jitterTick = 0
+                    jitterValue2 = 0
+                }
+            }
             if (autoSneak.get() && autoSneakTriggerMode.get() == "OnlyFire"){
                 if (!autoSneakOnlyAwp.get() || awp()) {
                     if (autoSneakMode.get() == "Packet") {
@@ -121,8 +177,8 @@ class RageBot : Module() {
             }
             val rotation = getRotationTo(playerVec, targetVec)
 
-            val yaw = rotation.yaw
-            val pitch = rotation.pitch + pitchOffset.get()
+            val yaw = rotation.yaw + jitterValue2
+            val pitch = rotation.pitch + pitchOffset.get() + jitterValue
 
             if (noSpreadValue.get()) {
                 if (noSpreadMode.get() == "Switch" && !awp()) {
@@ -149,7 +205,26 @@ class RageBot : Module() {
             }
 
 
-            if (fireMode.get() == "Packet") mc.thePlayer.sendQueue.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem)) else{
+            if (fireMode.get() == "Packet") {
+                if (timeLimitedAwpOnly.get() && awp()) {
+                    if (it.onGround && timeLimitedPrediction.get())
+                        if (time < timeLimitedPredictionTicksValue.get() + Random.nextInt(
+                                minRandomRange.get(),
+                                maxRandomRange.get()
+                            )
+                        ) time++
+                        else {mc.thePlayer.sendQueue.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem))
+                            time = 0
+                        }
+                    if (!fireLimit.get() ||
+                        (!it.onGround && !it.onGround && (it.posY - it.prevPosY) <= posYValue.get() && (it.posY - it.prevPosY) >= fallValue.get())
+                    )
+                        mc.thePlayer.sendQueue.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem))
+                }else mc.thePlayer.sendQueue.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem))
+            }else{
+
+
+                
                 if (tick < fireTick.get()) {
                     tick ++
                     mc.gameSettings.keyBindUseItem.pressed = true
@@ -168,6 +243,7 @@ class RageBot : Module() {
             }
             ticks = 0
             tick = 0
+            time = 0
         }
         if (!autoSneakOnlyAwp.get() || awp()) {
             if (autoSneak.get() && autoSneakTriggerMode.get() == "Always") {
