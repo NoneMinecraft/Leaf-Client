@@ -68,6 +68,9 @@ class RageBot : Module() {
     private val jitterPitch = BoolValue("JitterPitch", false).displayable{jitter.get()}
     private val jitterFrequency = IntegerValue("JitterFrequency", 1, 1, 40).displayable{jitter.get()}
     private val jitterAmplitude = IntegerValue("JitterAmplitude", 1, 1, 40).displayable{jitter.get()}
+    private val reversePrediction  = BoolValue("ReversePrediction", true)
+    private val reversePredictionAirMaxSpeed = FloatValue("MaximumSpeedAtWhichTheTargetIsInTheAir", 0.8F, -1F, 1F)
+    private val reversePredictionAirMinSpeed = FloatValue("MinimumSpeedAtWhichTheTargetIsInTheAir", 0.8F, -1F, 1F)
     private val targetDebug = BoolValue("TargetDebug", false)
     private val targetDebugMaxHurtTime = IntegerValue("TargetDebug-MaxHurtTime", 10, 1, 10)
     private val targetDebugMinHurtTime = IntegerValue("TargetDebug-MinHurtTime", 10, 1, 10)
@@ -83,8 +86,18 @@ class RageBot : Module() {
     var jitterValue2 = 0
     var jitterTick = 0
     var jitterTick2 = 0
+    private var isXStrafe = false
+    private var isZStrafe = false
+    private var reverseX = false
+    private var reverseZ = false
+
 
     override fun onDisable() {
+        reverseX = false
+        reverseZ = false
+
+        isXStrafe = false
+        isZStrafe = false
         jitterTick = 0
         jitterValue = 0
         time
@@ -107,6 +120,40 @@ class RageBot : Module() {
             .filter { it.getDistanceToEntityBox(player) <= range.get() }
             .firstOrNull { canSeePlayer(player, it) }
         targetPlayer?.let {
+            if (reversePrediction.get()){
+                if (!it.onGround){
+                    if ((it.posX - it.prevPosX) > reversePredictionAirMaxSpeed.get() && !isXStrafe){
+                        isXStrafe = true
+                    }
+                    if ((it.posZ - it.prevPosZ) > reversePredictionAirMaxSpeed.get() && !isZStrafe){
+                        isZStrafe = true
+                    }
+                }else{
+                    isXStrafe = false
+                    isZStrafe = false
+                    reverseZ = false
+                    reverseX = false
+                }
+                if (isXStrafe && (it.posX - it.prevPosX) < reversePredictionAirMinSpeed.get()){
+                    reverseX = true
+                    if (targetDebug.get()) ChatPrint("§f[§bDebug§f] ${it.name} is moving in reverse, and the prediction has been adjusted (X)")
+                }else{
+                    reverseX = false
+                    isXStrafe = false
+                }
+                if (isZStrafe && (it.posZ - it.prevPosZ) < reversePredictionAirMinSpeed.get()){
+                    reverseZ = true
+                    if (targetDebug.get()) ChatPrint("§f[§bDebug§f] ${it.name} is moving in reverse, and the prediction has been adjusted (Z)")
+                }else{
+                    reverseZ = false
+                    isZStrafe = false
+                }
+            }else{
+                isXStrafe = false
+                isZStrafe = false
+                reverseZ = false
+                reverseX = false
+            }
             if (targetDebug.get() && it.hurtTime in targetDebugMinHurtTime.get()..targetDebugMaxHurtTime.get()) ChatPrint("§f[§bHit§f] Name:${it.name} Health:${it.health}")
             if (jitter.get()){
                 if (jitterPitch.get()){
@@ -150,11 +197,25 @@ class RageBot : Module() {
                 }
             }
             val targetVec = if(targetPredict.get()) {
-                Vec3(
-                    it.posX + (it.posX - it.prevPosX) * targetPredictSize.get(),
-                    (it.posY + it.eyeHeight * eyeHeight.get()) + it.posY - it.prevPosY,
-                    it.posZ + (it.posZ - it.prevPosZ) * targetPredictSize.get()
-                )
+                if (reverseX){
+                    Vec3(
+                        it.posX - (it.posX - it.prevPosX) * targetPredictSize.get(),
+                        (it.posY + it.eyeHeight * eyeHeight.get()) + it.posY - it.prevPosY,
+                        it.posZ + (it.posZ - it.prevPosZ) * targetPredictSize.get()
+                    )
+                }else if (reverseZ){
+                    Vec3(
+                        it.posX + (it.posX - it.prevPosX) * targetPredictSize.get(),
+                        (it.posY + it.eyeHeight * eyeHeight.get()) + it.posY - it.prevPosY,
+                        it.posZ - (it.posZ - it.prevPosZ) * targetPredictSize.get()
+                    )
+                } else {
+                    Vec3(
+                        it.posX + (it.posX - it.prevPosX) * targetPredictSize.get(),
+                        (it.posY + it.eyeHeight * eyeHeight.get()) + it.posY - it.prevPosY,
+                        it.posZ + (it.posZ - it.prevPosZ) * targetPredictSize.get()
+                    )
+                }
             } else {
                 Vec3(
                     it.posX,

@@ -14,6 +14,8 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.ui.font.Fonts
+import net.ccbluex.liquidbounce.utils.render.RenderUtils
+import net.ccbluex.liquidbounce.utils6.RenderU
 import net.ccbluex.liquidbounce.value.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.FontRenderer
@@ -33,45 +35,52 @@ import kotlin.random.Random
 
 @ModuleInfo(name = "CounterStrike", category = ModuleCategory.COMBAT)
 class CounterStrike : Module() {
-    private val text = TextValue("Text","win")
-    private val dieText = TextValue("Die","died")
-    private val teamT = TextValue("TeamT","T")
-    private val teamCT = TextValue("TeamCT","CT")
-    private val c4A = TextValue("C4A","C4:A")
-    private val c4B = TextValue("C4B","C4:B")
-    private val start = TextValue("Start","start")
-    private val exchangeTeams = TextValue("ExchangeTeams","ExchangeTeams")
-    private val resetTitle = TextValue("ResetTitle","ResetTitle")
-    private val musicMode = ListValue("MusicMode", arrayOf("Random","Custom"),"Random")
-    private val musicNumber = IntegerValue("MusicNumber",1,1,9).displayable{musicMode.get() == "Custom"}
-    private val ticks = IntegerValue("Tick",1000,100,2000)
-    private val colorRedValue = IntegerValue("Red", 255, 0, 255)
-    private val colorGreenValue = IntegerValue("Green", 255, 0, 255)
-    private val colorBlueValue = IntegerValue("Blue", 255, 0, 255)
-    private val colorAlphaValue = IntegerValue("Alpha", 255, 0, 255)
-    private val widthValue = FloatValue("Width", 0.5f, 0.25f, 10f)
-    private val sizeValue = FloatValue("Length", 7f, 0.25f, 15f)
-    private val gapValue = FloatValue("Gap", 5f, 0.25f, 15f)
-    private val dynamicValue = BoolValue("Dynamic", true)
-    private val YOffset = FloatValue("YOffset", 5f, -500f, 500f)
-    private val Xoffset = FloatValue("Xoffset", 5f, -500f, 500f)
-    var kills = 0
-    private val scaledResolution = ScaledResolution(Minecraft.getMinecraft())
-    private val screenWidth = scaledResolution.scaledWidth
-    private val screenHeight = scaledResolution.scaledHeight
-    private val referenceWidth = screenWidth.toDouble()
+    private val text = TextValue("RenderTrigger-Victory","Victory")
+    private val dieText = TextValue("RenderTrigger-Die","Died")
+    private val teamT = TextValue("RenderTrigger-TeamT","T")
+    private val teamCT = TextValue("RenderTrigger-TeamCT","CT")
+    private val c4A = TextValue("RenderTrigger-C4A","The bomb was placed in A")
+    private val c4B = TextValue("RenderTrigger-C4B","The bomb was placed in B")
+    private val start = TextValue("RenderTrigger-Start","start")
+    private val exchangeTeams = TextValue("RenderTrigger-ExchangeTeams","Swap")
+    private val resetTitle = TextValue("RenderTrigger-GameOver","GameOver")
+    private val musicMode = ListValue("MvpMusicMode", arrayOf("Random","Custom"),"Random")
+    private val musicNumber = IntegerValue("MvpMusicNumber",1,1,9).displayable{musicMode.get() == "Custom"}
+    private val ticks = IntegerValue("Mvp-RenderTick",1000,100,2000)
+    private val Xoffset = FloatValue("InventoryOffsetX", 0f, -200f, 200f)
+    private val YOffset = FloatValue("InventoryOffsetY", 0f, -200f, 200f)
+    private val Xoffset2 = FloatValue("ScoreboardOffsetX", 0f, -200f, 200f)
+    private val Yoffset2 = FloatValue("ScoreboardOffsetY", 0f, -200f, 200f)
+    private val Xoffset3 = FloatValue("BombPanelOffsetX", 0f, -200f, 200f)
+    private val Yoffset3 = FloatValue("BombPanelOffsetY", 0f, -200f, 200f)
+    private val colorRedValue = IntegerValue("Cross-Red", 255, 0, 255)
+    private val colorGreenValue = IntegerValue("Cross-Green", 255, 0, 255)
+    private val colorBlueValue = IntegerValue("Cross-Blue", 255, 0, 255)
+    private val colorAlphaValue = IntegerValue("Cross-Alpha", 255, 0, 255)
+    private val widthValue = FloatValue("Cross-Width", 0.5f, 0.25f, 10f)
+    private val sizeValue = FloatValue("Cross-Length", 7f, 0.25f, 15f)
+    private val gapValue = FloatValue("Cross-Gap", 5f, 0.25f, 15f)
+    private val dynamicValue = BoolValue("Cross-Dynamic", true)
+
+    private var kills = 0
     private var startTime = 0L
     private var countdownSeconds = 45
-    private val referenceHeight = screenHeight.toDouble()
 
-    private val propx = ((468F/ referenceWidth) * screenWidth).toInt()
-    private val propy = ((240F/ referenceHeight) * screenWidth).toInt()
-    private val propx2 = ((443F/ referenceWidth) * screenWidth).toInt()
-    private val propy2 = ((220F/ referenceHeight) * screenWidth).toInt()
-    private val propx4 = ((453F/ referenceWidth) * screenWidth).toInt()
-    private val propy4 = ((234F/ referenceHeight) * screenWidth).toInt()
-    private val propx5 =(( 450F/ referenceWidth) * screenWidth).toInt()
-    private val propy5 = ((226F/ referenceHeight) * screenWidth).toInt()
+    private val armorx = FloatValue("armorx", 0f, -200f, 200f)
+    private val armory = FloatValue("armory", 0f, -200f, 200f)
+    private val armorw = FloatValue("armorw", 0f, -200f, 200f)
+    private val armorh = FloatValue("armorh", 0f, -200f, 200f)
+
+
+    private val propx = 468.0
+    private val propy = 240.0
+    private val propx2 = 443.0
+    private val propy2 = 207.0
+    private val propx4 = 453.0
+    private val propy4 = 234.0
+    private val propx5 = 450.0
+    private val propy5 = 226.0
+
 
     private val xxx =-25
     private val yyy =-53
@@ -81,34 +90,34 @@ class CounterStrike : Module() {
     private val vyy2 =-57
     private val vxx3 =-12
     private val vyy3 =-50
-    private val iggx = 266
-    private val iggy = 69
-    private val vx = ((226.0 / referenceWidth) * screenWidth).toInt()
-    private val vy = ((1.0 / referenceHeight) * screenHeight).toInt()
-    private val vx2 = ((226.0 / referenceWidth) * screenWidth).toInt()
-    private val vy2 = ((12.0 / referenceHeight) * screenHeight).toInt()
-    private val vx3 = ((238.0 / referenceWidth) * screenWidth).toInt()
-    private val vy3 = ((12.0 / referenceHeight) * screenHeight).toInt()
-    private val tx = ((230.0 / referenceWidth) * screenWidth).toInt()
-    private val ty = ((5.0 / referenceHeight) * screenHeight).toInt()
-    private val tx2 = ((229.0 / referenceWidth) * screenWidth).toInt()
-    private val ty2 = ((17.0 / referenceHeight) * screenHeight).toInt()
-    private val tx3 = ((242.0 / referenceWidth) * screenWidth).toInt()
-    private val ty3 = ((17.0 / referenceHeight) * screenHeight).toInt()
-    private val x = ((130.0 / referenceWidth) * screenWidth).toInt()
-    private val x2 = ((130.0 / referenceWidth) * screenWidth).toInt()
-    private val y = ((16.0 / referenceHeight) * screenHeight).toInt()
-    private val y2 = ((24.0 / referenceHeight) * screenHeight).toInt()
-    private val textX = ((202.0 / referenceWidth) * screenWidth).toInt()
-    private val textY = ((19.0 / referenceHeight) * screenHeight).toInt()
-    private val MVPX = ((155.0 / referenceWidth) * screenWidth).toInt()
-    private val MVPY = ((28.0 / referenceHeight) * screenHeight).toInt()
-    private val imgX = ((310.0 / referenceWidth) * screenWidth).toInt()
-    private val imgY = ((25.0 / referenceHeight) * screenHeight).toInt()
-    private val silverX = ((132.0 / referenceWidth) * screenWidth).toInt()
-    private val silverY = ((37.0 / referenceHeight) * screenHeight).toInt()
-    private val soundTextX = ((155.0 / referenceWidth) * screenWidth).toInt()
-    private val soundTextY = ((39.0 / referenceHeight) * screenHeight).toInt()
+    private val vx = 226.0
+    private val vy = 1.0
+    private val vx2 = 226.0
+    private val vy2 = 12.0
+    private val vx3 = 238.0
+    private val vy3 = 12.0
+    private val tx = 230.0
+    private val ty = 5.0
+    private val tx2 = 229.0
+    private val ty2 = 17.0
+    private val tx3 = 242.0
+    private val ty3 = 17.0
+    private val x = 130.0
+    private val x2 = 130.0
+    private val y = 16.0
+    private val y2 = 24.0
+    private val textX = 202.0
+    private val textY = 19.0
+    private val MVPX = 155.0
+    private val MVPY = 28.0
+    private val imgX = 310.0
+    private val imgY = 25.0
+    private val silverX = 132.0
+    private val silverY = 37.0
+    private val soundTextX = 155.0
+    private val soundTextY = 39.0
+
+
     private val propw = 8F
     private val proph = 11F
     private val propw2 = 30F
@@ -119,13 +128,8 @@ class CounterStrike : Module() {
     private val proph4 = 11F
     private val xp = 3F
     private val radiuss = 6.56F
-    private val bw = 55F
-    private val bh = 10F
-    private val ba = 167
     private val vhh =18
-    private val vww = 81
-    private val iggh = 10
-    private val iggw = 16
+    private val vww = 70
     private val vw = 22
     private val vh = 10
     private val vw2 = 10
@@ -169,7 +173,6 @@ class CounterStrike : Module() {
     private val imgsilver3 = ResourceLocation("leaf/silver3.png")
     private val imgsilver4 = ResourceLocation("leaf/silver4.png")
     private val imgsilver5 = ResourceLocation("leaf/silver5.png")
-    private val c4Img = ResourceLocation("leaf/C4.png")
     private val prop1 = ResourceLocation("leaf/prop1.png")
     private val prop2 = ResourceLocation("leaf/prop2.png")
     private val prop6 = ResourceLocation("leaf/prop6.png")
@@ -181,12 +184,14 @@ class CounterStrike : Module() {
     private val p2000 = ResourceLocation("leaf/p2000.png")
     private val DesertEagle = ResourceLocation("leaf/DesertEagle.png")
     private val sword = ResourceLocation("leaf/sword.png")
-
     private val m42 = ResourceLocation("leaf/M42.png")
     private val ak2 = ResourceLocation("leaf/AK2.png")
     private val p20002 = ResourceLocation("leaf/p20002.png")
     private val DesertEagle2 = ResourceLocation("leaf/DesertEagle2.png")
     private val sword2 = ResourceLocation("leaf/sword2.png")
+    private val armor1 = ResourceLocation("leaf/armor1.png")
+    private val armor2 = ResourceLocation("leaf/armor2.png")
+    private val armor3 = ResourceLocation("leaf/armor3.png")
     private var isRenderA = false
     private var isRenderB = false
     var Select1 = false
@@ -234,20 +239,53 @@ class CounterStrike : Module() {
 
     @EventTarget
     fun onRender(event: Render2DEvent) {
+
+
         val screenWidth = event.scaledResolution.scaledWidth / 2
         val screenHeight = event.scaledResolution.scaledHeight / 2
-        cross(screenWidth,screenHeight)
+        cross(screenWidth, screenHeight)
         if (!can) {
             kd = all.toDouble() / die.toDouble()
-            can= true
+            can = true
         }
 
-        drawBlackPanel4(vx.toDouble()+xp,vy.toDouble(),vw.toDouble(),vh.toDouble())
-        drawBlackPanel3(vx2.toDouble()+xp,vy2.toDouble(),vw2.toDouble(),vh2.toDouble())
-        drawBlackPanel3(vx3.toDouble()+xp,vy3.toDouble(),vw3.toDouble(),vh3.toDouble())
-        drawText3("$timerMinute:$timerSecounds", tx+xp.toInt(), ty, 255,255,255)
-        drawText3(ctwinValue.toString(), tx2+xp.toInt(), ty2, 191,215,234)
-        drawText3(twinValue.toString(), tx3+xp.toInt(), ty3, 228,224,175)
+        drawBlackPanel4(vx.toDouble() + Xoffset2.get(), vy.toDouble() + Yoffset2.get(), vw.toDouble(), vh.toDouble())
+        drawBlackPanel3(
+            vx2.toDouble() + Xoffset2.get(),
+            vy2 + Yoffset2.get().toDouble(),
+            vw2.toDouble(),
+            vh2.toDouble()
+        )
+        drawBlackPanel3(
+            vx3.toDouble() + Xoffset2.get(),
+            vy3 + Yoffset2.get().toDouble(),
+            vw3.toDouble(),
+            vh3.toDouble()
+        )
+        drawText3(
+            "$timerMinute:$timerSecounds",
+            tx.toInt() + Xoffset2.get().toInt(),
+            ty.toInt() + Yoffset2.get().toInt(),
+            255,
+            255,
+            255
+        )
+        drawText3(
+            ctwinValue.toString(),
+            tx2.toInt() + Xoffset2.get().toInt(),
+            ty2.toInt() + Yoffset2.get().toInt(),
+            191,
+            215,
+            234
+        )
+        drawText3(
+            twinValue.toString(),
+            tx3.toInt() + Xoffset2.get().toInt(),
+            ty3.toInt() + Yoffset2.get().toInt(),
+            228,
+            224,
+            175
+        )
 
         if (isRenderA) {
             val scaledResolution = ScaledResolution(mc)
@@ -262,8 +300,8 @@ class CounterStrike : Module() {
                 isRenderA = false
             }
             MainLib.drawPanel(
-                centerX + vxx.toDouble(),
-                centerY + vyy.toDouble(),
+                centerX + vxx.toDouble() + Xoffset3.get().toInt(),
+                centerY + vyy.toDouble() + Yoffset3.get().toInt(),
                 vww.toDouble(),
                 vhh.toDouble(),
                 0,
@@ -272,14 +310,27 @@ class CounterStrike : Module() {
                 150
             )
             drawProgressRing(
-                centerX + xxx,
-                centerY + yyy,
+                centerX + xxx + Xoffset3.get().toInt(),
+                centerY + yyy + Yoffset3.get().toInt(),
                 radiuss.toFloat(),
                 remainingTime.toFloat() / countdownSeconds
             )
-            drawText3("Location: A", centerX + vxx2, centerY + vyy2, 255, 255, 255)
-            drawText3("Time: $remainingTime", centerX + vxx3, centerY + vyy3, 255, 255, 255)
-            renderImage(c4Img, iggx, iggy, iggw, iggh)
+            drawText3(
+                "Location: A",
+                centerX + vxx2 + Xoffset3.get().toInt(),
+                centerY + vyy2 + Yoffset3.get().toInt(),
+                255,
+                255,
+                255
+            )
+            drawText3(
+                "Time: $remainingTime",
+                centerX + vxx3 + Xoffset3.get().toInt(),
+                centerY + vyy3 + Yoffset3.get().toInt(),
+                255,
+                255,
+                255
+            )
         }
         if (isRenderB) {
             val scaledResolution = ScaledResolution(mc)
@@ -294,8 +345,8 @@ class CounterStrike : Module() {
                 isRenderB = false
             }
             MainLib.drawPanel(
-                centerX + vxx.toDouble(),
-                centerY + vyy.toDouble(),
+                centerX + vxx.toDouble() + Xoffset3.get().toInt(),
+                centerY + vyy.toDouble() + Yoffset3.get().toInt(),
                 vww.toDouble(),
                 vhh.toDouble(),
                 0,
@@ -304,215 +355,641 @@ class CounterStrike : Module() {
                 150
             )
             drawProgressRing(
-                centerX + xxx,
-                centerY + yyy,
+                centerX + xxx + Xoffset3.get().toInt(),
+                centerY + yyy + Yoffset3.get().toInt(),
                 radiuss,
                 remainingTime.toFloat() / countdownSeconds
             )
-            drawText3("Location: B", centerX + vxx2, centerY + vyy2, 255, 255, 255)
-            drawText3("Time: $remainingTime", centerX + vxx3, centerY + vyy3, 255, 255, 255)
-            renderImage(c4Img, iggx, iggy, iggw, iggh)
+            drawText3(
+                "Location: B",
+                centerX + vxx2 + Xoffset3.get().toInt(),
+                centerY + vyy2 + Yoffset3.get().toInt(),
+                255,
+                255,
+                255
+            )
+            drawText3(
+                "Time: $remainingTime",
+                centerX + vxx3 + Xoffset3.get().toInt(),
+                centerY + vyy3 + Yoffset3.get().toInt(),
+                255,
+                255,
+                255
+            )
         }
 
-        if (alpha>=a)alpha = a
+        if (alpha >= a) alpha = a
         if (ctw) {
-            if (alpha <= 0)alpha=0
-            if (tick<ticks.get()) {
+            if (alpha <= 0) alpha = 0
+            if (tick < ticks.get()) {
                 tick++
                 alpha += 2
-                drawBlackPanel2(x2.toDouble(), y2.toDouble(), width1.toDouble(), height2.toDouble())
-                drawBlackPanel(x.toDouble(), y.toDouble(), width1.toDouble(), height.toDouble())
+                drawBlackPanel2(
+                    x2.toDouble() + Xoffset2.get().toInt(),
+                    y2.toDouble() + Yoffset2.get().toInt(),
+                    width1.toDouble(),
+                    height2.toDouble()
+                )
+                drawBlackPanel(
+                    x.toDouble() + Xoffset2.get().toInt(),
+                    y.toDouble() + Yoffset2.get().toInt(),
+                    width1.toDouble(),
+                    height.toDouble()
+                )
 
-                renderImage(imgCT, imgX, imgY, imgWidth, imgHeight)
-                drawText4("Counter-Terrorists Win", textX, textY, 191,215,234)
-                drawText5("KillStreak: You killed $kills players in the round", MVPX, MVPY, 191,215,234)
+                renderImage(
+                    imgCT,
+                    imgX.toInt() + Xoffset2.get().toInt(),
+                    imgY.toInt() + Yoffset2.get().toInt(),
+                    imgWidth,
+                    imgHeight
+                )
+                drawText4(
+                    "Counter-Terrorists Win",
+                    textX.toInt() + Xoffset2.get().toInt(),
+                    textY.toInt() + Yoffset2.get().toInt(),
+                    191,
+                    215,
+                    234
+                )
+                drawText5(
+                    "KillStreak: You killed $kills players in the round",
+                    MVPX.toInt() + Xoffset2.get().toInt(),
+                    MVPY.toInt() + Yoffset2.get().toInt(),
+                    191,
+                    215,
+                    234
+                )
                 if (!can) {
                     all += kills
                     can = true
                 }
-                drawText5("Now Playing: $sound", soundTextX, soundTextY, 191,215,234)
+                drawText5(
+                    "Now Playing: $sound",
+                    soundTextX.toInt() + Xoffset2.get().toInt(),
+                    soundTextY.toInt() + Yoffset2.get().toInt(),
+                    191,
+                    215,
+                    234
+                )
                 isRenderA = false
                 isRenderB = false
 
-                when(kills) {
+                when (kills) {
                     1 -> {
-                        renderImage(imgsilver1, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver1,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
+
                     2 -> {
-                        renderImage(imgsilver2, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver2,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
+
                     3 -> {
-                        renderImage(imgsilver3, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver3,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
+
                     4 -> {
-                        renderImage(imgsilver4, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver4,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
-                    5 ->{
-                        renderImage(imgsilver5, silverX, silverY, silverWidth, silverHeight)
+
+                    5 -> {
+                        renderImage(
+                            imgsilver5,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
                 }
 
-            }else{
+            } else {
                 ctw = false
                 tick = 0
                 alpha = 0
             }
         }
         if (tw) {
-            if (alpha <= 0)alpha=0
-            if (tick<ticks.get()) {
+            if (alpha <= 0) alpha = 0
+            if (tick < ticks.get()) {
                 alpha += 2
                 tick++
-                drawBlackPanel2(x2.toDouble(), y2.toDouble(), width1.toDouble(), height2.toDouble())
-                drawBlackPanel(x.toDouble(), y.toDouble(), width1.toDouble(), height.toDouble())
-                renderImage(imgT, imgX, imgY, imgWidth, imgHeight)
-                drawText4("Terrorists Win", textX, textY, 191,215,234)
-                drawText5("KillStreak: You killed $kills players in the round", MVPX, MVPY, 191,215,234)
+                drawBlackPanel2(
+                    x2.toDouble() + Xoffset2.get().toInt(),
+                    y2.toDouble() + Yoffset2.get().toInt(),
+                    width1.toDouble(),
+                    height2.toDouble()
+                )
+                drawBlackPanel(
+                    x.toDouble() + Xoffset2.get().toInt(),
+                    y.toDouble() + Yoffset2.get().toInt(),
+                    width1.toDouble(),
+                    height.toDouble()
+                )
+                renderImage(
+                    imgT,
+                    imgX.toInt() + Xoffset2.get().toInt(),
+                    imgY.toInt() + Yoffset2.get().toInt(),
+                    imgWidth,
+                    imgHeight
+                )
+                drawText4(
+                    "Terrorists Win",
+                    textX.toInt() + Xoffset2.get().toInt(),
+                    textY.toInt() + Yoffset2.get().toInt(),
+                    191,
+                    215,
+                    234
+                )
+                drawText5(
+                    "KillStreak: You killed $kills players in the round",
+                    MVPX.toInt() + Xoffset2.get().toInt(),
+                    MVPY.toInt() + Yoffset2.get().toInt(),
+                    191,
+                    215,
+                    234
+                )
                 if (!can) {
                     all += kills
                     can = true
                 }
-                drawText5("Now Playing: $sound", soundTextX, soundTextY, 191,215,234)
+                drawText5(
+                    "Now Playing: $sound",
+                    soundTextX.toInt() + Xoffset2.get().toInt(),
+                    soundTextY.toInt() + Yoffset2.get().toInt(),
+                    191,
+                    215,
+                    234
+                )
                 isRenderA = false
                 isRenderB = false
 
-                when(kills) {
+                when (kills) {
                     1 -> {
-                        renderImage(imgsilver1, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver1,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
+
                     2 -> {
-                        renderImage(imgsilver2, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver2,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
+
                     3 -> {
-                        renderImage(imgsilver3, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver3,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
+
                     4 -> {
-                        renderImage(imgsilver4, silverX, silverY, silverWidth, silverHeight)
+                        renderImage(
+                            imgsilver4,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
-                    5 ->{
-                        renderImage(imgsilver5, silverX, silverY, silverWidth, silverHeight)
+
+                    5 -> {
+                        renderImage(
+                            imgsilver5,
+                            silverX.toInt() + Xoffset2.get().toInt(),
+                            silverY.toInt() + Yoffset2.get().toInt(),
+                            silverWidth,
+                            silverHeight
+                        )
                     }
                 }
-            }else{
+            } else {
                 tw = false
                 tick = 0
                 alpha = 0
             }
         }
         if (findM4() != -1 && findAK() == -1) {
-            renderImage(m4, propx2.toInt()+Xoffset.get().toInt(), propy2.toInt()-13+YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+            RenderUtils.drawImage(
+                m4,
+                propx2.toInt() + Xoffset.get().toInt(),
+                propy2.toInt() - 13 + YOffset.get().toInt(),
+                propw2.toInt(),
+                proph2.toInt()
+            )
         }
         if (findAK() != -1 && findM4() == -1) {
-            renderImage(ak, propx2.toInt()+Xoffset.get().toInt(), propy2.toInt()-13+YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+            RenderUtils.drawImage(
+                ak,
+                propx2.toInt() + Xoffset.get().toInt(),
+                propy2.toInt() - 13 + YOffset.get().toInt(),
+                propw2.toInt(),
+                proph2.toInt()
+            )
         }
         if (p2000() != -1 && findDesertEagle() == -1) {
-            renderImage(p2000, propx4.toInt()+Xoffset.get().toInt(), propy4.toInt()-25+YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+            RenderUtils.drawImage(
+                p2000,
+                propx4.toInt() + Xoffset.get().toInt(),
+                propy4.toInt() - 25 + YOffset.get().toInt(),
+                propw4.toInt(),
+                proph4.toInt()
+            )
         }
         if (findDesertEagle() != -1 && p2000() == -1) {
-            renderImage(DesertEagle, propx4.toInt()+Xoffset.get().toInt(), propy4.toInt()-25+YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+            RenderUtils.drawImage(
+                DesertEagle,
+                propx4.toInt() + Xoffset.get().toInt(),
+                propy4.toInt() - 25 + YOffset.get().toInt(),
+                propw4.toInt(),
+                proph4.toInt()
+            )
         }
 
         if (findSword() != -1) {
-            renderImage(sword, propx5.toInt()+Xoffset.get().toInt(), propy5.toInt()+YOffset.get().toInt(), propw3.toInt(), proph3.toInt())
+            RenderUtils.drawImage(
+                sword,
+                propx5.toInt() + Xoffset.get().toInt(),
+                propy5.toInt() + YOffset.get().toInt(),
+                propw3.toInt(),
+                proph3.toInt()
+            )
         }
         if (findProp() != -1 && findProp2() == -1 && findProp3() == -1) {
-            renderImage(prop1, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+            RenderUtils.drawImage(
+                prop1,
+                propx.toInt() + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
         }
-        if (findProp2() != -1 && findProp() == -1 && findProp3() == -1){
-            renderImage(prop2, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp2() != -1 && findProp() == -1 && findProp3() == -1) {
+            RenderUtils.drawImage(
+                prop2,
+                propx.toInt() + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
         }
-        if (findProp3() != -1 && findProp() == -1 && findProp2() == -1){
-            renderImage(prop6, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp3() != -1 && findProp() == -1 && findProp2() == -1) {
+            RenderUtils.drawImage(
+                prop6,
+                propx.toInt() + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
         }
 
-        if (findProp2() != -1 && findProp3() != -1 && findProp() != -1){
-            renderImage(prop1, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
-            renderImage(prop2, propx.toInt()-10+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
-            renderImage(prop6, propx.toInt()-20+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+            RenderUtils.drawImage(
+                prop1,
+                propx.toInt() + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
+            RenderUtils.drawImage(
+                prop2,
+                propx.toInt() - 10 + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
+            RenderUtils.drawImage(
+                prop6,
+                propx.toInt() - 20 + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
         }
 
-        if (findProp2() != -1 && findProp() == -1 && findProp3() != -1){ //2,3
-            renderImage(prop1, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
-            renderImage(prop6, propx.toInt()+Xoffset.get().toInt()-10, propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) { //2,3
+            RenderUtils.drawImage(
+                prop2,
+                propx.toInt() + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
+            RenderUtils.drawImage(
+                prop6,
+                propx.toInt() + Xoffset.get().toInt() - 10,
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
         }
-        if (findProp2() != -1 && findProp() != -1 && findProp3() == -1){ // 1,2
-            renderImage(prop1, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
-            renderImage(prop2, propx.toInt()-10+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) { // 1,2
+            RenderUtils.drawImage(
+                prop1,
+                propx.toInt() + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
+            RenderUtils.drawImage(
+                prop2,
+                propx.toInt() - 10 + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
         }
-        if (findProp2() == -1 && findProp() != -1 && findProp3() != -1){ // 1,3
-            renderImage(prop1, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
-            renderImage(prop6, propx.toInt()-10+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) { // 1,3
+            RenderUtils.drawImage(
+                prop1,
+                propx.toInt() + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
+            RenderUtils.drawImage(
+                prop6,
+                propx.toInt() - 10 + Xoffset.get().toInt(),
+                propy.toInt() + YOffset.get().toInt(),
+                propw.toInt(),
+                proph.toInt()
+            )
         }
 
-        when(mc.thePlayer.heldItem.item){
-            Items.stone_hoe->{
-                renderImage(ak2, propx2.toInt()+Xoffset.get().toInt(), propy2.toInt()-13+YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+        when (mc.thePlayer.heldItem.item) {
+            Items.stone_hoe -> {
+                RenderUtils.drawImage(
+                    ak2,
+                    propx2.toInt() + Xoffset.get().toInt(),
+                    propy2.toInt() - 13 + YOffset.get().toInt(),
+                    propw2.toInt(),
+                    proph2.toInt()
+                )
             }
-            Items.iron_hoe->{
-                renderImage(m42, propx2.toInt()+Xoffset.get().toInt(), propy2.toInt()-13+YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+
+            Items.iron_hoe -> {
+                RenderUtils.drawImage(
+                    m42,
+                    propx2.toInt() + Xoffset.get().toInt(),
+                    propy2.toInt() - 13 + YOffset.get().toInt(),
+                    propw2.toInt(),
+                    proph2.toInt()
+                )
             }
-            Items.wooden_pickaxe->{
-                renderImage(p20002, propx4.toInt()+Xoffset.get().toInt(), propy4.toInt()-25+YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+
+            Items.wooden_pickaxe -> {
+                RenderUtils.drawImage(
+                    p20002,
+                    propx4.toInt() + Xoffset.get().toInt(),
+                    propy4.toInt() - 25 + YOffset.get().toInt(),
+                    propw4.toInt(),
+                    proph4.toInt()
+                )
             }
-            Items.golden_pickaxe->{
-                renderImage(DesertEagle2, propx4.toInt()+Xoffset.get().toInt(), propy4.toInt()-25+YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+
+            Items.golden_pickaxe -> {
+                RenderUtils.drawImage(
+                    DesertEagle2,
+                    propx4.toInt() + Xoffset.get().toInt(),
+                    propy4.toInt() - 25 + YOffset.get().toInt(),
+                    propw4.toInt(),
+                    proph4.toInt()
+                )
             }
-            Items.iron_axe->{
-                renderImage(sword2, propx5.toInt()+Xoffset.get().toInt(), propy5.toInt()+YOffset.get().toInt(), propw3.toInt(), proph3.toInt())
+
+            Items.iron_axe -> {
+                RenderUtils.drawImage(
+                    sword2,
+                    propx5.toInt() + Xoffset.get().toInt(),
+                    propy5.toInt() + YOffset.get().toInt(),
+                    propw3.toInt(),
+                    proph3.toInt()
+                )
             }
-            Items.stone_axe->{
-                renderImage(sword2, propx5.toInt()+Xoffset.get().toInt(), propy5.toInt()+YOffset.get().toInt(), propw3.toInt(), proph3.toInt())
+
+            Items.stone_axe -> {
+                RenderUtils.drawImage(
+                    sword2,
+                    propx5.toInt() + Xoffset.get().toInt(),
+                    propy5.toInt() + YOffset.get().toInt(),
+                    propw3.toInt(),
+                    proph3.toInt()
+                )
             }
-            Items.blaze_powder->{
+
+            Items.blaze_powder -> {
                 if (findProp() != -1 && findProp2() == -1 && findProp3() == -1) {
-                    renderImage(prop4, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                    RenderUtils.drawImage(
+                        prop4,
+                        propx.toInt() + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1){
-                    renderImage(prop4, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+                    RenderUtils.drawImage(
+                        prop4,
+                        propx.toInt() + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1){
-                    renderImage(prop4, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(
+                        prop4,
+                        propx.toInt() + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1){
-                    renderImage(prop4, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) {
+                    RenderUtils.drawImage(
+                        prop4,
+                        propx.toInt() + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1){
-                    renderImage(prop4, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(
+                        prop4,
+                        propx.toInt() + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
             }
-            Items.carrot->{
-                if (findProp2() != -1 && findProp() == -1 && findProp3() == -1){
-                    renderImage(prop3, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+
+            Items.carrot -> {
+                if (findProp2() != -1 && findProp() == -1 && findProp3() == -1) {
+                    RenderUtils.drawImage(
+                        prop3,
+                        propx.toInt() + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1){
-                    renderImage(prop3, propx.toInt()-10+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+                    RenderUtils.drawImage(
+                        prop3,
+                        propx.toInt() - 10 + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1){
-                    renderImage(prop3, propx.toInt()-10+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) {
+                    RenderUtils.drawImage(
+                        prop3,
+                        propx.toInt() - 10 + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
             }
-            Items.potato->{
-                if (findProp3() != -1 && findProp() == -1 && findProp2() == -1){
-                    renderImage(prop7, propx.toInt()+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+
+            Items.potato -> {
+                if (findProp3() != -1 && findProp() == -1 && findProp2() == -1) {
+                    RenderUtils.drawImage(
+                        prop7,
+                        propx.toInt() + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1){
-                    renderImage(prop7, propx.toInt()-20+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+                    RenderUtils.drawImage(
+                        prop7,
+                        propx.toInt() - 20 + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1){
-                    renderImage(prop7, propx.toInt()-10+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(
+                        prop7,
+                        propx.toInt() - 10 + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
-                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1){
-                    renderImage(prop7, propx.toInt()-10+Xoffset.get().toInt(), propy.toInt()+YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(
+                        prop7,
+                        propx.toInt() - 10 + Xoffset.get().toInt(),
+                        propy.toInt() + YOffset.get().toInt(),
+                        propw.toInt(),
+                        proph.toInt()
+                    )
                 }
             }
-            null ->{
+
+            null -> {
                 Select1 = false
                 Select2 = false
                 Select3 = false
             }
         }
+        val playerArmor2 = mc.thePlayer.inventory.armorInventory[3].item as ItemArmor
+        val playerArmor1 = mc.thePlayer.inventory.armorInventory[2].item as ItemArmor
 
+      if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.IRON) {
+          RenderUtils.drawImage(
+              armor1,
+              armorx.get().toInt(),
+              armory.get().toInt(),
+              armorw.get().toInt(),
+              armorh.get().toInt()
+          )
+      }else if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial != ItemArmor.ArmorMaterial.IRON) {
+            RenderUtils.drawImage(
+                armor2,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }else if (playerArmor1.armorMaterial != ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.IRON) {
+            RenderUtils.drawImage(
+                armor3,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
         }
+        if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.CHAIN) {
+            RenderUtils.drawImage(
+                armor1,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }else if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial != ItemArmor.ArmorMaterial.CHAIN) {
+            RenderUtils.drawImage(
+                armor2,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }else if (playerArmor1.armorMaterial != ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.CHAIN) {
+            RenderUtils.drawImage(
+                armor3,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }
+    }
 
     @EventTarget
     fun Update (event:UpdateEvent) {
@@ -955,16 +1432,6 @@ class CounterStrike : Module() {
     }
 
 
-    private fun drawText2(text: String, x: Int, y: Int, color: Int) {
-        val fontRenderer: FontRenderer =  Fonts.SFUI35
-        GL11.glPushMatrix()
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-        fontRenderer.drawString(text, x, y, color)
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-
     private fun renderImage(resourceLocation: ResourceLocation, x: Int, y: Int, width: Int, height: Int) {
         mc.textureManager.bindTexture(resourceLocation)
         GL11.glColor4f(1f, 1f, 1f, 1f)
@@ -973,24 +1440,6 @@ class CounterStrike : Module() {
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0f, 0f, width, height, width.toFloat(), height.toFloat())
         GL11.glDisable(GL11.GL_BLEND)
     }
-    private fun drawTransparentPanel(x: Int, y: Int, width: Int, height: Int, alpha: Float) {
-        GL11.glPushMatrix()
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-        GL11.glColor4f(0f, 0f, 0f, alpha) // 设置全黑色透明背景
-        GL11.glBegin(GL11.GL_QUADS)
-        GL11.glVertex2f(x.toFloat(), y.toFloat())
-        GL11.glVertex2f(x.toFloat(), (y + height).toFloat())
-        GL11.glVertex2f((x + width).toFloat(), (y + height).toFloat())
-        GL11.glVertex2f((x + width).toFloat(), y.toFloat())
-        GL11.glEnd()
-        GL11.glEnable(GL11.GL_TEXTURE_2D)
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-
-    // 绘制进度环
     private fun drawProgressRing(centerX: Int, centerY: Int, radius: Float, progress: Float) {
         val segments = 4000
         val anglePerSegment = (2 * Math.PI / segments).toFloat()
@@ -1064,12 +1513,6 @@ class CounterStrike : Module() {
         GL11.glDisable(GL11.GL_BLEND)
         GL11.glPopMatrix()
     }
-    private fun drawRoundedPanel(x: Double, y: Double, width: Double, height: Double, radius: Double) {
-        val segments = 20 // Number of segments for the arc
-
-        // Draw the rectangle with rounded corners
-        drawRectWithRoundedCorners(x, y, width, height, radius, segments)
-    }
 
     private fun drawRectWithRoundedCorners(x: Double, y: Double, width: Double, height: Double, radius: Double, segments: Int) {
         GL11.glPushMatrix()
@@ -1117,18 +1560,6 @@ class CounterStrike : Module() {
             GL11.glVertex2d(x, y)
         }
         GL11.glEnd()
-    }
-    private fun drawLine(startX: Double, startY: Double, startZ: Double, endX: Double, endY: Double, endZ: Double, color: Color, width: Float) {
-        GL11.glPushMatrix()
-        GL11.glLineWidth(width)
-        GL11.glBegin(GL11.GL_LINES)
-
-        GL11.glColor3f(color.red / 255f, color.green / 255f, color.blue / 255f)
-        GL11.glVertex3d(startX, startY, startZ)
-        GL11.glVertex3d(endX, endY, endZ)
-
-        GL11.glEnd()
-        GL11.glPopMatrix()
     }
 
     data class Color(val red: Int, val green: Int, val blue: Int)
