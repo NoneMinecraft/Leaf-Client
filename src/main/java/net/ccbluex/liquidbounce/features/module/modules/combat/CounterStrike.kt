@@ -239,8 +239,6 @@ class CounterStrike : Module() {
 
     @EventTarget
     fun onRender(event: Render2DEvent) {
-
-
         val screenWidth = event.scaledResolution.scaledWidth / 2
         val screenHeight = event.scaledResolution.scaledHeight / 2
         cross(screenWidth, screenHeight)
@@ -605,6 +603,7 @@ class CounterStrike : Module() {
                 alpha = 0
             }
         }
+        armorRender()
         if (findM4() != -1 && findAK() == -1) {
             RenderUtils.drawImage(
                 m4,
@@ -641,7 +640,6 @@ class CounterStrike : Module() {
                 proph4.toInt()
             )
         }
-
         if (findSword() != -1) {
             RenderUtils.drawImage(
                 sword,
@@ -678,7 +676,6 @@ class CounterStrike : Module() {
                 proph.toInt()
             )
         }
-
         if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
             RenderUtils.drawImage(
                 prop1,
@@ -702,7 +699,6 @@ class CounterStrike : Module() {
                 proph.toInt()
             )
         }
-
         if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) { //2,3
             RenderUtils.drawImage(
                 prop2,
@@ -752,7 +748,7 @@ class CounterStrike : Module() {
             )
         }
 
-        when (mc.thePlayer.heldItem.item) {
+        when (mc.thePlayer.heldItem.item?:null) {
             Items.stone_hoe -> {
                 RenderUtils.drawImage(
                     ak2,
@@ -931,64 +927,13 @@ class CounterStrike : Module() {
             }
 
             null -> {
+                armorRender()
                 Select1 = false
                 Select2 = false
                 Select3 = false
             }
         }
-        val playerArmor2 = mc.thePlayer.inventory.armorInventory[3].item as ItemArmor
-        val playerArmor1 = mc.thePlayer.inventory.armorInventory[2].item as ItemArmor
-
-      if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.IRON) {
-          RenderUtils.drawImage(
-              armor1,
-              armorx.get().toInt(),
-              armory.get().toInt(),
-              armorw.get().toInt(),
-              armorh.get().toInt()
-          )
-      }else if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial != ItemArmor.ArmorMaterial.IRON) {
-            RenderUtils.drawImage(
-                armor2,
-                armorx.get().toInt(),
-                armory.get().toInt(),
-                armorw.get().toInt(),
-                armorh.get().toInt()
-            )
-        }else if (playerArmor1.armorMaterial != ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.IRON) {
-            RenderUtils.drawImage(
-                armor3,
-                armorx.get().toInt(),
-                armory.get().toInt(),
-                armorw.get().toInt(),
-                armorh.get().toInt()
-            )
-        }
-        if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.CHAIN) {
-            RenderUtils.drawImage(
-                armor1,
-                armorx.get().toInt(),
-                armory.get().toInt(),
-                armorw.get().toInt(),
-                armorh.get().toInt()
-            )
-        }else if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial != ItemArmor.ArmorMaterial.CHAIN) {
-            RenderUtils.drawImage(
-                armor2,
-                armorx.get().toInt(),
-                armory.get().toInt(),
-                armorw.get().toInt(),
-                armorh.get().toInt()
-            )
-        }else if (playerArmor1.armorMaterial != ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.CHAIN) {
-            RenderUtils.drawImage(
-                armor3,
-                armorx.get().toInt(),
-                armory.get().toInt(),
-                armorw.get().toInt(),
-                armorh.get().toInt()
-            )
-        }
+        armorRender()
     }
 
     @EventTarget
@@ -1074,97 +1019,208 @@ class CounterStrike : Module() {
               ctw = true
                 isStart = false
                 if (musicMode.get() == "Random") {
-                    when (Random.nextInt(1, 10)) {
+                    when (Random.nextInt(1, 26)) {
                         1 -> {
                             LiquidBounce.tipSoundManager.winSound.asyncPlay()
                             sound = "EZ4ENCE"
                         }
-
                         2 -> {
                             LiquidBounce.tipSoundManager.winSound2.asyncPlay()
                             sound = "dashstar"
                         }
-
                         3 -> {
                             LiquidBounce.tipSoundManager.winSound3.asyncPlay()
                             sound = "The Good Youth"
                         }
-
                         4 -> {
                             LiquidBounce.tipSoundManager.winSound4.asyncPlay()
                             sound = "inhuman"
                         }
-
                         5 -> {
                             LiquidBounce.tipSoundManager.winSound5.asyncPlay()
                             sound = "Heading for the Source"
                         }
-
                         6 -> {
                             LiquidBounce.tipSoundManager.winSound6.asyncPlay()
                             sound = "The Lowlife Pack"
                         }
-
                         7 -> {
                             LiquidBounce.tipSoundManager.winSound7.asyncPlay()
                             sound = "Under Bright Lights"
                         }
-
                         8 -> {
                             LiquidBounce.tipSoundManager.winSound8.asyncPlay()
                             sound = "ULTIMATE"
                         }
-
                         9 -> {
                             LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                            sound = "I Am"
+                            sound = "I AM"
                         }
-                    }
-                }else{
+                        10 -> {
+                            LiquidBounce.tipSoundManager.winSound10.asyncPlay()
+                            sound = "u mad!"
+                        }
+                        11 -> {
+                            LiquidBounce.tipSoundManager.winSound11.asyncPlay()
+                            sound = "Void"
+                        }
+                        12 -> {
+                            LiquidBounce.tipSoundManager.winSound12.asyncPlay()
+                            sound = "MVP SOUND 12"
+                        }
+                        13 -> {
+                            LiquidBounce.tipSoundManager.winSound13.asyncPlay()
+                            sound = "MVP SOUND 13"
+                        }
+                        14 -> {
+                            LiquidBounce.tipSoundManager.winSound14.asyncPlay()
+                            sound = "MVP SOUND 14"
+                        }
+                        15 -> {
+                            LiquidBounce.tipSoundManager.winSound15.asyncPlay()
+                            sound = "MVP SOUND 15"
+                        }
+                        16 -> {
+                            LiquidBounce.tipSoundManager.winSound16.asyncPlay()
+                            sound = "MVP SOUND 16"
+                        }
+                        17 -> {
+                            LiquidBounce.tipSoundManager.winSound17.asyncPlay()
+                            sound = "MVP SOUND 17"
+                        }
+                        18 -> {
+                            LiquidBounce.tipSoundManager.winSound18.asyncPlay()
+                            sound = "MVP SOUND 18"
+                        }
+                        19 -> {
+                            LiquidBounce.tipSoundManager.winSound19.asyncPlay()
+                            sound = "MVP SOUND 19"
+                        }
+                        20 -> {
+                            LiquidBounce.tipSoundManager.winSound20.asyncPlay()
+                            sound = "MVP SOUND 20"
+                        }
+                        21 -> {
+                            LiquidBounce.tipSoundManager.winSound21.asyncPlay()
+                            sound = "MVP SOUND 21"
+                        }
+                        22 -> {
+                            LiquidBounce.tipSoundManager.winSound22.asyncPlay()
+                            sound = "MVP SOUND 22"
+                        }
+                        23 -> {
+                            LiquidBounce.tipSoundManager.winSound23.asyncPlay()
+                            sound = "MVP SOUND 23"
+                        }
+                        24 -> {
+                            LiquidBounce.tipSoundManager.winSound24.asyncPlay()
+                            sound = "MVP SOUND 24"
+                        }
+                        25 -> {
+                            LiquidBounce.tipSoundManager.winSound25.asyncPlay()
+                            sound = "MVP SOUND 25"
+                        }
+                    }                }else{
                     when (musicNumber.get()) {
                         1 -> {
                             LiquidBounce.tipSoundManager.winSound.asyncPlay()
                             sound = "EZ4ENCE"
                         }
-
                         2 -> {
                             LiquidBounce.tipSoundManager.winSound2.asyncPlay()
                             sound = "dashstar"
                         }
-
                         3 -> {
                             LiquidBounce.tipSoundManager.winSound3.asyncPlay()
                             sound = "The Good Youth"
                         }
-
                         4 -> {
                             LiquidBounce.tipSoundManager.winSound4.asyncPlay()
                             sound = "inhuman"
                         }
-
                         5 -> {
                             LiquidBounce.tipSoundManager.winSound5.asyncPlay()
                             sound = "Heading for the Source"
                         }
-
                         6 -> {
                             LiquidBounce.tipSoundManager.winSound6.asyncPlay()
                             sound = "The Lowlife Pack"
                         }
-
                         7 -> {
                             LiquidBounce.tipSoundManager.winSound7.asyncPlay()
                             sound = "Under Bright Lights"
                         }
-
                         8 -> {
                             LiquidBounce.tipSoundManager.winSound8.asyncPlay()
                             sound = "ULTIMATE"
                         }
-
                         9 -> {
                             LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                            sound = "I Am"
+                            sound = "I AM"
+                        }
+                        10 -> {
+                            LiquidBounce.tipSoundManager.winSound10.asyncPlay()
+                            sound = "u mad!"
+                        }
+                        11 -> {
+                            LiquidBounce.tipSoundManager.winSound11.asyncPlay()
+                            sound = "Void"
+                        }
+                        12 -> {
+                            LiquidBounce.tipSoundManager.winSound12.asyncPlay()
+                            sound = "MVP SOUND 12"
+                        }
+                        13 -> {
+                            LiquidBounce.tipSoundManager.winSound13.asyncPlay()
+                            sound = "MVP SOUND 13"
+                        }
+                        14 -> {
+                            LiquidBounce.tipSoundManager.winSound14.asyncPlay()
+                            sound = "MVP SOUND 14"
+                        }
+                        15 -> {
+                            LiquidBounce.tipSoundManager.winSound15.asyncPlay()
+                            sound = "MVP SOUND 15"
+                        }
+                        16 -> {
+                            LiquidBounce.tipSoundManager.winSound16.asyncPlay()
+                            sound = "MVP SOUND 16"
+                        }
+                        17 -> {
+                            LiquidBounce.tipSoundManager.winSound17.asyncPlay()
+                            sound = "MVP SOUND 17"
+                        }
+                        18 -> {
+                            LiquidBounce.tipSoundManager.winSound18.asyncPlay()
+                            sound = "MVP SOUND 18"
+                        }
+                        19 -> {
+                            LiquidBounce.tipSoundManager.winSound19.asyncPlay()
+                            sound = "MVP SOUND 19"
+                        }
+                        20 -> {
+                            LiquidBounce.tipSoundManager.winSound20.asyncPlay()
+                            sound = "MVP SOUND 20"
+                        }
+                        21 -> {
+                            LiquidBounce.tipSoundManager.winSound21.asyncPlay()
+                            sound = "MVP SOUND 21"
+                        }
+                        22 -> {
+                            LiquidBounce.tipSoundManager.winSound22.asyncPlay()
+                            sound = "MVP SOUND 22"
+                        }
+                        23 -> {
+                            LiquidBounce.tipSoundManager.winSound23.asyncPlay()
+                            sound = "MVP SOUND 23"
+                        }
+                        24 -> {
+                            LiquidBounce.tipSoundManager.winSound24.asyncPlay()
+                            sound = "MVP SOUND 24"
+                        }
+                        25 -> {
+                            LiquidBounce.tipSoundManager.winSound25.asyncPlay()
+                            sound = "MVP SOUND 25"
                         }
                     }
 
@@ -1176,51 +1232,106 @@ class CounterStrike : Module() {
                 tw = true
                 isStart = false
                 if (musicMode.get() == "Random") {
-                    when (Random.nextInt(1, 10)) {
+                    when (Random.nextInt(1, 26)) {
                         1 -> {
                             LiquidBounce.tipSoundManager.winSound.asyncPlay()
                             sound = "EZ4ENCE"
-
                         }
-
                         2 -> {
                             LiquidBounce.tipSoundManager.winSound2.asyncPlay()
                             sound = "dashstar"
                         }
-
                         3 -> {
                             LiquidBounce.tipSoundManager.winSound3.asyncPlay()
                             sound = "The Good Youth"
                         }
-
                         4 -> {
                             LiquidBounce.tipSoundManager.winSound4.asyncPlay()
                             sound = "inhuman"
                         }
-
                         5 -> {
                             LiquidBounce.tipSoundManager.winSound5.asyncPlay()
                             sound = "Heading for the Source"
                         }
-
                         6 -> {
                             LiquidBounce.tipSoundManager.winSound6.asyncPlay()
                             sound = "The Lowlife Pack"
                         }
-
                         7 -> {
                             LiquidBounce.tipSoundManager.winSound7.asyncPlay()
                             sound = "Under Bright Lights"
                         }
-
                         8 -> {
                             LiquidBounce.tipSoundManager.winSound8.asyncPlay()
                             sound = "ULTIMATE"
                         }
-
                         9 -> {
                             LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                            sound = "I Am"
+                            sound = "I AM"
+                        }
+                        10 -> {
+                            LiquidBounce.tipSoundManager.winSound10.asyncPlay()
+                            sound = "u mad!"
+                        }
+                        11 -> {
+                            LiquidBounce.tipSoundManager.winSound11.asyncPlay()
+                            sound = "Void"
+                        }
+                        12 -> {
+                            LiquidBounce.tipSoundManager.winSound12.asyncPlay()
+                            sound = "MVP SOUND 12"
+                        }
+                        13 -> {
+                            LiquidBounce.tipSoundManager.winSound13.asyncPlay()
+                            sound = "MVP SOUND 13"
+                        }
+                        14 -> {
+                            LiquidBounce.tipSoundManager.winSound14.asyncPlay()
+                            sound = "MVP SOUND 14"
+                        }
+                        15 -> {
+                            LiquidBounce.tipSoundManager.winSound15.asyncPlay()
+                            sound = "MVP SOUND 15"
+                        }
+                        16 -> {
+                            LiquidBounce.tipSoundManager.winSound16.asyncPlay()
+                            sound = "MVP SOUND 16"
+                        }
+                        17 -> {
+                            LiquidBounce.tipSoundManager.winSound17.asyncPlay()
+                            sound = "MVP SOUND 17"
+                        }
+                        18 -> {
+                            LiquidBounce.tipSoundManager.winSound18.asyncPlay()
+                            sound = "MVP SOUND 18"
+                        }
+                        19 -> {
+                            LiquidBounce.tipSoundManager.winSound19.asyncPlay()
+                            sound = "MVP SOUND 19"
+                        }
+                        20 -> {
+                            LiquidBounce.tipSoundManager.winSound20.asyncPlay()
+                            sound = "MVP SOUND 20"
+                        }
+                        21 -> {
+                            LiquidBounce.tipSoundManager.winSound21.asyncPlay()
+                            sound = "MVP SOUND 21"
+                        }
+                        22 -> {
+                            LiquidBounce.tipSoundManager.winSound22.asyncPlay()
+                            sound = "MVP SOUND 22"
+                        }
+                        23 -> {
+                            LiquidBounce.tipSoundManager.winSound23.asyncPlay()
+                            sound = "MVP SOUND 23"
+                        }
+                        24 -> {
+                            LiquidBounce.tipSoundManager.winSound24.asyncPlay()
+                            sound = "MVP SOUND 24"
+                        }
+                        25 -> {
+                            LiquidBounce.tipSoundManager.winSound25.asyncPlay()
+                            sound = "MVP SOUND 25"
                         }
                     }
                 }else{
@@ -1229,48 +1340,103 @@ class CounterStrike : Module() {
                             LiquidBounce.tipSoundManager.winSound.asyncPlay()
                             sound = "EZ4ENCE"
                         }
-
                         2 -> {
                             LiquidBounce.tipSoundManager.winSound2.asyncPlay()
                             sound = "dashstar"
                         }
-
                         3 -> {
                             LiquidBounce.tipSoundManager.winSound3.asyncPlay()
                             sound = "The Good Youth"
                         }
-
                         4 -> {
                             LiquidBounce.tipSoundManager.winSound4.asyncPlay()
                             sound = "inhuman"
                         }
-
                         5 -> {
                             LiquidBounce.tipSoundManager.winSound5.asyncPlay()
                             sound = "Heading for the Source"
                         }
-
                         6 -> {
                             LiquidBounce.tipSoundManager.winSound6.asyncPlay()
                             sound = "The Lowlife Pack"
                         }
-
                         7 -> {
                             LiquidBounce.tipSoundManager.winSound7.asyncPlay()
                             sound = "Under Bright Lights"
                         }
-
                         8 -> {
                             LiquidBounce.tipSoundManager.winSound8.asyncPlay()
                             sound = "ULTIMATE"
                         }
-
                         9 -> {
                             LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                            sound = "I Am"
+                            sound = "I AM"
+                        }
+                        10 -> {
+                            LiquidBounce.tipSoundManager.winSound10.asyncPlay()
+                            sound = "u mad!"
+                        }
+                        11 -> {
+                            LiquidBounce.tipSoundManager.winSound11.asyncPlay()
+                            sound = "Void"
+                        }
+                        12 -> {
+                            LiquidBounce.tipSoundManager.winSound12.asyncPlay()
+                            sound = "MVP SOUND 12"
+                        }
+                        13 -> {
+                            LiquidBounce.tipSoundManager.winSound13.asyncPlay()
+                            sound = "MVP SOUND 13"
+                        }
+                        14 -> {
+                            LiquidBounce.tipSoundManager.winSound14.asyncPlay()
+                            sound = "MVP SOUND 14"
+                        }
+                        15 -> {
+                            LiquidBounce.tipSoundManager.winSound15.asyncPlay()
+                            sound = "MVP SOUND 15"
+                        }
+                        16 -> {
+                            LiquidBounce.tipSoundManager.winSound16.asyncPlay()
+                            sound = "MVP SOUND 16"
+                        }
+                        17 -> {
+                            LiquidBounce.tipSoundManager.winSound17.asyncPlay()
+                            sound = "MVP SOUND 17"
+                        }
+                        18 -> {
+                            LiquidBounce.tipSoundManager.winSound18.asyncPlay()
+                            sound = "MVP SOUND 18"
+                        }
+                        19 -> {
+                            LiquidBounce.tipSoundManager.winSound19.asyncPlay()
+                            sound = "MVP SOUND 19"
+                        }
+                        20 -> {
+                            LiquidBounce.tipSoundManager.winSound20.asyncPlay()
+                            sound = "MVP SOUND 20"
+                        }
+                        21 -> {
+                            LiquidBounce.tipSoundManager.winSound21.asyncPlay()
+                            sound = "MVP SOUND 21"
+                        }
+                        22 -> {
+                            LiquidBounce.tipSoundManager.winSound22.asyncPlay()
+                            sound = "MVP SOUND 22"
+                        }
+                        23 -> {
+                            LiquidBounce.tipSoundManager.winSound23.asyncPlay()
+                            sound = "MVP SOUND 23"
+                        }
+                        24 -> {
+                            LiquidBounce.tipSoundManager.winSound24.asyncPlay()
+                            sound = "MVP SOUND 24"
+                        }
+                        25 -> {
+                            LiquidBounce.tipSoundManager.winSound25.asyncPlay()
+                            sound = "MVP SOUND 25"
                         }
                     }
-
                 }
 
             }
@@ -1340,7 +1506,61 @@ class CounterStrike : Module() {
         }
         return -1
     }
-    private fun findProp3(): Int {
+    private fun armorRender () {
+        val playerArmor2 = mc.thePlayer.inventory.armorInventory[3].item as ItemArmor
+        val playerArmor1 = mc.thePlayer.inventory.armorInventory[2].item as ItemArmor
+
+        if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.IRON) {
+            RenderUtils.drawImage(
+                armor1,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }else if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial != ItemArmor.ArmorMaterial.IRON) {
+            RenderUtils.drawImage(
+                armor2,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }else if (playerArmor1.armorMaterial != ItemArmor.ArmorMaterial.IRON && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.IRON) {
+            RenderUtils.drawImage(
+                armor3,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }
+        if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.CHAIN) {
+            RenderUtils.drawImage(
+                armor1,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }else if (playerArmor1.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial != ItemArmor.ArmorMaterial.CHAIN) {
+            RenderUtils.drawImage(
+                armor2,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }else if (playerArmor1.armorMaterial != ItemArmor.ArmorMaterial.CHAIN && playerArmor2.armorMaterial == ItemArmor.ArmorMaterial.CHAIN) {
+            RenderUtils.drawImage(
+                armor3,
+                armorx.get().toInt(),
+                armory.get().toInt(),
+                armorw.get().toInt(),
+                armorh.get().toInt()
+            )
+        }
+    }    private fun findProp3(): Int {
         for (i in 0 until net.ccbluex.liquidbounce.utils.mc.thePlayer.inventory.mainInventory.size) {
             val stack = net.ccbluex.liquidbounce.utils.mc.thePlayer.inventory.getStackInSlot(i)
             if (stack != null && stack.item == Items.potato) {
