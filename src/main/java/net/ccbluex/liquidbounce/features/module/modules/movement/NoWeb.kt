@@ -17,8 +17,10 @@ import net.ccbluex.liquidbounce.value.ListValue
 @ModuleInfo(name = "NoWeb", category = ModuleCategory.MOVEMENT)
 class NoWeb : Module() {
 
-    private val modeValue = ListValue("Mode", arrayOf("None", "OldAAC", "LAAC", "Rewinside", "Horizon", "Spartan", "AAC4", "AAC5", "Matrix", "Test"), "None")
+    private val modeValue = ListValue("Mode", arrayOf("None", "Intave", "LAAC", "Rewinside", "Horizon", "Spartan", "AAC4", "AAC5", "Matrix", "Test","Fall"), "None")
     private val horizonSpeed = FloatValue("HorizonSpeed", 0.1F, 0.01F, 0.8F)
+    private val speed = FloatValue("Speed", 1.3F, 1F, 5F)
+    private val minSpeed = FloatValue("MinSpeed", 0.9F, 0.1F, 2F)
 
     private var usedTimer = false
 
@@ -34,12 +36,21 @@ class NoWeb : Module() {
 
         when (modeValue.get().lowercase()) {
             "none" -> mc.thePlayer.isInWeb = false
-            "oldaac" -> {
-                mc.thePlayer.jumpMovementFactor = 0.59f
-
-                if (!mc.gameSettings.keyBindSneak.isKeyDown) {
-                    mc.thePlayer.motionY = 0.0
+            "Intave" -> {
+                if (MovementUtils.isMoving() && mc.thePlayer.moveStrafing == 0.0f) {
+                    if (mc.thePlayer.onGround) {
+                        if (mc.thePlayer.ticksExisted % 3 == 0) {
+                            MovementUtils.strafe(0.734f)
+                        } else {
+                            mc.thePlayer.jump()
+                            MovementUtils.strafe(0.346f)
+                        }
+                    }
                 }
+            }
+            "fall"->{
+                if (mc.thePlayer.onGround) mc.thePlayer.jump()
+                if (mc.thePlayer.fallDistance > 0.01) mc.timer.timerSpeed = speed.get() else {mc.timer.timerSpeed = minSpeed.get()}
             }
             "laac" -> {
                 mc.thePlayer.jumpMovementFactor = if (mc.thePlayer.movementInput.moveStrafe != 0f) 1.0f else 1.21f

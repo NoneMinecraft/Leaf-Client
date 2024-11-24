@@ -52,7 +52,7 @@ class Speed : Module() {
             alert("Speed: " + MovementUtils.getSpeed().toString())
             alert("YMotion: " + mc.thePlayer.motionY.toString())
         }
-        
+
         if (MovementUtils.isMoving()) {
             mc.thePlayer.isSprinting = true
         }
@@ -86,7 +86,7 @@ class Speed : Module() {
 
         mode.onTick()
     }
-    
+
     @EventTarget
     fun onPacket(event: PacketEvent) {
         mode.onPacket(event)
@@ -114,9 +114,6 @@ class Speed : Module() {
     override val tag: String
         get() = modeValue.get()
 
-    /**
-     * 读取mode中的value并和本体中的value合并
-     * 所有的value必须在这个之前初始化
-      */
+
     override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
 }

@@ -55,7 +55,7 @@ class FastFall : Module() {
         }
         }
         if (modeValue.get()=="Motion"){
-            mc.thePlayer.motionY = - 1.0
+            mc.thePlayer.motionY = -1.0
         }
     }
 

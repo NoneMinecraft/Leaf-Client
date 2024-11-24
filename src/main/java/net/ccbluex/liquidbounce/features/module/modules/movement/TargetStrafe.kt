@@ -1,6 +1,7 @@
 /*
- * Leaf Hacked Client
- * Code by NoneMinecraft
+ * FDPClient Hacked Client
+ * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
+ * https://github.com/SkidderMC/FDPClient/
  */
 package net.ccbluex.liquidbounce.features.module.modules.movement
 
@@ -10,7 +11,7 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.MovementUtils
-import net.ccbluex.liquidbounce.utils3.RotationUtils
+import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.render.ColorManager
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.value.BoolValue
@@ -201,10 +202,10 @@ class TargetStrafe : Module() {
                     return
                 }
                 var aroundVoid = false
-                for (x in -1..0) for (z in -1..0) 
-                    if (isVoid(x, z)) 
+                for (x in -1..0) for (z in -1..0)
+                    if (isVoid(x, z))
                         aroundVoid = true
-                if (aroundVoid) 
+                if (aroundVoid)
                     direction *= -1
                 var _1IlIll1 = 0
                 if (radiusModeValue.get().equals("Strict", ignoreCase = true)) {
@@ -213,7 +214,7 @@ class TargetStrafe : Module() {
                 MovementUtils.doTargetStrafe(_entity, direction.toFloat(), radiusValue.get(), event, _1IlIll1.toInt())
                 callBackYaw = RotationUtils.getRotationsEntity(_entity).yaw.toDouble()
                 isEnabled = true
-                if (!thirdPersonViewValue.get()) 
+                if (!thirdPersonViewValue.get())
                     return
                 mc.gameSettings.thirdPersonView = if (canStrafe(target)) 3 else 0
             }else {
@@ -224,9 +225,9 @@ class TargetStrafe : Module() {
         }
     }
 
-        private fun canStrafe(target: EntityLivingBase?): Boolean {
-            return target != null && (!holdSpaceValue.get() || mc.thePlayer.movementInput.jump) && (!onlySpeedValue.get() || LiquidBounce.moduleManager[Speed::class.java]!!.state)
-        }
+    private fun canStrafe(target: EntityLivingBase?): Boolean {
+        return target != null && (!holdSpaceValue.get() || mc.thePlayer.movementInput.jump) && (!onlySpeedValue.get() || LiquidBounce.moduleManager[Speed::class.java]!!.state)
+    }
 
     fun modifyStrafe(event: StrafeEvent):Boolean {
         if(!isEnabled || event.isCancelled) {
