@@ -14,7 +14,7 @@ public class RenderWings extends ModelBase {
     private boolean playerUsesFullHeight;
 
     public RenderWings() {
-        this.location = new ResourceLocation("fdpclient/wings/wings.png");
+        this.location = new ResourceLocation("leaf/wings/wings.png");
         this.playerUsesFullHeight = true;
         this.setTextureOffset("wing.bone", 0, 0);
         this.setTextureOffset("wing.skin", -10, 8);

@@ -1,14 +1,9 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+
 package net.ccbluex.liquidbounce.utils
 
 import net.ccbluex.liquidbounce.event.StrafeEvent
 import net.ccbluex.liquidbounce.features.module.modules.client.Rotations
 import net.ccbluex.liquidbounce.utils.block.PlaceInfo
-import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3

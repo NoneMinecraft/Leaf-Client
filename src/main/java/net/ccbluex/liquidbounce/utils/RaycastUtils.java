@@ -1,12 +1,7 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+
 package net.ccbluex.liquidbounce.utils;
 
 import com.google.common.base.Predicates;
-import net.ccbluex.liquidbounce.utils3.RotationUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
 
@@ -15,7 +10,7 @@ import java.util.List;
 public final class RaycastUtils extends MinecraftInstance {
 
     public static Entity raycastEntity(final double range, final IEntityFilter entityFilter) {
-        return raycastEntity(range, net.ccbluex.liquidbounce.utils3.RotationUtils.serverRotation.getYaw(), RotationUtils.serverRotation.getPitch(),
+        return raycastEntity(range, RotationUtils.serverRotation.getYaw(), RotationUtils.serverRotation.getPitch(),
                 entityFilter);
     }
 

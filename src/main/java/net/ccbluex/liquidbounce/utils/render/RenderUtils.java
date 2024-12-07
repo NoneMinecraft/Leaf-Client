@@ -1,8 +1,4 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+
 package net.ccbluex.liquidbounce.utils.render;
 
 import net.ccbluex.liquidbounce.injection.access.StaticStorage;
@@ -405,7 +401,7 @@ public final class RenderUtils extends MinecraftInstance {
         final boolean disableAlpha = !glIsEnabled(GL_ALPHA_TEST);
         if (!enableBlend) glEnable(GL_BLEND);
         if (!disableAlpha) glDisable(GL_ALPHA_TEST);
-        mc.getTextureManager().bindTexture(new ResourceLocation("fdpclient/ui/shadow/" + image + ".png"));
+        mc.getTextureManager().bindTexture(new ResourceLocation("leaf/ui/shadow/" + image + ".png"));
         GlStateManager.color(1F, 1F, 1F, 1F);
         RenderUtils.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
         if (!enableBlend) glDisable(GL_BLEND);

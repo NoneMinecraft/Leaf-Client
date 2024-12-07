@@ -1,8 +1,4 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+
 package net.ccbluex.liquidbounce.utils;
 
 import net.ccbluex.liquidbounce.event.EventTarget;
@@ -88,14 +84,18 @@ public final class RotationUtils extends MinecraftInstance implements Listenable
      * @param entity
      * @return
      */
-
+    public static Rotation getRotationsEntity(EntityLivingBase entity) {
+        return RotationUtils.getRotations(entity.posX, entity.posY + entity.getEyeHeight() - 0.4, entity.posZ);
+    }
 
     /**
      *
      * @param entity
      * @return
      */
-
+    public static Rotation getRotationsNonLivingEntity(Entity entity) {
+        return RotationUtils.getRotations(entity.posX, entity.posY + (entity.getEntityBoundingBox().maxY-entity.getEntityBoundingBox().minY)*0.5, entity.posZ);
+    }
 
     /**
      * Face target with bow
@@ -527,7 +527,8 @@ public final class RotationUtils extends MinecraftInstance implements Listenable
 
         rotation.fixedSensitivity(mc.gameSettings.mouseSensitivity);
         targetRotation = rotation;
-
+        RotationUtils.keepLength = keepLength;
+        RotationUtils.revTick = 0;
     }
     
     public static void setTargetRotationReverse(final Rotation rotation, final int keepLength, final int revTick) {
@@ -537,7 +538,8 @@ public final class RotationUtils extends MinecraftInstance implements Listenable
 
         rotation.fixedSensitivity(mc.gameSettings.mouseSensitivity);
         targetRotation = rotation;
-
+        RotationUtils.keepLength = keepLength;
+        RotationUtils.revTick = revTick+1;
     }
     
     /**
@@ -555,8 +557,7 @@ public final class RotationUtils extends MinecraftInstance implements Listenable
         double x = ent.posX;
         double z = ent.posZ;
         double y = ent.posY + (double)(ent.getEyeHeight() / 2.0f);
-
-        return null;
+        return RotationUtils.getRotationFromPosition(x, z, y);
     }
 
 
@@ -568,7 +569,7 @@ public final class RotationUtils extends MinecraftInstance implements Listenable
      * @return
      */
     public static Rotation getRotations(double posX, double posY, double posZ) {
-        EntityPlayerSP player = net.ccbluex.liquidbounce.utils3.RotationUtils.mc.thePlayer;
+        EntityPlayerSP player = RotationUtils.mc.thePlayer;
         double x = posX - player.posX;
         double y = posY - (player.posY + (double)player.getEyeHeight());
         double z = posZ - player.posZ;

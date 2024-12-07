@@ -1,4 +1,3 @@
-
 package net.ccbluex.liquidbounce.utils
 
 import com.google.gson.JsonObject
@@ -11,7 +10,7 @@ import org.lwjgl.opengl.Display
 object
 ClientUtils : MinecraftInstance() {
     @JvmStatic
-    val logger = LogManager.getLogger("Leaf")
+    val logger = LogManager.getLogger("LeafClient")
 
 
     fun logInfo(msg: String) {
@@ -35,10 +34,10 @@ ClientUtils : MinecraftInstance() {
     }
 
     fun setTitle() {
-        Display.setTitle("${LiquidBounce.CLIENT_NAME} ${LiquidBounce.CLIENT_VERSION} (${LiquidBounce.CLIENT_BRANCH}) | ${LiquidBounce.CLIENT_WEBSITE}")
+        Display.setTitle("Leaf Client")
     }
     fun setTitle(stats:String) {
-        Display.setTitle("${LiquidBounce.CLIENT_NAME} ${LiquidBounce.CLIENT_VERSION} (${LiquidBounce.CLIENT_BRANCH}) | ${LiquidBounce.CLIENT_WEBSITE} - " + stats)
+        Display.setTitle("Leaf Client")
     }
 
     fun displayAlert(message: String) {
