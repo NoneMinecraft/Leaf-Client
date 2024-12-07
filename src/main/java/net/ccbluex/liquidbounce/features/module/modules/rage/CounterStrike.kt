@@ -1747,12 +1747,23 @@ class CounterStrike : Module() {
         val anglePerSegment = (2 * Math.PI / segments).toFloat()
 
         GL11.glPushMatrix()
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-        GL11.glColor4f(1f, 1f, 1f, 1f) // 设置白色
 
+        // 启用线条平滑
+        GL11.glEnable(GL11.GL_LINE_SMOOTH)
+        // 设置合适的混合模式
+        GL11.glEnable(GL11.GL_BLEND)
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+
+        // 禁用纹理映射
+        GL11.glDisable(GL11.GL_TEXTURE_2D)
+
+        // 设置线条颜色为白色，透明度为1
+        GL11.glColor4f(1f, 1f, 1f, 1f)
+
+        // 设置线条宽度
         GL11.glLineWidth(3f)
+
+        // 开始绘制
         GL11.glBegin(GL11.GL_LINE_STRIP)
         for (i in 0..(segments * progress).toInt()) {
             val angle = i * anglePerSegment
@@ -1762,10 +1773,16 @@ class CounterStrike : Module() {
         }
         GL11.glEnd()
 
-        GL11.glEnable(GL11.GL_TEXTURE_2D)
+        // 关闭平滑和混合设置
+        GL11.glDisable(GL11.GL_LINE_SMOOTH)
         GL11.glDisable(GL11.GL_BLEND)
+
+        // 重新启用纹理映射
+        GL11.glEnable(GL11.GL_TEXTURE_2D)
+
         GL11.glPopMatrix()
     }
+
 
 
     private fun drawBlackPanel3(x: Double, y: Double, width: Double, height: Double) {

@@ -11,5 +11,6 @@ enum class WeaponType(val items: List<Item>) {
     MP7(listOf(Items.stone_shovel)),
     P250(listOf(Items.wooden_pickaxe)),
     DEAGLE(listOf(Items.golden_pickaxe)),
-    SHOTGUN(listOf(Items.diamond_shovel));
+    SHOTGUN(listOf(Items.diamond_shovel)),
+    PISTOL(listOf(Items.wooden_pickaxe, Items.golden_pickaxe));
 }
