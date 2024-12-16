@@ -22,9 +22,10 @@ class VAC : Module() {
     }
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
+        val player = mc?.thePlayer ?: return
         val targetPlayer = mc.theWorld.playerEntities
             .filterIsInstance<EntityPlayer>()
-            .filter { it != mc.thePlayer && ((it.posX - it.prevPosX) <= velocityThreshold.get().toDouble() && (it.posY - it.prevPosY) <= velocityThreshold.get().toDouble() && (it.posZ - it.prevPosZ <= velocityThreshold.get().toDouble())) && !it.onGround}
+            .filter { it != player && ((it.posX - it.prevPosX) <= velocityThreshold.get().toDouble() && (it.posY - it.prevPosY) <= velocityThreshold.get().toDouble() && (it.posZ - it.prevPosZ <= velocityThreshold.get().toDouble())) && !it.onGround}
             .firstOrNull { true }
         targetPlayer?.let {
             vl ++

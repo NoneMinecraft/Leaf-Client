@@ -55,17 +55,9 @@ class CounterStrike : Module() {
     private val sizeValue = FloatValue("Cross-Length", 7f, 0.25f, 15f)
     private val gapValue = FloatValue("Cross-Gap", 5f, 0.25f, 15f)
     private val dynamicValue = BoolValue("Cross-Dynamic", true)
-
     private var kills = 0
     private var startTime = 0L
     private var countdownSeconds = 45
-
-    private val armorx = FloatValue("armorx", 0f, -200f, 200f)
-    private val armory = FloatValue("armory", 0f, -200f, 200f)
-    private val armorw = FloatValue("armorw", 0f, -200f, 200f)
-    private val armorh = FloatValue("armorh", 0f, -200f, 200f)
-
-
     private val propx = 468.0
     private val propy = 240.0
     private val propx2 = 443.0
@@ -74,8 +66,6 @@ class CounterStrike : Module() {
     private val propy4 = 234.0
     private val propx5 = 450.0
     private val propy5 = 226.0
-
-
     private val xxx =-25
     private val yyy =-53
     private val vxx = -37
