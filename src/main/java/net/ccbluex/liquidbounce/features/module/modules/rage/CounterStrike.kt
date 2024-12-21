@@ -10,10 +10,12 @@ import net.ccbluex.liquidbounce.features.MainLib
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.features.module.modules.rage.rage.render.drawPanel
+import net.ccbluex.liquidbounce.features.module.modules.rage.rage.render.drawText
+import net.ccbluex.liquidbounce.features.module.modules.rage.rage.search.findItem
 import net.ccbluex.liquidbounce.ui.font.Fonts
 import net.ccbluex.liquidbounce.utils.render.RenderUtils
 import net.ccbluex.liquidbounce.value.*
-import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
@@ -24,6 +26,7 @@ import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.network.play.server.S45PacketTitle
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
+import java.awt.Color
 import java.lang.System.currentTimeMillis
 import kotlin.random.Random
 
@@ -54,6 +57,7 @@ class CounterStrike : Module() {
     private val widthValue = FloatValue("Cross-Width", 0.5f, 0.25f, 10f)
     private val sizeValue = FloatValue("Cross-Length", 7f, 0.25f, 15f)
     private val gapValue = FloatValue("Cross-Gap", 5f, 0.25f, 15f)
+    private val stepCross = IntegerValue("Cross-Step", 10, 1, 40)
     private val dynamicValue = BoolValue("Cross-Dynamic", true)
     private var kills = 0
     private var startTime = 0L
@@ -225,49 +229,18 @@ class CounterStrike : Module() {
     fun onRender(event: Render2DEvent) {
         val screenWidth = event.scaledResolution.scaledWidth / 2
         val screenHeight = event.scaledResolution.scaledHeight / 2
-        cross(screenWidth, screenHeight)
+        cross(screenWidth, screenHeight,stepCross.get())
         if (!can) {
             kd = all.toDouble() / die.toDouble()
             can = true
         }
 
         drawBlackPanel4(vx.toDouble() + Xoffset2.get(), vy.toDouble() + Yoffset2.get(), vw.toDouble(), vh.toDouble())
-        drawBlackPanel3(
-            vx2.toDouble() + Xoffset2.get(),
-            vy2 + Yoffset2.get().toDouble(),
-            vw2.toDouble(),
-            vh2.toDouble()
-        )
-        drawBlackPanel3(
-            vx3.toDouble() + Xoffset2.get(),
-            vy3 + Yoffset2.get().toDouble(),
-            vw3.toDouble(),
-            vh3.toDouble()
-        )
-        drawText3(
-            "$timerMinute:$timerSecounds",
-            tx.toInt() + Xoffset2.get().toInt(),
-            ty.toInt() + Yoffset2.get().toInt(),
-            255,
-            255,
-            255
-        )
-        drawText3(
-            ctwinValue.toString(),
-            tx2.toInt() + Xoffset2.get().toInt(),
-            ty2.toInt() + Yoffset2.get().toInt(),
-            191,
-            215,
-            234
-        )
-        drawText3(
-            twinValue.toString(),
-            tx3.toInt() + Xoffset2.get().toInt(),
-            ty3.toInt() + Yoffset2.get().toInt(),
-            228,
-            224,
-            175
-        )
+        drawBlackPanel3(vx2+ Xoffset2.get(), vy2 + Yoffset2.get().toDouble(), vw2.toDouble(), vh2.toDouble())
+        drawBlackPanel3(vx3 + Xoffset2.get(), vy3 + Yoffset2.get().toDouble(), vw3.toDouble(), vh3.toDouble())
+        drawText1("$timerMinute:$timerSecounds", tx.toInt() + Xoffset2.get().toInt(), ty.toInt() + Yoffset2.get().toInt(), 255, 255, 255)
+        drawText1(ctwinValue.toString(), tx2.toInt() + Xoffset2.get().toInt(), ty2.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+        drawText1(twinValue.toString(), tx3.toInt() + Xoffset2.get().toInt(), ty3.toInt() + Yoffset2.get().toInt(), 228, 224, 175)
 
         if (isRenderA) {
             val scaledResolution = ScaledResolution(mc)
@@ -297,7 +270,7 @@ class CounterStrike : Module() {
                 radiuss.toFloat(),
                 remainingTime.toFloat() / countdownSeconds
             )
-            drawText3(
+            drawText1(
                 "Location: A",
                 centerX + vxx2 + Xoffset3.get().toInt(),
                 centerY + vyy2 + Yoffset3.get().toInt(),
@@ -305,7 +278,7 @@ class CounterStrike : Module() {
                 255,
                 255
             )
-            drawText3(
+            drawText1(
                 "Time: $remainingTime",
                 centerX + vxx3 + Xoffset3.get().toInt(),
                 centerY + vyy3 + Yoffset3.get().toInt(),
@@ -342,7 +315,7 @@ class CounterStrike : Module() {
                 radiuss,
                 remainingTime.toFloat() / countdownSeconds
             )
-            drawText3(
+            drawText1(
                 "Location: B",
                 centerX + vxx2 + Xoffset3.get().toInt(),
                 centerY + vyy2 + Yoffset3.get().toInt(),
@@ -350,7 +323,7 @@ class CounterStrike : Module() {
                 255,
                 255
             )
-            drawText3(
+            drawText1(
                 "Time: $remainingTime",
                 centerX + vxx3 + Xoffset3.get().toInt(),
                 centerY + vyy3 + Yoffset3.get().toInt(),
@@ -386,7 +359,7 @@ class CounterStrike : Module() {
                     imgWidth,
                     imgHeight
                 )
-                drawText4(
+                drawText2(
                     "Counter-Terrorists Win",
                     textX.toInt() + Xoffset2.get().toInt(),
                     textY.toInt() + Yoffset2.get().toInt(),
@@ -394,7 +367,7 @@ class CounterStrike : Module() {
                     215,
                     234
                 )
-                drawText5(
+                drawText3(
                     "KillStreak: You killed $kills players in the round",
                     MVPX.toInt() + Xoffset2.get().toInt(),
                     MVPY.toInt() + Yoffset2.get().toInt(),
@@ -406,7 +379,7 @@ class CounterStrike : Module() {
                     all += kills
                     can = true
                 }
-                drawText5(
+                drawText3(
                     "Now Playing: $sound",
                     soundTextX.toInt() + Xoffset2.get().toInt(),
                     soundTextY.toInt() + Yoffset2.get().toInt(),
@@ -499,7 +472,7 @@ class CounterStrike : Module() {
                     imgWidth,
                     imgHeight
                 )
-                drawText4(
+                drawText2(
                     "Terrorists Win",
                     textX.toInt() + Xoffset2.get().toInt(),
                     textY.toInt() + Yoffset2.get().toInt(),
@@ -507,7 +480,7 @@ class CounterStrike : Module() {
                     215,
                     234
                 )
-                drawText5(
+                drawText3(
                     "KillStreak: You killed $kills players in the round",
                     MVPX.toInt() + Xoffset2.get().toInt(),
                     MVPY.toInt() + Yoffset2.get().toInt(),
@@ -519,7 +492,7 @@ class CounterStrike : Module() {
                     all += kills
                     can = true
                 }
-                drawText5(
+                drawText3(
                     "Now Playing: $sound",
                     soundTextX.toInt() + Xoffset2.get().toInt(),
                     soundTextY.toInt() + Yoffset2.get().toInt(),
@@ -587,339 +560,7 @@ class CounterStrike : Module() {
                 alpha = 0
             }
         }
-
-        if (findM4() != -1 && findAK() == -1) {
-            RenderUtils.drawImage(
-                m4,
-                propx2.toInt() + Xoffset.get().toInt(),
-                propy2.toInt() - 13 + YOffset.get().toInt(),
-                propw2.toInt(),
-                proph2.toInt()
-            )
-        }
-        if (findAK() != -1 && findM4() == -1) {
-            RenderUtils.drawImage(
-                ak,
-                propx2.toInt() + Xoffset.get().toInt(),
-                propy2.toInt() - 13 + YOffset.get().toInt(),
-                propw2.toInt(),
-                proph2.toInt()
-            )
-        }
-        if (p2000() != -1 && findDesertEagle() == -1) {
-            RenderUtils.drawImage(
-                p2000,
-                propx4.toInt() + Xoffset.get().toInt(),
-                propy4.toInt() - 25 + YOffset.get().toInt(),
-                propw4.toInt(),
-                proph4.toInt()
-            )
-        }
-        if (findDesertEagle() != -1 && p2000() == -1) {
-            RenderUtils.drawImage(
-                DesertEagle,
-                propx4.toInt() + Xoffset.get().toInt(),
-                propy4.toInt() - 25 + YOffset.get().toInt(),
-                propw4.toInt(),
-                proph4.toInt()
-            )
-        }
-        if (findSword() != -1) {
-            RenderUtils.drawImage(
-                sword,
-                propx5.toInt() + Xoffset.get().toInt(),
-                propy5.toInt() + YOffset.get().toInt(),
-                propw3.toInt(),
-                proph3.toInt()
-            )
-        }
-        if (findProp() != -1 && findProp2() == -1 && findProp3() == -1) {
-            RenderUtils.drawImage(
-                prop1,
-                propx.toInt() + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-        }
-        if (findProp2() != -1 && findProp() == -1 && findProp3() == -1) {
-            RenderUtils.drawImage(
-                prop2,
-                propx.toInt() + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-        }
-        if (findProp3() != -1 && findProp() == -1 && findProp2() == -1) {
-            RenderUtils.drawImage(
-                prop6,
-                propx.toInt() + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-        }
-        if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
-            RenderUtils.drawImage(
-                prop1,
-                propx.toInt() + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-            RenderUtils.drawImage(
-                prop2,
-                propx.toInt() - 10 + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-            RenderUtils.drawImage(
-                prop6,
-                propx.toInt() - 20 + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-        }
-        if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) { //2,3
-            RenderUtils.drawImage(
-                prop2,
-                propx.toInt() + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-            RenderUtils.drawImage(
-                prop6,
-                propx.toInt() + Xoffset.get().toInt() - 10,
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-        }
-        if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) { // 1,2
-            RenderUtils.drawImage(
-                prop1,
-                propx.toInt() + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-            RenderUtils.drawImage(
-                prop2,
-                propx.toInt() - 10 + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-        }
-        if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) { // 1,3
-            RenderUtils.drawImage(
-                prop1,
-                propx.toInt() + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-            RenderUtils.drawImage(
-                prop6,
-                propx.toInt() - 10 + Xoffset.get().toInt(),
-                propy.toInt() + YOffset.get().toInt(),
-                propw.toInt(),
-                proph.toInt()
-            )
-        }
-
-        val player = mc.thePlayer ?: return
-        val heldItem = player.heldItem ?: return
-
-        when (heldItem.item) {
-            Items.stone_hoe -> {
-                RenderUtils.drawImage(
-                    ak2,
-                    propx2.toInt() + Xoffset.get().toInt(),
-                    propy2.toInt() - 13 + YOffset.get().toInt(),
-                    propw2.toInt(),
-                    proph2.toInt()
-                )
-            }
-
-            Items.iron_hoe -> {
-                RenderUtils.drawImage(
-                    m42,
-                    propx2.toInt() + Xoffset.get().toInt(),
-                    propy2.toInt() - 13 + YOffset.get().toInt(),
-                    propw2.toInt(),
-                    proph2.toInt()
-                )
-            }
-
-            Items.wooden_pickaxe -> {
-                RenderUtils.drawImage(
-                    p20002,
-                    propx4.toInt() + Xoffset.get().toInt(),
-                    propy4.toInt() - 25 + YOffset.get().toInt(),
-                    propw4.toInt(),
-                    proph4.toInt()
-                )
-            }
-
-            Items.golden_pickaxe -> {
-                RenderUtils.drawImage(
-                    DesertEagle2,
-                    propx4.toInt() + Xoffset.get().toInt(),
-                    propy4.toInt() - 25 + YOffset.get().toInt(),
-                    propw4.toInt(),
-                    proph4.toInt()
-                )
-            }
-
-            Items.iron_axe -> {
-                RenderUtils.drawImage(
-                    sword2,
-                    propx5.toInt() + Xoffset.get().toInt(),
-                    propy5.toInt() + YOffset.get().toInt(),
-                    propw3.toInt(),
-                    proph3.toInt()
-                )
-            }
-
-            Items.stone_axe -> {
-                RenderUtils.drawImage(
-                    sword2,
-                    propx5.toInt() + Xoffset.get().toInt(),
-                    propy5.toInt() + YOffset.get().toInt(),
-                    propw3.toInt(),
-                    proph3.toInt()
-                )
-            }
-
-            Items.blaze_powder -> {
-                if (findProp() != -1 && findProp2() == -1 && findProp3() == -1) {
-                    RenderUtils.drawImage(
-                        prop4,
-                        propx.toInt() + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
-                    RenderUtils.drawImage(
-                        prop4,
-                        propx.toInt() + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) {
-                    RenderUtils.drawImage(
-                        prop4,
-                        propx.toInt() + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) {
-                    RenderUtils.drawImage(
-                        prop4,
-                        propx.toInt() + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) {
-                    RenderUtils.drawImage(
-                        prop4,
-                        propx.toInt() + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-            }
-
-            Items.carrot -> {
-                if (findProp2() != -1 && findProp() == -1 && findProp3() == -1) {
-                    RenderUtils.drawImage(
-                        prop3,
-                        propx.toInt() + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
-                    RenderUtils.drawImage(
-                        prop3,
-                        propx.toInt() - 10 + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) {
-                    RenderUtils.drawImage(
-                        prop3,
-                        propx.toInt() - 10 + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-            }
-
-            Items.potato -> {
-                if (findProp3() != -1 && findProp() == -1 && findProp2() == -1) {
-                    RenderUtils.drawImage(
-                        prop7,
-                        propx.toInt() + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
-                    RenderUtils.drawImage(
-                        prop7,
-                        propx.toInt() - 20 + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) {
-                    RenderUtils.drawImage(
-                        prop7,
-                        propx.toInt() - 10 + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) {
-                    RenderUtils.drawImage(
-                        prop7,
-                        propx.toInt() - 10 + Xoffset.get().toInt(),
-                        propy.toInt() + YOffset.get().toInt(),
-                        propw.toInt(),
-                        proph.toInt()
-                    )
-                }
-            }
-
-            null -> {
-
-                Select1 = false
-                Select2 = false
-                Select3 = false
-            }
-        }
+        renderHotbar()
     }
 
     @EventTarget
@@ -989,7 +630,7 @@ class CounterStrike : Module() {
 
         if (packet is S02PacketChat) {
             val message = packet.chatComponent.unformattedText
-            val regex = Regex(mc.thePlayer.name+" - (\\d+) kills")
+            val regex = Regex(mc.thePlayer.name + " - (\\d+) kills")
             val matchResult = regex.find(message)
 
             if (matchResult != null) {
@@ -998,731 +639,96 @@ class CounterStrike : Module() {
 
             if (message.contains(resetTitle.get(), ignoreCase = true)) {
                 ctwinValue = 0
-                twinValue =0
+                twinValue = 0
             }
-            if (myItemArmor != null) {
-                if (message.contains(text.get()+teamCT.get())&&
-                    (myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.IRON || myItemArmor.getColor(playerArmor) == 0x0000FF)) {
-                    ctw = true
-                    isStart = false
-                    if (musicMode.get() == "Random") {
-                        when (Random.nextInt(1, 26)) {
-                            1 -> {
-                                LiquidBounce.tipSoundManager.winSound.asyncPlay()
-                                sound = "EZ4ENCE"
-                            }
-
-                            2 -> {
-                                LiquidBounce.tipSoundManager.winSound2.asyncPlay()
-                                sound = "dashstar"
-                            }
-
-                            3 -> {
-                                LiquidBounce.tipSoundManager.winSound3.asyncPlay()
-                                sound = "The Good Youth"
-                            }
-
-                            4 -> {
-                                LiquidBounce.tipSoundManager.winSound4.asyncPlay()
-                                sound = "inhuman"
-                            }
-
-                            5 -> {
-                                LiquidBounce.tipSoundManager.winSound5.asyncPlay()
-                                sound = "Heading for the Source"
-                            }
-
-                            6 -> {
-                                LiquidBounce.tipSoundManager.winSound6.asyncPlay()
-                                sound = "The Lowlife Pack"
-                            }
-
-                            7 -> {
-                                LiquidBounce.tipSoundManager.winSound7.asyncPlay()
-                                sound = "Under Bright Lights"
-                            }
-
-                            8 -> {
-                                LiquidBounce.tipSoundManager.winSound8.asyncPlay()
-                                sound = "ULTIMATE"
-                            }
-
-                            9 -> {
-                                LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                                sound = "I AM"
-                            }
-
-                            10 -> {
-                                LiquidBounce.tipSoundManager.winSound10.asyncPlay()
-                                sound = "u mad!"
-                            }
-
-                            11 -> {
-                                LiquidBounce.tipSoundManager.winSound11.asyncPlay()
-                                sound = "Void"
-                            }
-
-                            12 -> {
-                                LiquidBounce.tipSoundManager.winSound12.asyncPlay()
-                                sound = "MVP SOUND 12"
-                            }
-
-                            13 -> {
-                                LiquidBounce.tipSoundManager.winSound13.asyncPlay()
-                                sound = "MVP SOUND 13"
-                            }
-
-                            14 -> {
-                                LiquidBounce.tipSoundManager.winSound14.asyncPlay()
-                                sound = "MVP SOUND 14"
-                            }
-
-                            15 -> {
-                                LiquidBounce.tipSoundManager.winSound15.asyncPlay()
-                                sound = "MVP SOUND 15"
-                            }
-
-                            16 -> {
-                                LiquidBounce.tipSoundManager.winSound16.asyncPlay()
-                                sound = "MVP SOUND 16"
-                            }
-
-                            17 -> {
-                                LiquidBounce.tipSoundManager.winSound17.asyncPlay()
-                                sound = "MVP SOUND 17"
-                            }
-
-                            18 -> {
-                                LiquidBounce.tipSoundManager.winSound18.asyncPlay()
-                                sound = "MVP SOUND 18"
-                            }
-
-                            19 -> {
-                                LiquidBounce.tipSoundManager.winSound19.asyncPlay()
-                                sound = "MVP SOUND 19"
-                            }
-
-                            20 -> {
-                                LiquidBounce.tipSoundManager.winSound20.asyncPlay()
-                                sound = "MVP SOUND 20"
-                            }
-
-                            21 -> {
-                                LiquidBounce.tipSoundManager.winSound21.asyncPlay()
-                                sound = "MVP SOUND 21"
-                            }
-
-                            22 -> {
-                                LiquidBounce.tipSoundManager.winSound22.asyncPlay()
-                                sound = "MVP SOUND 22"
-                            }
-
-                            23 -> {
-                                LiquidBounce.tipSoundManager.winSound23.asyncPlay()
-                                sound = "MVP SOUND 23"
-                            }
-
-                            24 -> {
-                                LiquidBounce.tipSoundManager.winSound24.asyncPlay()
-                                sound = "MVP SOUND 24"
-                            }
-
-                            25 -> {
-                                LiquidBounce.tipSoundManager.winSound25.asyncPlay()
-                                sound = "MVP SOUND 25"
-                            }
-                        }                }else{
-                        when (musicNumber.get()) {
-                            1 -> {
-                                LiquidBounce.tipSoundManager.winSound.asyncPlay()
-                                sound = "EZ4ENCE"
-                            }
-
-                            2 -> {
-                                LiquidBounce.tipSoundManager.winSound2.asyncPlay()
-                                sound = "dashstar"
-                            }
-
-                            3 -> {
-                                LiquidBounce.tipSoundManager.winSound3.asyncPlay()
-                                sound = "The Good Youth"
-                            }
-
-                            4 -> {
-                                LiquidBounce.tipSoundManager.winSound4.asyncPlay()
-                                sound = "inhuman"
-                            }
-
-                            5 -> {
-                                LiquidBounce.tipSoundManager.winSound5.asyncPlay()
-                                sound = "Heading for the Source"
-                            }
-
-                            6 -> {
-                                LiquidBounce.tipSoundManager.winSound6.asyncPlay()
-                                sound = "The Lowlife Pack"
-                            }
-
-                            7 -> {
-                                LiquidBounce.tipSoundManager.winSound7.asyncPlay()
-                                sound = "Under Bright Lights"
-                            }
-
-                            8 -> {
-                                LiquidBounce.tipSoundManager.winSound8.asyncPlay()
-                                sound = "ULTIMATE"
-                            }
-
-                            9 -> {
-                                LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                                sound = "I AM"
-                            }
-
-                            10 -> {
-                                LiquidBounce.tipSoundManager.winSound10.asyncPlay()
-                                sound = "u mad!"
-                            }
-
-                            11 -> {
-                                LiquidBounce.tipSoundManager.winSound11.asyncPlay()
-                                sound = "Void"
-                            }
-
-                            12 -> {
-                                LiquidBounce.tipSoundManager.winSound12.asyncPlay()
-                                sound = "MVP SOUND 12"
-                            }
-
-                            13 -> {
-                                LiquidBounce.tipSoundManager.winSound13.asyncPlay()
-                                sound = "MVP SOUND 13"
-                            }
-
-                            14 -> {
-                                LiquidBounce.tipSoundManager.winSound14.asyncPlay()
-                                sound = "MVP SOUND 14"
-                            }
-
-                            15 -> {
-                                LiquidBounce.tipSoundManager.winSound15.asyncPlay()
-                                sound = "MVP SOUND 15"
-                            }
-
-                            16 -> {
-                                LiquidBounce.tipSoundManager.winSound16.asyncPlay()
-                                sound = "MVP SOUND 16"
-                            }
-
-                            17 -> {
-                                LiquidBounce.tipSoundManager.winSound17.asyncPlay()
-                                sound = "MVP SOUND 17"
-                            }
-
-                            18 -> {
-                                LiquidBounce.tipSoundManager.winSound18.asyncPlay()
-                                sound = "MVP SOUND 18"
-                            }
-
-                            19 -> {
-                                LiquidBounce.tipSoundManager.winSound19.asyncPlay()
-                                sound = "MVP SOUND 19"
-                            }
-
-                            20 -> {
-                                LiquidBounce.tipSoundManager.winSound20.asyncPlay()
-                                sound = "MVP SOUND 20"
-                            }
-
-                            21 -> {
-                                LiquidBounce.tipSoundManager.winSound21.asyncPlay()
-                                sound = "MVP SOUND 21"
-                            }
-
-                            22 -> {
-                                LiquidBounce.tipSoundManager.winSound22.asyncPlay()
-                                sound = "MVP SOUND 22"
-                            }
-
-                            23 -> {
-                                LiquidBounce.tipSoundManager.winSound23.asyncPlay()
-                                sound = "MVP SOUND 23"
-                            }
-
-                            24 -> {
-                                LiquidBounce.tipSoundManager.winSound24.asyncPlay()
-                                sound = "MVP SOUND 24"
-                            }
-
-                            25 -> {
-                                LiquidBounce.tipSoundManager.winSound25.asyncPlay()
-                                LiquidBounce.tipSoundManager.winSound25.asyncPlay()
-                                sound = "MVP SOUND 25"
-                            }
-                        }
-
-                    }
-
-                }
-            }
-            if (myItemArmor != null) {
-                if (message.contains(text.get()+teamT.get())&&
-                    (myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.CHAIN || myItemArmor.getColor(playerArmor) == 0xFF0000)) {
-                    tw = true
-                    isStart = false
-                    if (musicMode.get() == "Random") {
-                        when (Random.nextInt(1, 26)) {
-                            1 -> {
-                                LiquidBounce.tipSoundManager.winSound.asyncPlay()
-                                sound = "EZ4ENCE"
-                            }
-
-                            2 -> {
-                                LiquidBounce.tipSoundManager.winSound2.asyncPlay()
-                                sound = "dashstar"
-                            }
-
-                            3 -> {
-                                LiquidBounce.tipSoundManager.winSound3.asyncPlay()
-                                sound = "The Good Youth"
-                            }
-
-                            4 -> {
-                                LiquidBounce.tipSoundManager.winSound4.asyncPlay()
-                                sound = "inhuman"
-                            }
-
-                            5 -> {
-                                LiquidBounce.tipSoundManager.winSound5.asyncPlay()
-                                sound = "Heading for the Source"
-                            }
-
-                            6 -> {
-                                LiquidBounce.tipSoundManager.winSound6.asyncPlay()
-                                sound = "The Lowlife Pack"
-                            }
-
-                            7 -> {
-                                LiquidBounce.tipSoundManager.winSound7.asyncPlay()
-                                sound = "Under Bright Lights"
-                            }
-
-                            8 -> {
-                                LiquidBounce.tipSoundManager.winSound8.asyncPlay()
-                                sound = "ULTIMATE"
-                            }
-
-                            9 -> {
-                                LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                                sound = "I AM"
-                            }
-
-                            10 -> {
-                                LiquidBounce.tipSoundManager.winSound10.asyncPlay()
-                                sound = "u mad!"
-                            }
-
-                            11 -> {
-                                LiquidBounce.tipSoundManager.winSound11.asyncPlay()
-                                sound = "Void"
-                            }
-
-                            12 -> {
-                                LiquidBounce.tipSoundManager.winSound12.asyncPlay()
-                                sound = "MVP SOUND 12"
-                            }
-
-                            13 -> {
-                                LiquidBounce.tipSoundManager.winSound13.asyncPlay()
-                                sound = "MVP SOUND 13"
-                            }
-
-                            14 -> {
-                                LiquidBounce.tipSoundManager.winSound14.asyncPlay()
-                                sound = "MVP SOUND 14"
-                            }
-
-                            15 -> {
-                                LiquidBounce.tipSoundManager.winSound15.asyncPlay()
-                                sound = "MVP SOUND 15"
-                            }
-
-                            16 -> {
-                                LiquidBounce.tipSoundManager.winSound16.asyncPlay()
-                                sound = "MVP SOUND 16"
-                            }
-
-                            17 -> {
-                                LiquidBounce.tipSoundManager.winSound17.asyncPlay()
-                                sound = "MVP SOUND 17"
-                            }
-
-                            18 -> {
-                                LiquidBounce.tipSoundManager.winSound18.asyncPlay()
-                                sound = "MVP SOUND 18"
-                            }
-
-                            19 -> {
-                                LiquidBounce.tipSoundManager.winSound19.asyncPlay()
-                                sound = "MVP SOUND 19"
-                            }
-
-                            20 -> {
-                                LiquidBounce.tipSoundManager.winSound20.asyncPlay()
-                                sound = "MVP SOUND 20"
-                            }
-
-                            21 -> {
-                                LiquidBounce.tipSoundManager.winSound21.asyncPlay()
-                                sound = "MVP SOUND 21"
-                            }
-
-                            22 -> {
-                                LiquidBounce.tipSoundManager.winSound22.asyncPlay()
-                                sound = "MVP SOUND 22"
-                            }
-
-                            23 -> {
-                                LiquidBounce.tipSoundManager.winSound23.asyncPlay()
-                                sound = "MVP SOUND 23"
-                            }
-
-                            24 -> {
-                                LiquidBounce.tipSoundManager.winSound24.asyncPlay()
-                                sound = "MVP SOUND 24"
-                            }
-
-                            25 -> {
-                                LiquidBounce.tipSoundManager.winSound25.asyncPlay()
-                                sound = "MVP SOUND 25"
-                            }
-                        }
-                    }else{
-                        when (musicNumber.get()) {
-                            1 -> {
-                                LiquidBounce.tipSoundManager.winSound.asyncPlay()
-                                sound = "EZ4ENCE"
-                            }
-
-                            2 -> {
-                                LiquidBounce.tipSoundManager.winSound2.asyncPlay()
-                                sound = "dashstar"
-                            }
-
-                            3 -> {
-                                LiquidBounce.tipSoundManager.winSound3.asyncPlay()
-                                sound = "The Good Youth"
-                            }
-
-                            4 -> {
-                                LiquidBounce.tipSoundManager.winSound4.asyncPlay()
-                                sound = "inhuman"
-                            }
-
-                            5 -> {
-                                LiquidBounce.tipSoundManager.winSound5.asyncPlay()
-                                sound = "Heading for the Source"
-                            }
-
-                            6 -> {
-                                LiquidBounce.tipSoundManager.winSound6.asyncPlay()
-                                sound = "The Lowlife Pack"
-                            }
-
-                            7 -> {
-                                LiquidBounce.tipSoundManager.winSound7.asyncPlay()
-                                sound = "Under Bright Lights"
-                            }
-
-                            8 -> {
-                                LiquidBounce.tipSoundManager.winSound8.asyncPlay()
-                                sound = "ULTIMATE"
-                            }
-
-                            9 -> {
-                                LiquidBounce.tipSoundManager.winSound9.asyncPlay()
-                                sound = "I AM"
-                            }
-
-                            10 -> {
-                                LiquidBounce.tipSoundManager.winSound10.asyncPlay()
-                                sound = "u mad!"
-                            }
-
-                            11 -> {
-                                LiquidBounce.tipSoundManager.winSound11.asyncPlay()
-                                sound = "Void"
-                            }
-
-                            12 -> {
-                                LiquidBounce.tipSoundManager.winSound12.asyncPlay()
-                                sound = "MVP SOUND 12"
-                            }
-
-                            13 -> {
-                                LiquidBounce.tipSoundManager.winSound13.asyncPlay()
-                                sound = "MVP SOUND 13"
-                            }
-
-                            14 -> {
-                                LiquidBounce.tipSoundManager.winSound14.asyncPlay()
-                                sound = "MVP SOUND 14"
-                            }
-
-                            15 -> {
-                                LiquidBounce.tipSoundManager.winSound15.asyncPlay()
-                                sound = "MVP SOUND 15"
-                            }
-
-                            16 -> {
-                                LiquidBounce.tipSoundManager.winSound16.asyncPlay()
-                                sound = "MVP SOUND 16"
-                            }
-
-                            17 -> {
-                                LiquidBounce.tipSoundManager.winSound17.asyncPlay()
-                                sound = "MVP SOUND 17"
-                            }
-
-                            18 -> {
-                                LiquidBounce.tipSoundManager.winSound18.asyncPlay()
-                                sound = "MVP SOUND 18"
-                            }
-
-                            19 -> {
-                                LiquidBounce.tipSoundManager.winSound19.asyncPlay()
-                                sound = "MVP SOUND 19"
-                            }
-
-                            20 -> {
-                                LiquidBounce.tipSoundManager.winSound20.asyncPlay()
-                                sound = "MVP SOUND 20"
-                            }
-
-                            21 -> {
-                                LiquidBounce.tipSoundManager.winSound21.asyncPlay()
-                                sound = "MVP SOUND 21"
-                            }
-
-                            22 -> {
-                                LiquidBounce.tipSoundManager.winSound22.asyncPlay()
-                                sound = "MVP SOUND 22"
-                            }
-
-                            23 -> {
-                                LiquidBounce.tipSoundManager.winSound23.asyncPlay()
-                                sound = "MVP SOUND 23"
-                            }
-
-                            24 -> {
-                                LiquidBounce.tipSoundManager.winSound24.asyncPlay()
-                                sound = "MVP SOUND 24"
-                            }
-
-                            25 -> {
-                                LiquidBounce.tipSoundManager.winSound25.asyncPlay()
-                                sound = "MVP SOUND 25"
-                            }
-                        }
-                    }
-
-                }
-            }
-
-        }
-    }
-    private fun findM4(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.iron_hoe) {
-                return i
+            val isTeamCT = message.contains(text.get() + teamCT.get())
+            val isTeamT = message.contains(text.get() + teamT.get())
+            val armorColorCT = myItemArmor?.getColor(playerArmor) == 0x0000FF
+            val armorColorT = myItemArmor?.getColor(playerArmor) == 0xFF0000
+            val isIronArmor = myItemArmor?.armorMaterial == ItemArmor.ArmorMaterial.IRON
+            val isChainArmor = myItemArmor?.armorMaterial == ItemArmor.ArmorMaterial.CHAIN
+            if (isTeamCT && (isIronArmor || armorColorCT)) {playWinSound(musicMode.get(), musicNumber.get())
+                ctw = true
+            } else if (isTeamT && (isChainArmor || armorColorT)){ playWinSound(musicMode.get(), musicNumber.get())
+                tw = true
             }
         }
-        return -1
     }
-
-    private fun findAK(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.stone_hoe) {
-                return i
-            }
-        }
-        return -1
+    fun findM4(): Int = findItem(Items.iron_hoe)
+    fun findAK(): Int = findItem(Items.stone_hoe)
+    fun p2000(): Int = findItem(Items.wooden_pickaxe)
+    fun findDesertEagle(): Int = findItem(Items.golden_pickaxe)
+    fun findSword(): Int {
+        val axeIndex = findItem(Items.iron_axe)
+        if (axeIndex != -1) return axeIndex
+        return findItem(Items.stone_axe)
     }
-
-    private fun p2000(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.wooden_pickaxe) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    private fun findDesertEagle(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.golden_pickaxe) {
-                return i
-            }
-        }
-        return -1
-    }
-    private fun findSword(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.iron_axe || stack.item == Items.stone_axe) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    private fun findProp(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.blaze_powder) {
-                return i
-            }
-        }
-        return -1
-    }
-
-    private fun findProp2(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.carrot) {
-                return i
-            }
-        }
-        return -1
-    }
-    private fun findProp3(): Int {
-        val mc = Minecraft.getMinecraft()
-        val player = mc.thePlayer ?: return -1 // Check if thePlayer is null
-        val inventory = player.inventory ?: return -1 // Check if inventory is null
-
-        for (i in 0 until inventory.mainInventory.size) {
-            val stack = inventory.getStackInSlot(i) ?: continue // Check if stack is null
-            if (stack.item == Items.potato) {
-                return i
-            }
-        }
-        return -1
-    }
-
-
-        private  fun cross(screenWidth:Int,screenHeight:Int) {
+    fun findProp(): Int = findItem(Items.blaze_powder)
+    fun findProp2(): Int = findItem(Items.carrot)
+    fun findProp3(): Int = findItem(Items.potato)
+    private fun cross(screenWidth: Int, screenHeight: Int , step : Int) {
         val player = mc.thePlayer
         val movementSpeed = Math.sqrt((player.motionX * player.motionX + player.motionZ * player.motionZ).toDouble()).toFloat()
-
-        val gap = if (dynamicValue.get()) gapValue.get() + movementSpeed *5 else gapValue.get()
-
+        val gap = if (dynamicValue.get()) gapValue.get() + movementSpeed * 5 else gapValue.get()
         val red = colorRedValue.get() / 255f
         val green = colorGreenValue.get() / 255f
         val blue = colorBlueValue.get() / 255f
-        val alpha = colorAlphaValue.get() / 255f
+        val alphaBase = colorAlphaValue.get() / 255f
 
+        val steps = step
+        val size = sizeValue.get()
 
         GlStateManager.pushMatrix()
         GlStateManager.enableBlend()
         GlStateManager.disableTexture2D()
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
 
-        GL11.glColor4f(red, green, blue, alpha)
-        GL11.glLineWidth(widthValue.get())
+        // 渲染上下两条线
+        for (i in 0 until steps) {
+            val alpha = (alphaBase * (1.0 - i.toDouble() / steps)).toFloat()
+            GL11.glColor4f(red, green, blue, alpha)
 
-        GL11.glBegin(GL11.GL_LINES)
+            // 渲染上方线
+            GL11.glLineWidth(widthValue.get())
+            GL11.glBegin(GL11.GL_LINES)
+            GL11.glVertex2f(screenWidth.toFloat(), (screenHeight - gap - (i * size / steps)).toFloat())
+            GL11.glVertex2f(screenWidth.toFloat(), (screenHeight - gap - ((i + 1) * size / steps)).toFloat())
+            GL11.glEnd()
 
-        // 上部线
-        GL11.glVertex2f(screenWidth.toFloat(), (screenHeight - gap).toFloat())
-        GL11.glVertex2f(screenWidth.toFloat(), (screenHeight - gap - sizeValue.get()).toFloat())
+            // 渲染下方线
+            GL11.glBegin(GL11.GL_LINES)
+            GL11.glVertex2f(screenWidth.toFloat(), (screenHeight + gap + (i * size / steps)).toFloat())
+            GL11.glVertex2f(screenWidth.toFloat(), (screenHeight + gap + ((i + 1) * size / steps)).toFloat())
+            GL11.glEnd()
+        }
 
-        // 下部线
-        GL11.glVertex2f(screenWidth.toFloat(), (screenHeight + gap).toFloat())
-        GL11.glVertex2f(screenWidth.toFloat(), (screenHeight + gap + sizeValue.get()).toFloat())
+        // 渲染左右两条线
+        for (i in 0 until steps) {
+            val alpha = (alphaBase * (1.0 - i.toDouble() / steps)).toFloat()
+            GL11.glColor4f(red, green, blue, alpha)
 
-        // 左部线
-        GL11.glVertex2f((screenWidth - gap).toFloat(), screenHeight.toFloat())
-        GL11.glVertex2f((screenWidth - gap - sizeValue.get()).toFloat(), screenHeight.toFloat())
+            // 渲染左方线
+            GL11.glLineWidth(widthValue.get())
+            GL11.glBegin(GL11.GL_LINES)
+            GL11.glVertex2f((screenWidth - gap - (i * size / steps)).toFloat(), screenHeight.toFloat())
+            GL11.glVertex2f((screenWidth - gap - ((i + 1) * size / steps)).toFloat(), screenHeight.toFloat())
+            GL11.glEnd()
 
-        // 右部线
-        GL11.glVertex2f((screenWidth + gap).toFloat(), screenHeight.toFloat())
-        GL11.glVertex2f((screenWidth + gap + sizeValue.get()).toFloat(), screenHeight.toFloat())
-
-        GL11.glEnd()
+            // 渲染右方线
+            GL11.glBegin(GL11.GL_LINES)
+            GL11.glVertex2f((screenWidth + gap + (i * size / steps)).toFloat(), screenHeight.toFloat())
+            GL11.glVertex2f((screenWidth + gap + ((i + 1) * size / steps)).toFloat(), screenHeight.toFloat())
+            GL11.glEnd()
+        }
 
         GlStateManager.enableTexture2D()
         GlStateManager.disableBlend()
         GlStateManager.popMatrix()
     }
-    private fun drawText3(text: String, x: Int, y: Int, r: Int, g: Int, b: Int) {
-        val fontRenderer: FontRenderer = Fonts.font28
-        GL11.glPushMatrix()
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
 
-        val color = (r shl 16) or (g shl 8) or b
-        fontRenderer.drawString(text, x, y, color)
-
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-
-    private fun drawText4(text: String, x: Int, y: Int, rv: Int, gv: Int, bv: Int) {
-        val fontRenderer: FontRenderer = Fonts.font28
-        GL11.glPushMatrix()
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-        val color = (rv shl 16) or (gv shl 8) or bv
-        fontRenderer.drawString(text, x, y, color)
-
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-    private fun drawText5(text: String, x: Int, y: Int, rv: Int, gv: Int, bv: Int) {
-        val fontRenderer: FontRenderer = Fonts.SFUI35
-        GL11.glPushMatrix()
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-        val color = (rv shl 16) or (gv shl 8) or bv
-        fontRenderer.drawString(text, x, y, color)
-
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-
+   private fun drawText1(text: String, x: Int, y: Int, r: Int, g: Int, b: Int){drawText(Fonts.font28, text, x, y, r, g, b)}
+   private fun drawText2(text: String, x: Int, y: Int, rv: Int, gv: Int, bv: Int){drawText(Fonts.font28, text, x, y, rv, gv, bv)}
+   private fun drawText3(text: String, x: Int, y: Int, rv: Int, gv: Int, bv: Int){drawText(Fonts.SFUI35, text, x, y, rv, gv, bv)}
 
     private fun renderImage(resourceLocation: ResourceLocation, x: Int, y: Int, width: Int, height: Int) {
         mc.textureManager.bindTexture(resourceLocation)
@@ -1732,28 +738,127 @@ class CounterStrike : Module() {
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0f, 0f, width, height, width.toFloat(), height.toFloat())
         GL11.glDisable(GL11.GL_BLEND)
     }
+    private fun renderHotbar(){
+        if (findM4() != -1 && findAK() == -1) RenderUtils.drawImage(m4, propx2.toInt() + Xoffset.get().toInt(), propy2.toInt() - 13 + YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+        if (findAK() != -1 && findM4() == -1)  RenderUtils.drawImage(ak, propx2.toInt() + Xoffset.get().toInt(), propy2.toInt() - 13 + YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+        if (p2000() != -1 && findDesertEagle() == -1) RenderUtils.drawImage(p2000, propx4.toInt() + Xoffset.get().toInt(), propy4.toInt() - 25 + YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+        if (findDesertEagle() != -1 && p2000() == -1) RenderUtils.drawImage(DesertEagle, propx4.toInt() + Xoffset.get().toInt(), propy4.toInt() - 25 + YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+        if (findSword() != -1) RenderUtils.drawImage(sword, propx5.toInt() + Xoffset.get().toInt(), propy5.toInt() + YOffset.get().toInt(), propw3.toInt(), proph3.toInt())
+        if (findProp() != -1 && findProp2() == -1 && findProp3() == -1) RenderUtils.drawImage(prop1, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp2() != -1 && findProp() == -1 && findProp3() == -1) RenderUtils.drawImage(prop2, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp3() != -1 && findProp() == -1 && findProp2() == -1) RenderUtils.drawImage(prop6, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+            RenderUtils.drawImage(prop1, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+            RenderUtils.drawImage(prop2, propx.toInt() - 10 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+            RenderUtils.drawImage(prop6, propx.toInt() - 20 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        }
+        if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) {
+            RenderUtils.drawImage( prop2, propx.toInt() + Xoffset.get().toInt(),propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+            RenderUtils.drawImage(prop6, propx.toInt() + Xoffset.get().toInt() - 10, propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        }
+        if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) {
+            RenderUtils.drawImage( prop1, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+            RenderUtils.drawImage(prop2, propx.toInt() - 10 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        }
+        if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) {
+            RenderUtils.drawImage(prop1, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+            RenderUtils.drawImage(prop6, propx.toInt() - 10 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+        }
+
+        val player = mc.thePlayer ?: return
+        val heldItem = player.heldItem ?: return
+
+        when (heldItem.item) {
+            Items.stone_hoe -> {
+                RenderUtils.drawImage(ak2, propx2.toInt() + Xoffset.get().toInt(), propy2.toInt() - 13 + YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+            }
+
+            Items.iron_hoe -> {
+                RenderUtils.drawImage(m42, propx2.toInt() + Xoffset.get().toInt(), propy2.toInt() - 13 + YOffset.get().toInt(), propw2.toInt(), proph2.toInt())
+            }
+
+            Items.wooden_pickaxe -> {
+                RenderUtils.drawImage(p20002, propx4.toInt() + Xoffset.get().toInt(), propy4.toInt() - 25 + YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+            }
+
+            Items.golden_pickaxe -> {
+                RenderUtils.drawImage(DesertEagle2, propx4.toInt() + Xoffset.get().toInt(), propy4.toInt() - 25 + YOffset.get().toInt(), propw4.toInt(), proph4.toInt())
+            }
+
+            Items.iron_axe -> {
+                RenderUtils.drawImage(sword2, propx5.toInt() + Xoffset.get().toInt(), propy5.toInt() + YOffset.get().toInt(), propw3.toInt(), proph3.toInt()
+                )
+            }
+
+            Items.stone_axe -> {
+                RenderUtils.drawImage(sword2, propx5.toInt() + Xoffset.get().toInt(), propy5.toInt() + YOffset.get().toInt(), propw3.toInt(), proph3.toInt())
+            }
+
+            Items.blaze_powder -> {
+                if (findProp() != -1 && findProp2() == -1 && findProp3() == -1) {
+                    RenderUtils.drawImage(prop4, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+                    RenderUtils.drawImage(prop4, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(prop4, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) {
+                    RenderUtils.drawImage(prop4, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(prop4, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+            }
+
+            Items.carrot -> {
+                if (findProp2() != -1 && findProp() == -1 && findProp3() == -1) {
+                    RenderUtils.drawImage(prop3, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+                    RenderUtils.drawImage(prop3, propx.toInt() - 10 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(),propw.toInt(), proph.toInt())
+                }
+                if (findProp2() != -1 && findProp() != -1 && findProp3() == -1) {
+                    RenderUtils.drawImage(prop3, propx.toInt() - 10 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt()
+                    )
+                }
+            }
+
+            Items.potato -> {
+                if (findProp3() != -1 && findProp() == -1 && findProp2() == -1) {
+                    RenderUtils.drawImage(prop7, propx.toInt() + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() != -1 && findProp3() != -1 && findProp() != -1) {
+                    RenderUtils.drawImage(prop7, propx.toInt() - 20 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() != -1 && findProp() == -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(prop7, propx.toInt() - 10 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+                if (findProp2() == -1 && findProp() != -1 && findProp3() != -1) {
+                    RenderUtils.drawImage(prop7, propx.toInt() - 10 + Xoffset.get().toInt(), propy.toInt() + YOffset.get().toInt(), propw.toInt(), proph.toInt())
+                }
+            }
+
+            null -> {
+
+                Select1 = false
+                Select2 = false
+                Select3 = false
+            }
+        }
+    }
     private fun drawProgressRing(centerX: Int, centerY: Int, radius: Float, progress: Float) {
         val segments = 4000
         val anglePerSegment = (2 * Math.PI / segments).toFloat()
 
         GL11.glPushMatrix()
-
-        // 启用线条平滑
         GL11.glEnable(GL11.GL_LINE_SMOOTH)
-        // 设置合适的混合模式
         GL11.glEnable(GL11.GL_BLEND)
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-        // 禁用纹理映射
         GL11.glDisable(GL11.GL_TEXTURE_2D)
-
-        // 设置线条颜色为白色，透明度为1
         GL11.glColor4f(1f, 1f, 1f, 1f)
-
-        // 设置线条宽度
         GL11.glLineWidth(3f)
-
-        // 开始绘制
         GL11.glBegin(GL11.GL_LINE_STRIP)
         for (i in 0..(segments * progress).toInt()) {
             val angle = i * anglePerSegment
@@ -1763,25 +868,55 @@ class CounterStrike : Module() {
         }
         GL11.glEnd()
 
-        // 关闭平滑和混合设置
         GL11.glDisable(GL11.GL_LINE_SMOOTH)
         GL11.glDisable(GL11.GL_BLEND)
 
-        // 重新启用纹理映射
         GL11.glEnable(GL11.GL_TEXTURE_2D)
 
         GL11.glPopMatrix()
     }
-
-
-
+    fun playWinSound(musicMode: String, musicNumber: Int) {
+        val soundList = listOf(
+            "EZ4ENCE", "dashstar", "The Good Youth", "inhuman", "Heading for the Source",
+            "The Lowlife Pack", "Under Bright Lights", "ULTIMATE", "I AM", "u mad!",
+            "Void", "MVP SOUND 12", "MVP SOUND 13", "MVP SOUND 14", "MVP SOUND 15",
+            "MVP SOUND 16", "MVP SOUND 17", "MVP SOUND 18", "MVP SOUND 19", "MVP SOUND 20",
+            "MVP SOUND 21", "MVP SOUND 22", "MVP SOUND 23", "MVP SOUND 24", "MVP SOUND 25"
+        )
+        val sound = if (musicMode == "Random") soundList.random() else soundList.getOrNull(musicNumber - 1) ?: soundList.first()
+        when (sound) {
+            "EZ4ENCE" -> LiquidBounce.tipSoundManager.winSound.asyncPlay()
+            "dashstar" -> LiquidBounce.tipSoundManager.winSound2.asyncPlay()
+            "The Good Youth" -> LiquidBounce.tipSoundManager.winSound3.asyncPlay()
+            "inhuman" -> LiquidBounce.tipSoundManager.winSound4.asyncPlay()
+            "Heading for the Source" -> LiquidBounce.tipSoundManager.winSound5.asyncPlay()
+            "The Lowlife Pack" -> LiquidBounce.tipSoundManager.winSound6.asyncPlay()
+            "Under Bright Lights" -> LiquidBounce.tipSoundManager.winSound7.asyncPlay()
+            "ULTIMATE" -> LiquidBounce.tipSoundManager.winSound8.asyncPlay()
+            "I AM" -> LiquidBounce.tipSoundManager.winSound9.asyncPlay()
+            "u mad!" -> LiquidBounce.tipSoundManager.winSound10.asyncPlay()
+            "Void" -> LiquidBounce.tipSoundManager.winSound11.asyncPlay()
+            "MVP SOUND 12" -> LiquidBounce.tipSoundManager.winSound12.asyncPlay()
+            "MVP SOUND 13" -> LiquidBounce.tipSoundManager.winSound13.asyncPlay()
+            "MVP SOUND 14" -> LiquidBounce.tipSoundManager.winSound14.asyncPlay()
+            "MVP SOUND 15" -> LiquidBounce.tipSoundManager.winSound15.asyncPlay()
+            "MVP SOUND 16" -> LiquidBounce.tipSoundManager.winSound16.asyncPlay()
+            "MVP SOUND 17" -> LiquidBounce.tipSoundManager.winSound17.asyncPlay()
+            "MVP SOUND 18" -> LiquidBounce.tipSoundManager.winSound18.asyncPlay()
+            "MVP SOUND 19" -> LiquidBounce.tipSoundManager.winSound19.asyncPlay()
+            "MVP SOUND 20" -> LiquidBounce.tipSoundManager.winSound20.asyncPlay()
+            "MVP SOUND 21" -> LiquidBounce.tipSoundManager.winSound21.asyncPlay()
+            "MVP SOUND 22" -> LiquidBounce.tipSoundManager.winSound22.asyncPlay()
+            "MVP SOUND 23" -> LiquidBounce.tipSoundManager.winSound23.asyncPlay()
+            "MVP SOUND 24" -> LiquidBounce.tipSoundManager.winSound24.asyncPlay()
+            "MVP SOUND 25" -> LiquidBounce.tipSoundManager.winSound25.asyncPlay()
+        }
+    }
     private fun drawBlackPanel3(x: Double, y: Double, width: Double, height: Double) {
         GL11.glPushMatrix()
         GL11.glDisable(GL11.GL_TEXTURE_2D)
         GL11.glEnable(GL11.GL_BLEND)
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-
         val steps = 100
         val stepHeight = height / steps
         for (i in 0 until steps) {
@@ -1800,115 +935,7 @@ class CounterStrike : Module() {
         GL11.glDisable(GL11.GL_BLEND)
         GL11.glPopMatrix()
     }
-
-
-    private fun drawBlackPanel4(x: Double, y: Double, width: Double, height: Double) {
-
-        GL11.glPushMatrix()
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-        GL11.glColor4ub(r.toByte(), g.toByte(), b.toByte(), 156.toByte())
-
-        GL11.glBegin(GL11.GL_QUADS)
-        GL11.glVertex2d(x, y)
-        GL11.glVertex2d(x, y + height)
-        GL11.glVertex2d(x + width, y + height)
-        GL11.glVertex2d(x + width, y)
-        GL11.glEnd()
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D)
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-
-    private fun drawRectWithRoundedCorners(x: Double, y: Double, width: Double, height: Double, radius: Double, segments: Int) {
-        GL11.glPushMatrix()
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-        GL11.glColor4ub(r.toByte(), g.toByte(), b.toByte(), 156.toByte())
-
-        // Draw the center rectangle
-        GL11.glBegin(GL11.GL_QUADS)
-        GL11.glVertex2d(x + radius, y)
-        GL11.glVertex2d(x + width - radius, y)
-        GL11.glVertex2d(x + width - radius, y + height)
-        GL11.glVertex2d(x + radius, y + height)
-        GL11.glEnd()
-
-        // Draw the top left corner arc
-        drawArc(x + radius, y + radius, radius, 180.0, 270.0, segments)
-
-        // Draw the top right corner arc
-        drawArc(x + width - radius, y + radius, radius, 270.0, 360.0, segments)
-
-        // Draw the bottom left corner arc
-        drawArc(x + radius, y + height - radius, radius, 90.0, 180.0, segments)
-
-        // Draw the bottom right corner arc
-        drawArc(x + width - radius, y + height - radius, radius, 0.0, 90.0, segments)
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D)
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-
-    private fun drawArc(centerX: Double, centerY: Double, radius: Double, startAngle: Double, endAngle: Double, segments: Int) {
-        val angleStep = (endAngle - startAngle) / segments
-
-        GL11.glBegin(GL11.GL_TRIANGLE_FAN)
-        GL11.glVertex2d(centerX, centerY)
-
-        for (i in 0..segments) {
-            val angle = Math.toRadians(startAngle + angleStep * i)
-            val x = centerX + radius * Math.cos(angle)
-            val y = centerY + radius * Math.sin(angle)
-            GL11.glVertex2d(x, y)
-        }
-        GL11.glEnd()
-    }
-
-    data class Color(val red: Int, val green: Int, val blue: Int)
-    private fun drawBlackPanel(x: Double, y: Double, width: Double, height: Double) {
-
-        GL11.glPushMatrix()
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-        GL11.glColor4ub(r.toByte(), g.toByte(), b.toByte(), alpha.toByte())
-
-        GL11.glBegin(GL11.GL_QUADS)
-        GL11.glVertex2d(x, y)
-        GL11.glVertex2d(x, y + height)
-        GL11.glVertex2d(x + width, y + height)
-        GL11.glVertex2d(x + width, y)
-        GL11.glEnd()
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D)
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
-    private fun drawBlackPanel2(x: Double, y: Double, width: Double, height: Double) {
-        GL11.glPushMatrix()
-        GL11.glDisable(GL11.GL_TEXTURE_2D)
-        GL11.glEnable(GL11.GL_BLEND)
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
-
-        GL11.glColor4ub(r2.toByte(), g2.toByte(), b2.toByte(), alpha.toByte())
-
-        GL11.glBegin(GL11.GL_QUADS)
-        GL11.glVertex2d(x, y)
-        GL11.glVertex2d(x, y + height)
-        GL11.glVertex2d(x + width, y + height)
-        GL11.glVertex2d(x + width, y)
-        GL11.glEnd()
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D)
-        GL11.glDisable(GL11.GL_BLEND)
-        GL11.glPopMatrix()
-    }
+   private fun drawBlackPanel(x: Double, y: Double, width: Double, height: Double){drawPanel(x, y, width, height, Color(r, g, b, alpha))}
+   private fun drawBlackPanel2(x: Double, y: Double, width: Double, height: Double){drawPanel(x, y, width, height, Color(r2, g2, b2, alpha))}
+   private fun drawBlackPanel4(x: Double, y: Double, width: Double, height: Double){drawPanel(x, y, width, height, Color(r, g, b, 156))}
 }
