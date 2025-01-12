@@ -56,6 +56,7 @@ class CounterStrike : Module() {
     private val colorAlphaValue = IntegerValue("Cross-Alpha", 255, 0, 255)
     private val widthValue = FloatValue("Cross-Width", 0.5f, 0.25f, 10f)
     private val sizeValue = FloatValue("Cross-Length", 7f, 0.25f, 15f)
+    private val crossSpeed = FloatValue("Cross-Speed", 0.1f, 0.01f, 1f)
     private val gapValue = FloatValue("Cross-Gap", 5f, 0.25f, 15f)
     private val stepCross = IntegerValue("Cross-Step", 10, 1, 40)
     private val dynamicValue = BoolValue("Cross-Dynamic", true)
@@ -177,9 +178,6 @@ class CounterStrike : Module() {
     private val p20002 = ResourceLocation("leaf/p20002.png")
     private val DesertEagle2 = ResourceLocation("leaf/DesertEagle2.png")
     private val sword2 = ResourceLocation("leaf/sword2.png")
-    private val armor1 = ResourceLocation("leaf/armor1.png")
-    private val armor2 = ResourceLocation("leaf/armor2.png")
-    private val armor3 = ResourceLocation("leaf/armor3.png")
     private var isRenderA = false
     private var isRenderB = false
     var Select1 = false
@@ -223,343 +221,20 @@ class CounterStrike : Module() {
     override fun onEnable() {
         startTime = currentTimeMillis()
     }
-
-
     @EventTarget
     fun onRender(event: Render2DEvent) {
-        val screenWidth = event.scaledResolution.scaledWidth / 2
-        val screenHeight = event.scaledResolution.scaledHeight / 2
-        cross(screenWidth, screenHeight,stepCross.get())
         if (!can) {
             kd = all.toDouble() / die.toDouble()
             can = true
         }
-
-        drawBlackPanel4(vx.toDouble() + Xoffset2.get(), vy.toDouble() + Yoffset2.get(), vw.toDouble(), vh.toDouble())
-        drawBlackPanel3(vx2+ Xoffset2.get(), vy2 + Yoffset2.get().toDouble(), vw2.toDouble(), vh2.toDouble())
-        drawBlackPanel3(vx3 + Xoffset2.get(), vy3 + Yoffset2.get().toDouble(), vw3.toDouble(), vh3.toDouble())
-        drawText1("$timerMinute:$timerSecounds", tx.toInt() + Xoffset2.get().toInt(), ty.toInt() + Yoffset2.get().toInt(), 255, 255, 255)
-        drawText1(ctwinValue.toString(), tx2.toInt() + Xoffset2.get().toInt(), ty2.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
-        drawText1(twinValue.toString(), tx3.toInt() + Xoffset2.get().toInt(), ty3.toInt() + Yoffset2.get().toInt(), 228, 224, 175)
-
-        if (isRenderA) {
-            val scaledResolution = ScaledResolution(mc)
-            val centerX = scaledResolution.scaledWidth / 2
-            val centerY = scaledResolution.scaledHeight / 2
-
-            val elapsedTime = (currentTimeMillis() - startTime) / 1000
-            var remainingTime = countdownSeconds - elapsedTime
-
-            if (remainingTime < 0) {
-                remainingTime = 0
-                isRenderA = false
-            }
-            MainLib.drawPanel(
-                centerX + vxx.toDouble() + Xoffset3.get().toInt(),
-                centerY + vyy.toDouble() + Yoffset3.get().toInt(),
-                vww.toDouble(),
-                vhh.toDouble(),
-                0,
-                0,
-                0,
-                150
-            )
-            drawProgressRing(
-                centerX + xxx + Xoffset3.get().toInt(),
-                centerY + yyy + Yoffset3.get().toInt(),
-                radiuss.toFloat(),
-                remainingTime.toFloat() / countdownSeconds
-            )
-            drawText1(
-                "Location: A",
-                centerX + vxx2 + Xoffset3.get().toInt(),
-                centerY + vyy2 + Yoffset3.get().toInt(),
-                255,
-                255,
-                255
-            )
-            drawText1(
-                "Time: $remainingTime",
-                centerX + vxx3 + Xoffset3.get().toInt(),
-                centerY + vyy3 + Yoffset3.get().toInt(),
-                255,
-                255,
-                255
-            )
-        }
-        if (isRenderB) {
-            val scaledResolution = ScaledResolution(mc)
-            val centerX = scaledResolution.scaledWidth / 2
-            val centerY = scaledResolution.scaledHeight / 2
-
-            val elapsedTime = (currentTimeMillis() - startTime) / 1000
-            var remainingTime = countdownSeconds - elapsedTime
-
-            if (remainingTime < 0) {
-                remainingTime = 0
-                isRenderB = false
-            }
-            MainLib.drawPanel(
-                centerX + vxx.toDouble() + Xoffset3.get().toInt(),
-                centerY + vyy.toDouble() + Yoffset3.get().toInt(),
-                vww.toDouble(),
-                vhh.toDouble(),
-                0,
-                0,
-                0,
-                150
-            )
-            drawProgressRing(
-                centerX + xxx + Xoffset3.get().toInt(),
-                centerY + yyy + Yoffset3.get().toInt(),
-                radiuss,
-                remainingTime.toFloat() / countdownSeconds
-            )
-            drawText1(
-                "Location: B",
-                centerX + vxx2 + Xoffset3.get().toInt(),
-                centerY + vyy2 + Yoffset3.get().toInt(),
-                255,
-                255,
-                255
-            )
-            drawText1(
-                "Time: $remainingTime",
-                centerX + vxx3 + Xoffset3.get().toInt(),
-                centerY + vyy3 + Yoffset3.get().toInt(),
-                255,
-                255,
-                255
-            )
-        }
-
         if (alpha >= a) alpha = a
-        if (ctw) {
-            if (alpha <= 0) alpha = 0
-            if (tick < ticks.get()) {
-                tick++
-                alpha += 2
-                drawBlackPanel2(
-                    x2.toDouble() + Xoffset2.get().toInt(),
-                    y2.toDouble() + Yoffset2.get().toInt(),
-                    width1.toDouble(),
-                    height2.toDouble()
-                )
-                drawBlackPanel(
-                    x.toDouble() + Xoffset2.get().toInt(),
-                    y.toDouble() + Yoffset2.get().toInt(),
-                    width1.toDouble(),
-                    height.toDouble()
-                )
-
-                renderImage(
-                    imgCT,
-                    imgX.toInt() + Xoffset2.get().toInt(),
-                    imgY.toInt() + Yoffset2.get().toInt(),
-                    imgWidth,
-                    imgHeight
-                )
-                drawText2(
-                    "Counter-Terrorists Win",
-                    textX.toInt() + Xoffset2.get().toInt(),
-                    textY.toInt() + Yoffset2.get().toInt(),
-                    191,
-                    215,
-                    234
-                )
-                drawText3(
-                    "KillStreak: You killed $kills players in the round",
-                    MVPX.toInt() + Xoffset2.get().toInt(),
-                    MVPY.toInt() + Yoffset2.get().toInt(),
-                    191,
-                    215,
-                    234
-                )
-                if (!can) {
-                    all += kills
-                    can = true
-                }
-                drawText3(
-                    "Now Playing: $sound",
-                    soundTextX.toInt() + Xoffset2.get().toInt(),
-                    soundTextY.toInt() + Yoffset2.get().toInt(),
-                    191,
-                    215,
-                    234
-                )
-                isRenderA = false
-                isRenderB = false
-
-                when (kills) {
-                    1 -> {
-                        renderImage(
-                            imgsilver1,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    2 -> {
-                        renderImage(
-                            imgsilver2,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    3 -> {
-                        renderImage(
-                            imgsilver3,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    4 -> {
-                        renderImage(
-                            imgsilver4,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    5 -> {
-                        renderImage(
-                            imgsilver5,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-                }
-
-            } else {
-                ctw = false
-                tick = 0
-                alpha = 0
-            }
-        }
-        if (tw) {
-            if (alpha <= 0) alpha = 0
-            if (tick < ticks.get()) {
-                alpha += 2
-                tick++
-                drawBlackPanel2(
-                    x2.toDouble() + Xoffset2.get().toInt(),
-                    y2.toDouble() + Yoffset2.get().toInt(),
-                    width1.toDouble(),
-                    height2.toDouble()
-                )
-                drawBlackPanel(
-                    x.toDouble() + Xoffset2.get().toInt(),
-                    y.toDouble() + Yoffset2.get().toInt(),
-                    width1.toDouble(),
-                    height.toDouble()
-                )
-                renderImage(
-                    imgT,
-                    imgX.toInt() + Xoffset2.get().toInt(),
-                    imgY.toInt() + Yoffset2.get().toInt(),
-                    imgWidth,
-                    imgHeight
-                )
-                drawText2(
-                    "Terrorists Win",
-                    textX.toInt() + Xoffset2.get().toInt(),
-                    textY.toInt() + Yoffset2.get().toInt(),
-                    191,
-                    215,
-                    234
-                )
-                drawText3(
-                    "KillStreak: You killed $kills players in the round",
-                    MVPX.toInt() + Xoffset2.get().toInt(),
-                    MVPY.toInt() + Yoffset2.get().toInt(),
-                    191,
-                    215,
-                    234
-                )
-                if (!can) {
-                    all += kills
-                    can = true
-                }
-                drawText3(
-                    "Now Playing: $sound",
-                    soundTextX.toInt() + Xoffset2.get().toInt(),
-                    soundTextY.toInt() + Yoffset2.get().toInt(),
-                    191,
-                    215,
-                    234
-                )
-                isRenderA = false
-                isRenderB = false
-
-                when (kills) {
-                    1 -> {
-                        renderImage(
-                            imgsilver1,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    2 -> {
-                        renderImage(
-                            imgsilver2,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    3 -> {
-                        renderImage(
-                            imgsilver3,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    4 -> {
-                        renderImage(
-                            imgsilver4,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-
-                    5 -> {
-                        renderImage(
-                            imgsilver5,
-                            silverX.toInt() + Xoffset2.get().toInt(),
-                            silverY.toInt() + Yoffset2.get().toInt(),
-                            silverWidth,
-                            silverHeight
-                        )
-                    }
-                }
-            } else {
-                tw = false
-                tick = 0
-                alpha = 0
-            }
-        }
+        val screenWidth = event.scaledResolution.scaledWidth / 2
+        val screenHeight = event.scaledResolution.scaledHeight / 2
+        renderCross(screenWidth, screenHeight,stepCross.get())
+        renderScoreboard()
+        renderC4()
+        renderCTWin()
+        renderTWin()
         renderHotbar()
     }
 
@@ -666,8 +341,16 @@ class CounterStrike : Module() {
     fun findProp(): Int = findItem(Items.blaze_powder)
     fun findProp2(): Int = findItem(Items.carrot)
     fun findProp3(): Int = findItem(Items.potato)
-    private fun cross(screenWidth: Int, screenHeight: Int , step : Int) {
+    var length = 0.0F
+    private fun renderCross(screenWidth: Int, screenHeight: Int, step : Int) {
         val player = mc.thePlayer
+        if (!player.isSneaking){
+            length = 0.0F
+        }else{
+            if (length < sizeValue.get()){
+                length += crossSpeed.get()
+            }
+        }
         val movementSpeed = Math.sqrt((player.motionX * player.motionX + player.motionZ * player.motionZ).toDouble()).toFloat()
         val gap = if (dynamicValue.get()) gapValue.get() + movementSpeed * 5 else gapValue.get()
         val red = colorRedValue.get() / 255f
@@ -676,45 +359,36 @@ class CounterStrike : Module() {
         val alphaBase = colorAlphaValue.get() / 255f
 
         val steps = step
-        val size = sizeValue.get()
+        val size = length
 
         GlStateManager.pushMatrix()
         GlStateManager.enableBlend()
         GlStateManager.disableTexture2D()
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
 
-        // 渲染上下两条线
         for (i in 0 until steps) {
             val alpha = (alphaBase * (1.0 - i.toDouble() / steps)).toFloat()
             GL11.glColor4f(red, green, blue, alpha)
 
-            // 渲染上方线
             GL11.glLineWidth(widthValue.get())
             GL11.glBegin(GL11.GL_LINES)
             GL11.glVertex2f(screenWidth.toFloat(), (screenHeight - gap - (i * size / steps)).toFloat())
             GL11.glVertex2f(screenWidth.toFloat(), (screenHeight - gap - ((i + 1) * size / steps)).toFloat())
             GL11.glEnd()
 
-            // 渲染下方线
             GL11.glBegin(GL11.GL_LINES)
             GL11.glVertex2f(screenWidth.toFloat(), (screenHeight + gap + (i * size / steps)).toFloat())
             GL11.glVertex2f(screenWidth.toFloat(), (screenHeight + gap + ((i + 1) * size / steps)).toFloat())
             GL11.glEnd()
         }
-
-        // 渲染左右两条线
         for (i in 0 until steps) {
             val alpha = (alphaBase * (1.0 - i.toDouble() / steps)).toFloat()
             GL11.glColor4f(red, green, blue, alpha)
-
-            // 渲染左方线
             GL11.glLineWidth(widthValue.get())
             GL11.glBegin(GL11.GL_LINES)
             GL11.glVertex2f((screenWidth - gap - (i * size / steps)).toFloat(), screenHeight.toFloat())
             GL11.glVertex2f((screenWidth - gap - ((i + 1) * size / steps)).toFloat(), screenHeight.toFloat())
             GL11.glEnd()
-
-            // 渲染右方线
             GL11.glBegin(GL11.GL_LINES)
             GL11.glVertex2f((screenWidth + gap + (i * size / steps)).toFloat(), screenHeight.toFloat())
             GL11.glVertex2f((screenWidth + gap + ((i + 1) * size / steps)).toFloat(), screenHeight.toFloat())
@@ -725,11 +399,120 @@ class CounterStrike : Module() {
         GlStateManager.disableBlend()
         GlStateManager.popMatrix()
     }
+    fun renderScoreboard(){
+        drawBlackPanel4(vx.toDouble() + Xoffset2.get(), vy.toDouble() + Yoffset2.get(), vw.toDouble(), vh.toDouble())
+        drawBlackPanel3(vx2+ Xoffset2.get(), vy2 + Yoffset2.get().toDouble(), vw2.toDouble(), vh2.toDouble())
+        drawBlackPanel3(vx3 + Xoffset2.get(), vy3 + Yoffset2.get().toDouble(), vw3.toDouble(), vh3.toDouble())
+        drawText1("$timerMinute:$timerSecounds", tx.toInt() + Xoffset2.get().toInt(), ty.toInt() + Yoffset2.get().toInt(), 255, 255, 255)
+        drawText1(ctwinValue.toString(), tx2.toInt() + Xoffset2.get().toInt(), ty2.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+        drawText1(twinValue.toString(), tx3.toInt() + Xoffset2.get().toInt(), ty3.toInt() + Yoffset2.get().toInt(), 228, 224, 175)
+    }
+    fun renderC4(){
+        if (isRenderA) {
+            val scaledResolution = ScaledResolution(mc)
+            val centerX = scaledResolution.scaledWidth / 2
+            val centerY = scaledResolution.scaledHeight / 2
 
+            val elapsedTime = (currentTimeMillis() - startTime) / 1000
+            var remainingTime = countdownSeconds - elapsedTime
+
+            if (remainingTime < 0) {
+                remainingTime = 0
+                isRenderA = false
+            }
+            MainLib.drawPanel(centerX + vxx.toDouble() + Xoffset3.get().toInt(), centerY + vyy.toDouble() + Yoffset3.get().toInt(), vww.toDouble(), vhh.toDouble(), 0, 0, 0, 150)
+            drawProgressRing(centerX + xxx + Xoffset3.get().toInt(), centerY + yyy + Yoffset3.get().toInt(), radiuss, remainingTime.toFloat() / countdownSeconds)
+            drawText1("Location: A", centerX + vxx2 + Xoffset3.get().toInt(), centerY + vyy2 + Yoffset3.get().toInt(), 255, 255, 255)
+            drawText1("Time: $remainingTime", centerX + vxx3 + Xoffset3.get().toInt(), centerY + vyy3 + Yoffset3.get().toInt(), 255, 255, 255)
+        }
+        if (isRenderB) {
+            val scaledResolution = ScaledResolution(mc)
+            val centerX = scaledResolution.scaledWidth / 2
+            val centerY = scaledResolution.scaledHeight / 2
+
+            val elapsedTime = (currentTimeMillis() - startTime) / 1000
+            var remainingTime = countdownSeconds - elapsedTime
+
+            if (remainingTime < 0) {
+                remainingTime = 0
+                isRenderB = false
+            }
+            MainLib.drawPanel(centerX + vxx.toDouble() + Xoffset3.get().toInt(), centerY + vyy.toDouble() + Yoffset3.get().toInt(), vww.toDouble(), vhh.toDouble(), 0, 0, 0, 150)
+            drawProgressRing(centerX + xxx + Xoffset3.get().toInt(), centerY + yyy + Yoffset3.get().toInt(), radiuss, remainingTime.toFloat() / countdownSeconds)
+            drawText1("Location: B", centerX + vxx2 + Xoffset3.get().toInt(), centerY + vyy2 + Yoffset3.get().toInt(), 255, 255, 255)
+            drawText1("Time: $remainingTime", centerX + vxx3 + Xoffset3.get().toInt(), centerY + vyy3 + Yoffset3.get().toInt(), 255, 255, 255)
+        }
+    }
+    fun renderCTWin() {
+        if (ctw) {
+            if (alpha <= 0) alpha = 0
+            if (tick < ticks.get()) {
+                tick++
+                alpha += 2
+                drawBlackPanel2(x2.toDouble() + Xoffset2.get().toInt(), y2.toDouble() + Yoffset2.get().toInt(), width1.toDouble(), height2.toDouble())
+                drawBlackPanel(x.toDouble() + Xoffset2.get().toInt(), y.toDouble() + Yoffset2.get().toInt(), width1.toDouble(), height.toDouble())
+
+                renderImage(imgCT, imgX.toInt() + Xoffset2.get().toInt(), imgY.toInt() + Yoffset2.get().toInt(), imgWidth, imgHeight)
+                drawText2("Counter-Terrorists Win", textX.toInt() + Xoffset2.get().toInt(), textY.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+                drawText3("KillStreak: You killed $kills players in the round", MVPX.toInt() + Xoffset2.get().toInt(), MVPY.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+                if (!can) {
+                    all += kills
+                    can = true
+                }
+                drawText3("Now Playing: $sound", soundTextX.toInt() + Xoffset2.get().toInt(), soundTextY.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+                isRenderA = false
+                isRenderB = false
+
+                when (kills) {
+                    1 -> renderImage(imgsilver1, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                    2 -> renderImage(imgsilver2, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                    3 -> renderImage(imgsilver3, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                    4 -> renderImage(imgsilver4, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                    5 -> renderImage(imgsilver5, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                }
+            } else {
+                ctw = false
+                tick = 0
+                alpha = 0
+            }
+        }
+    }
+    fun renderTWin(){
+    if (tw) {
+        if (alpha <= 0) alpha = 0
+        if (tick < ticks.get()) {
+            alpha += 2
+            tick++
+            drawBlackPanel2(x2.toDouble() + Xoffset2.get().toInt(), y2.toDouble() + Yoffset2.get().toInt(), width1.toDouble(), height2.toDouble())
+            drawBlackPanel(x.toDouble() + Xoffset2.get().toInt(), y.toDouble() + Yoffset2.get().toInt(), width1.toDouble(), height.toDouble())
+            renderImage(imgT, imgX.toInt() + Xoffset2.get().toInt(), imgY.toInt() + Yoffset2.get().toInt(), imgWidth, imgHeight)
+            drawText2("Terrorists Win", textX.toInt() + Xoffset2.get().toInt(), textY.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+            drawText3("KillStreak: You killed $kills players in the round", MVPX.toInt() + Xoffset2.get().toInt(), MVPY.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+            if (!can) {
+                all += kills
+                can = true
+            }
+            drawText3("Now Playing: $sound", soundTextX.toInt() + Xoffset2.get().toInt(), soundTextY.toInt() + Yoffset2.get().toInt(), 191, 215, 234)
+            isRenderA = false
+            isRenderB = false
+
+            when (kills) {
+                1 -> renderImage(imgsilver1, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                2 -> renderImage(imgsilver2, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                3 -> renderImage(imgsilver3, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                4 -> renderImage(imgsilver4, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+                5 -> renderImage(imgsilver5, silverX.toInt() + Xoffset2.get().toInt(), silverY.toInt() + Yoffset2.get().toInt(), silverWidth, silverHeight)
+            }
+        } else {
+            tw = false
+            tick = 0
+            alpha = 0
+        }
+    }
+    }
    private fun drawText1(text: String, x: Int, y: Int, r: Int, g: Int, b: Int){drawText(Fonts.font28, text, x, y, r, g, b)}
    private fun drawText2(text: String, x: Int, y: Int, rv: Int, gv: Int, bv: Int){drawText(Fonts.font28, text, x, y, rv, gv, bv)}
    private fun drawText3(text: String, x: Int, y: Int, rv: Int, gv: Int, bv: Int){drawText(Fonts.SFUI35, text, x, y, rv, gv, bv)}
-
     private fun renderImage(resourceLocation: ResourceLocation, x: Int, y: Int, width: Int, height: Int) {
         mc.textureManager.bindTexture(resourceLocation)
         GL11.glColor4f(1f, 1f, 1f, 1f)

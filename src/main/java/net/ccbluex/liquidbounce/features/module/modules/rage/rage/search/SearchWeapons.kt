@@ -3,6 +3,8 @@ package net.ccbluex.liquidbounce.features.module.modules.rage.rage.search
 import net.ccbluex.liquidbounce.features.module.modules.rage.rage.WeaponType
 import net.ccbluex.liquidbounce.utils.MinecraftInstance
 import net.ccbluex.liquidbounce.utils.mc
+import net.minecraft.client.Minecraft
+import net.minecraft.item.Item
 
 fun hasWeapon(type: WeaponType): Boolean {
     val player = mc.thePlayer ?: return false
@@ -12,4 +14,16 @@ fun hasWeapon(type: WeaponType): Boolean {
         if (stack.item in type.items) return true
     }
     return false
+} fun findItem(itemToFind: Item): Int {
+    val mc = Minecraft.getMinecraft()
+    val player = mc.thePlayer ?: return -1
+    val inventory = player.inventory ?: return -1
+
+    for (i in 0 until inventory.mainInventory.size) {
+        val stack = inventory.getStackInSlot(i) ?: continue
+        if (stack.item == itemToFind) {
+            return i
+        }
+    }
+    return -1
 }

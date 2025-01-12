@@ -5,14 +5,11 @@
  */
 package net.ccbluex.liquidbounce.features.module.modules.rage
 
-import net.ccbluex.liquidbounce.LiquidBounce
 import net.ccbluex.liquidbounce.event.*
 import net.ccbluex.liquidbounce.features.MainLib.ChatPrint
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
-import net.ccbluex.liquidbounce.features.module.modules.combat.KillAura
-import net.ccbluex.liquidbounce.features.module.modules.movement.Sprint
 import net.ccbluex.liquidbounce.features.module.modules.rage.rage.TargetPart
 import net.ccbluex.liquidbounce.features.module.modules.rage.rage.WeaponType
 import net.ccbluex.liquidbounce.features.module.modules.rage.rage.actions.*
@@ -24,13 +21,10 @@ import net.ccbluex.liquidbounce.features.module.modules.rage.rage.special.distan
 import net.ccbluex.liquidbounce.features.module.modules.rage.rage.special.spreadOffset
 import net.ccbluex.liquidbounce.features.module.modules.rage.rage.utils.*
 import net.ccbluex.liquidbounce.utils.EntityUtils
-import net.ccbluex.liquidbounce.utils.MovementUtils.jumpMotion
-import net.ccbluex.liquidbounce.utils.MovementUtils.movingYaw
 import net.ccbluex.liquidbounce.utils.Rotation
 import net.ccbluex.liquidbounce.utils.RotationUtils
 import net.ccbluex.liquidbounce.utils.extensions.getDistanceToEntityBox
 import net.ccbluex.liquidbounce.value.*
-import net.minecraft.client.Minecraft
 import net.minecraft.client.audio.PositionedSoundRecord
 import net.minecraft.entity.Entity
 import net.minecraft.entity.effect.EntityLightningBolt
@@ -39,7 +33,6 @@ import net.minecraft.network.play.client.C0BPacketEntityAction
 import net.minecraft.network.play.server.S2CPacketSpawnGlobalEntity
 import net.minecraft.util.*
 import org.lwjgl.opengl.GL11
-import org.spongepowered.asm.mixin.Overwrite
 import java.awt.Color
 import kotlin.math.cos
 import kotlin.math.sin
@@ -379,26 +372,19 @@ object RageBot : Module() {
                 else -> return}
 
             val result = canSeePlayer(player, it).second
-
             val size = if (delayControl.get() && delayControlPrediction.get() && ping() > delayControlPredictionModeMinDelayValue.get()) ping() / 200 else 0
-
-            val targetVecX=
-                if (!canSeePart(player, it, TargetPart.HEAD) && !canSeePart(player, it, TargetPart.CHEST) && !canSeePart(player, it, TargetPart.FEET) && canSeePlayer(player, it).first && boundingBox.get()) result.xCoord
+            val targetVecX= if (!canSeePart(player, it, TargetPart.HEAD) && !canSeePart(player, it, TargetPart.CHEST) && !canSeePart(player, it, TargetPart.FEET) && canSeePlayer(player, it).first && boundingBox.get()) result.xCoord
             else if (targetPredict.get() && velocityABSX(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get())
-                if (acceleration.get()) acceleration(it, (targetPredictSize.get().toDouble() + size),timeTick.get()).xCoord else posX(it) + velocityX(it) * (targetPredictSize.get() + size)
-                else posX(it)
-
+                if (acceleration.get()) acceleration(it, (targetPredictSize.get().toDouble() + size),timeTick.get()).xCoord else posX(it) + velocityX(it) * (targetPredictSize.get() + size) else posX(it)
             val targetVecZ= if (!canSeePart(player, it, TargetPart.HEAD) && !canSeePart(player, it, TargetPart.CHEST) && !canSeePart(player, it, TargetPart.FEET) && canSeePlayer(player, it).first && boundingBox.get()) result.zCoord
             else if (targetPredict.get() && velocityABSZ(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get())
-               if (acceleration.get()) acceleration(it, (targetPredictSize.get().toDouble() + size),timeTick.get()).zCoord else posZ(it) + velocityZ(it) * (targetPredictSize.get() + size)
-            else posZ(it)
-
-            val targetVec = Vec3(targetVecX, targetVecY, targetVecZ)
-
+               if (acceleration.get()) acceleration(it, (targetPredictSize.get().toDouble() + size),timeTick.get()).zCoord else posZ(it) + velocityZ(it) * (targetPredictSize.get() + size) else posZ(it)
             val playerVecY = if (mc.thePlayer.isSneaking) playerPosY() + player.eyeHeight - sneakYOffset.get() + playerVecYVecYOffset.get() else playerPosY() + player.eyeHeight + playerVecYVecYOffset.get()
             val playerVecX = if (playerPredict.get()) playerPosX() + velocityX(it) * playerPredictSize.get() else playerPosX()
             val playerVecZ = if (playerPredict.get()) playerPosZ() + velocityZ(it) * playerPredictSize.get() else playerPosZ()
 
+
+            val targetVec = Vec3(targetVecX, targetVecY, targetVecZ)
             if(posDebug.get()) ChatPrint("PosX:${posX(it)} PosY:${posY(it)} PosZ:${posZ(it)}")
             if(velocityDebug.get()) ChatPrint("VelocityX:${velocityABSX(it)} VelocityY:${velocityABSY(it)} VelocityZ:${velocityABSZ(it)}")
             val playerVec = Vec3(playerVecX, playerVecY, playerVecZ)
@@ -551,32 +537,17 @@ object RageBot : Module() {
             )
             else -> return Pair(false,Vec3(0.0,0.0,0.0))
         }
-        if (boundingBoxMode.get() != "Full") {
             for (corner in corners) {
-                val result = world.rayTraceBlocks(
-                    playerVec,
-                    corner,
-                    stopOnLiquid.get(),
-                    ignoreBlockWithoutBoundingBox.get(),
-                    returnLastUncollidableBlock.get()
-                )
+                val result = world.rayTraceBlocks(playerVec, corner, stopOnLiquid.get(), ignoreBlockWithoutBoundingBox.get(), returnLastUncollidableBlock.get())
                 if (result == null || result.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) return Pair(
                     true,
-                    corner
-                )
+                    corner)
             }
-        }else{
 
-        }
 
         return Pair(false, Vec3(0.0,0.0,0.0))
     }
-    fun moveFix(yaw : Float) {
-        if (mc.thePlayer.isSprinting) {
-            mc.thePlayer.motionX -= (MathHelper.sin(yaw / 180f * 3.1415927f) * 0.1f).toDouble()
-            mc.thePlayer.motionZ += (MathHelper.cos(yaw / 180f * 3.1415927f) * 0.1f).toDouble()
-        }
-    }
+
     var Stime = 0
     var Dtime = 0
     var SvelocityX = 0.0
