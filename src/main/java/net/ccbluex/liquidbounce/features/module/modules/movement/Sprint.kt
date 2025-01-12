@@ -7,6 +7,7 @@ import net.ccbluex.liquidbounce.event.UpdateEvent
 import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
+import net.ccbluex.liquidbounce.features.module.modules.combat.Aura.sprintValue
 import net.ccbluex.liquidbounce.utils.MovementUtils
 import net.ccbluex.liquidbounce.utils.Rotation
 import net.ccbluex.liquidbounce.utils.RotationUtils
@@ -18,6 +19,7 @@ import net.minecraft.potion.Potion
 
 @ModuleInfo(name = "Sprint", category = ModuleCategory.MOVEMENT, defaultOn = true)
 class Sprint : Module() {
+    private val mode = ListValue("Mode", arrayOf("Normal", "Legit"), "Legit")
     val jumpDirectionsValue = BoolValue("JumpDirections", false)
     val allDirectionsValue = BoolValue("AllDirections", true)
     private val allDirectionsBypassValue = ListValue("AllDirectionsBypass", arrayOf("Rotate", "Rotate2", "Toggle", "Minemora", "Spoof", "LimitSpeed", "None"), "None").displayable { allDirectionsValue.get() }
@@ -45,89 +47,133 @@ class Sprint : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        mc.thePlayer.isSprinting = true
+        if (mode.get() == "Normal") {
+            if (sprintValue) {
+                mc.thePlayer.isSprinting = true
 
-        if (!MovementUtils.isMoving() || mc.thePlayer.isSneaking || blindnessValue.get() &&
-                mc.thePlayer.isPotionActive(Potion.blindness) || foodValue.get() &&
-                !(mc.thePlayer.foodStats.foodLevel > 6.0f || mc.thePlayer.capabilities.allowFlying) ||
-                (useItemValue.get() && mc.thePlayer.isUsingItem) ||
-                (checkServerSide.get() && (mc.thePlayer.onGround || !checkServerSideGround.get()) &&
-                !allDirectionsValue.get() && RotationUtils.targetRotation != null &&
-                RotationUtils.getRotationDifference(Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)) > 30)) {
-            mc.thePlayer.isSprinting = false
-            return
-        }
-
-        if (allDirectionsValue.get()) {
-            mc.thePlayer.isSprinting = true
-            if (RotationUtils.getRotationDifference(Rotation((MovementUtils.direction * 180f / Math.PI).toFloat(), mc.thePlayer.rotationPitch)) > 30) {
-                when (allDirectionsBypassValue.get().lowercase()) {
-                    "rotate" -> RotationUtils.setTargetRotation(Rotation(MovementUtils.movingYaw, mc.thePlayer.rotationPitch), 10)
-                    "rotate2" -> {
-                        var movingForward = mc.thePlayer.moveForward > 0.0F
-                        var movingBackward = mc.thePlayer.moveForward < 0.0F
-                        var movingRight = mc.thePlayer.moveStrafing > 0.0F
-                        var movingLeft = mc.thePlayer.moveStrafing < 0.0F
-
-                        var MovingSideways = movingLeft || movingRight
-                        var MovingStraight = movingForward || movingBackward
-                        var direction = mc.thePlayer.rotationYaw
-
-                        if(movingForward && !MovingSideways) {
-
-                        } else if(movingBackward && !MovingSideways) {
-                            direction += 180.0f
-                        } else if(movingForward && movingLeft) {
-                            direction += 45.0f
-                        } else if(movingForward) {
-                            direction -= 45.0f
-                        } else if(!MovingStraight && movingLeft) {
-                            direction += 90.0f
-                        } else if(!MovingStraight && movingRight) {
-                            direction -= 90.0f
-                        } else if(movingBackward && movingRight) {
-                            direction -= 135.0f
-                        } else if(movingBackward) {
-                            direction += 135.0f
-                        }
-
-                        RotationUtils.setTargetRotation(Rotation(direction, mc.thePlayer.rotationPitch), 10)
-                        
-                    }
-                    "toggle" -> {
-                        mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING))
-                        mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SPRINTING))
-                    }
-                    "minemora" -> {
-                        if (mc.thePlayer.onGround) {
-                            mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013, mc.thePlayer.posZ)
-                            mc.thePlayer.motionY = 0.0
-                        }
-                    }
-                    "limitspeed" -> {
-                        if (!allDirectionsLimitSpeedGround.get() || mc.thePlayer.onGround) {
-                            MovementUtils.limitSpeedByPercent(allDirectionsLimitSpeedValue.get())
-                        }
-                    }
-                    "spoof" -> spoofStat = true
+                if (!MovementUtils.isMoving() || mc.thePlayer.isSneaking || blindnessValue.get() &&
+                    mc.thePlayer.isPotionActive(Potion.blindness) || foodValue.get() &&
+                    !(mc.thePlayer.foodStats.foodLevel > 6.0f || mc.thePlayer.capabilities.allowFlying) ||
+                    (useItemValue.get() && mc.thePlayer.isUsingItem) ||
+                    (checkServerSide.get() && (mc.thePlayer.onGround || !checkServerSideGround.get()) &&
+                            !allDirectionsValue.get() && RotationUtils.targetRotation != null &&
+                            RotationUtils.getRotationDifference(
+                                Rotation(
+                                    mc.thePlayer.rotationYaw,
+                                    mc.thePlayer.rotationPitch
+                                )
+                            ) > 30)
+                ) {
+                    mc.thePlayer.isSprinting = false
+                    return
                 }
-            } else {
-                when (allDirectionsBypassValue.get().lowercase()) {
-                    "spoof" -> spoofStat = false
+
+                if (allDirectionsValue.get()) {
+                    mc.thePlayer.isSprinting = true
+                    if (RotationUtils.getRotationDifference(
+                            Rotation(
+                                (MovementUtils.direction * 180f / Math.PI).toFloat(),
+                                mc.thePlayer.rotationPitch
+                            )
+                        ) > 30
+                    ) {
+                        when (allDirectionsBypassValue.get().lowercase()) {
+                            "rotate" -> RotationUtils.setTargetRotation(
+                                Rotation(
+                                    MovementUtils.movingYaw,
+                                    mc.thePlayer.rotationPitch
+                                ), 10
+                            )
+
+                            "rotate2" -> {
+                                var movingForward = mc.thePlayer.moveForward > 0.0F
+                                var movingBackward = mc.thePlayer.moveForward < 0.0F
+                                var movingRight = mc.thePlayer.moveStrafing > 0.0F
+                                var movingLeft = mc.thePlayer.moveStrafing < 0.0F
+
+                                var MovingSideways = movingLeft || movingRight
+                                var MovingStraight = movingForward || movingBackward
+                                var direction = mc.thePlayer.rotationYaw
+
+                                if (movingForward && !MovingSideways) {
+
+                                } else if (movingBackward && !MovingSideways) {
+                                    direction += 180.0f
+                                } else if (movingForward && movingLeft) {
+                                    direction += 45.0f
+                                } else if (movingForward) {
+                                    direction -= 45.0f
+                                } else if (!MovingStraight && movingLeft) {
+                                    direction += 90.0f
+                                } else if (!MovingStraight && movingRight) {
+                                    direction -= 90.0f
+                                } else if (movingBackward && movingRight) {
+                                    direction -= 135.0f
+                                } else if (movingBackward) {
+                                    direction += 135.0f
+                                }
+
+                                RotationUtils.setTargetRotation(Rotation(direction, mc.thePlayer.rotationPitch), 10)
+
+                            }
+
+                            "toggle" -> {
+                                mc.netHandler.addToSendQueue(
+                                    C0BPacketEntityAction(
+                                        mc.thePlayer,
+                                        C0BPacketEntityAction.Action.STOP_SPRINTING
+                                    )
+                                )
+                                mc.netHandler.addToSendQueue(
+                                    C0BPacketEntityAction(
+                                        mc.thePlayer,
+                                        C0BPacketEntityAction.Action.START_SPRINTING
+                                    )
+                                )
+                            }
+
+                            "minemora" -> {
+                                if (mc.thePlayer.onGround) {
+                                    mc.thePlayer.setPosition(
+                                        mc.thePlayer.posX,
+                                        mc.thePlayer.posY + 0.0000013,
+                                        mc.thePlayer.posZ
+                                    )
+                                    mc.thePlayer.motionY = 0.0
+                                }
+                            }
+
+                            "limitspeed" -> {
+                                if (!allDirectionsLimitSpeedGround.get() || mc.thePlayer.onGround) {
+                                    MovementUtils.limitSpeedByPercent(allDirectionsLimitSpeedValue.get())
+                                }
+                            }
+
+                            "spoof" -> spoofStat = true
+                        }
+                    } else {
+                        when (allDirectionsBypassValue.get().lowercase()) {
+                            "spoof" -> spoofStat = false
+                        }
+                    }
                 }
             }
+        }else{
+            mc.gameSettings.keyBindSprint.pressed = true
         }
     }
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
-        val packet = event.packet
+        if (mode.get() == "Normal") {
+            val packet = event.packet
 
-        if (noPacket.get() && packet is C0BPacketEntityAction && (packet.action == C0BPacketEntityAction.Action.START_SPRINTING || packet.action == C0BPacketEntityAction.Action.STOP_SPRINTING)) {
-            event.cancelEvent()
-        }
-        if (noStopServerSide.get() && packet is C0BPacketEntityAction && packet.action == C0BPacketEntityAction.Action.STOP_SPRINTING) {
-            event.cancelEvent()
+            if (noPacket.get() && packet is C0BPacketEntityAction && (packet.action == C0BPacketEntityAction.Action.START_SPRINTING || packet.action == C0BPacketEntityAction.Action.STOP_SPRINTING)) {
+                event.cancelEvent()
+            }
+            if (noStopServerSide.get() && packet is C0BPacketEntityAction && packet.action == C0BPacketEntityAction.Action.STOP_SPRINTING) {
+                event.cancelEvent()
+            }
         }
     }
 }
