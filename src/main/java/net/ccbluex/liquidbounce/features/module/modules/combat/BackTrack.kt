@@ -22,10 +22,11 @@ import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.util.concurrent.ConcurrentHashMap
 
-@ModuleInfo(name = "Backtrack", category = ModuleCategory.COMBAT)
-object Backtrack : Module() {
+@ModuleInfo(name = "BackTrack", category = ModuleCategory.COMBAT)
+object BackTrack : Module() {
 
     private val delay = IntegerValue("Delay", 100, 1, 1000)
+    private val sleepDelay = IntegerValue("SleepDelay", 50, 0, 100)
     private val maxClientDistance: FloatValue = FloatValue("MaxClientSideDistance", 3f, 0.0f, 6f)
     private val minClientDistance = FloatValue("MinClientSideDistance", 1.0f, 0.0f, 6f)
     private val maxServerDistance: FloatValue = FloatValue("MaxServerSideDistance", 3f, 0.0f, 6f)
@@ -39,12 +40,20 @@ object Backtrack : Module() {
     private val maxPlayerHurtTime = IntegerValue("MaxPlayerHurtTime", 10, 0, 10)
     private val minTargetHurtTime = IntegerValue("MinTargetHurtTime", 0, 0, 10)
     private val maxTargetHurtTime = IntegerValue("MaxTargetHurtTime", 10, 0, 10)
+    private val predictTrack = BoolValue("PredictTrack", false)
+    private val predictSize = FloatValue("PredictSize", 1f, 1f, 5f).displayable{predictTrack.get()}
     private val lastPositions = ConcurrentHashMap<EntityPlayer, Vec3>()
     private val delayTimers = ConcurrentHashMap<EntityPlayer, MSTimer>()
     private val freeze = ConcurrentHashMap<EntityPlayer, Boolean>()
     private var keepPos = false
     private var targetPlayer: EntityPlayer? = null
+    private var targetVelocityX = 0.0
+    private var targetVelocityY = 0.0
+    private var targetVelocityZ = 0.0
+    private val sleepTimer = MSTimer()
+    private var sleep = false
     override fun onDisable() {
+        sleep = false
         keepPos = false
         delayTimers.clear()
         freeze.clear()
@@ -55,6 +64,9 @@ object Backtrack : Module() {
     fun onAttack(event: AttackEvent) {
         val player = mc.thePlayer?:return
         val target = event.targetEntity as EntityPlayer
+        targetVelocityX = (target.posX - target.prevPosX)*predictSize.get()
+        targetVelocityY = (target.posY - target.prevPosY)*predictSize.get()
+        targetVelocityZ = (target.posZ - target.prevPosZ)*predictSize.get()
         val clientDistance = player.getDistanceToEntity(target)
         val serverDistance = player.getDistance(target.serverPosX.toDouble()/32,
             target.serverPosY.toDouble()/32,target.serverPosZ.toDouble()/32)
@@ -85,15 +97,23 @@ object Backtrack : Module() {
 
             val timer = delayTimers[target]
             if (timer != null && timer.hasTimePassed(delay.get().toLong())) {
+                sleepTimer.reset()
+                sleep = true
                 freeze.clear()
                 lastPositions.clear()
                 targetPlayer = mc.thePlayer
                 keepPos = false
                 continue
             } else {
-                keepPos = true
-               if (allow(target)) target.setPositionAndUpdate(lastPos.xCoord, lastPos.yCoord, lastPos.zCoord)
-                targetPlayer = target
+                if (!sleep || sleepTimer.hasTimePassed(sleepDelay.get().toLong())) {
+                    keepPos = true
+                    if (allow(target)) if (predictTrack.get()) target.setPositionAndUpdate(
+                        lastPos.xCoord + targetVelocityX,
+                        lastPos.yCoord + targetVelocityY,
+                        lastPos.zCoord + targetVelocityZ
+                    ) else target.setPositionAndUpdate(lastPos.xCoord, lastPos.yCoord, lastPos.zCoord)
+                    targetPlayer = target
+                }
             }
         }
     }
@@ -120,7 +140,7 @@ object Backtrack : Module() {
         val iterator = lastPositions.iterator()
         while (iterator.hasNext()) {
             val (target, lastPos) = iterator.next()
-            if (keepPos && allow(target)) target.setPositionAndUpdate(lastPos.xCoord, lastPos.yCoord, lastPos.zCoord) else continue
+            if (keepPos && allow(target)) if (predictTrack.get()) target.setPositionAndUpdate(lastPos.xCoord + targetVelocityX, lastPos.yCoord + targetVelocityY, lastPos.zCoord + targetVelocityZ) else target.setPositionAndUpdate(lastPos.xCoord, lastPos.yCoord, lastPos.zCoord) else continue
         }
     }
 }

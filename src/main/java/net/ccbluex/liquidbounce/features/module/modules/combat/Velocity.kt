@@ -7,18 +7,23 @@ import net.ccbluex.liquidbounce.features.module.Module
 import net.ccbluex.liquidbounce.features.module.ModuleCategory
 import net.ccbluex.liquidbounce.features.module.ModuleInfo
 import net.ccbluex.liquidbounce.utils.EntityUtils
+import net.ccbluex.liquidbounce.utils.misc.RandomUtils
 import net.ccbluex.liquidbounce.value.BoolValue
 import net.ccbluex.liquidbounce.value.FloatValue
 import net.ccbluex.liquidbounce.value.IntegerValue
 import net.ccbluex.liquidbounce.value.ListValue
+import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.minecraft.network.play.server.S12PacketEntityVelocity
+import net.minecraft.network.play.server.S27PacketExplosion
 import net.minecraft.potion.Potion
 import java.lang.Math.random
+import kotlin.math.abs
+import kotlin.math.atan2
 
 @ModuleInfo(name = "Velocity", category = ModuleCategory.COMBAT)
 class Velocity : Module() {
@@ -50,8 +55,8 @@ class Velocity : Module() {
     var jump = false
     private var jumped = 0
     var jumped2 = false
-
-
+    private var hasReceivedVelocity = false
+    private var limitUntilJump = 0
     @EventTarget
      fun onAttack(event: AttackEvent) {
         when (mode.get()) {
@@ -103,8 +108,51 @@ class Velocity : Module() {
         }
     }
     @EventTarget
+    fun onStrafe(event: StrafeEvent) {
+        val player = mc.thePlayer ?: return
+
+        if (mode.get() == "Jump" && hasReceivedVelocity) {
+            if (player.isSprinting && player.onGround && player.hurtTime == 9) {
+                player.tryJump()
+                limitUntilJump = 0
+                if(debug.get()) ChatPrint("Jump")
+            }
+            hasReceivedVelocity = false
+            return
+        }
+    }
+    @EventTarget
     fun onPacket(event: PacketEvent) {
+        val packet = event.packet
+        val player = mc.thePlayer ?: return
         when (mode.get()) {
+            "Jump" -> {
+                var packetDirection = 0.0
+                when (packet) {
+                    is S12PacketEntityVelocity -> {
+                        val motionX = packet.motionX.toDouble()
+                        val motionZ = packet.motionZ.toDouble()
+
+                        packetDirection = atan2(motionX, motionZ)
+                    }
+
+                    is S27PacketExplosion -> {
+                        val motionX = player.motionX + packet.x
+                        val motionZ = player.motionZ + packet.y
+
+                        packetDirection = atan2(motionX, motionZ)
+                    }
+                }
+                val degreePlayer = getDirection()
+                val degreePacket = Math.floorMod(packetDirection.toDegrees().toInt(), 360).toDouble()
+                var angle = abs(degreePacket + degreePlayer)
+                val threshold = 120.0
+                angle = Math.floorMod(angle.toInt(), 360).toDouble()
+                val inRange = angle in 180 - threshold / 2..180 + threshold / 2
+                if (inRange)
+                    hasReceivedVelocity = true
+            }
+
             "Cancel" -> {
                     val packet = event.packet
                     if (packet is S12PacketEntityVelocity) {
@@ -195,7 +243,34 @@ class Velocity : Module() {
         }
     }  override val tag: String
         get() = mode.get()
+    fun Float.toRadians() = this * 0.017453292f
+    fun Float.toRadiansD() = toRadians().toDouble()
+    fun Float.toDegrees() = this * 57.29578f
+    fun Float.toDegreesD() = toDegrees().toDouble()
 
+    fun Double.toRadians() = this * 0.017453292
+    fun Double.toRadiansF() = toRadians().toFloat()
+    fun Double.toDegrees() = this * 57.295779513
+    fun Double.toDegreesF() = toDegrees().toFloat()
+
+    private fun getDirection(): Double {
+        var moveYaw = mc.thePlayer.rotationYaw
+        if (mc.thePlayer.moveForward != 0f && mc.thePlayer.moveStrafing == 0f) {
+            moveYaw += if (mc.thePlayer.moveForward > 0) 0 else 180
+        } else if (mc.thePlayer.moveForward != 0f && mc.thePlayer.moveStrafing != 0f) {
+            if (mc.thePlayer.moveForward > 0) moveYaw += if (mc.thePlayer.moveStrafing > 0) -45 else 45 else moveYaw -= if (mc.thePlayer.moveStrafing > 0) -45 else 45
+            moveYaw += if (mc.thePlayer.moveForward > 0) 0 else 180
+        } else if (mc.thePlayer.moveStrafing != 0f && mc.thePlayer.moveForward == 0f) {
+            moveYaw += if (mc.thePlayer.moveStrafing > 0) -90 else 90
+        }
+        return Math.floorMod(moveYaw.toInt(), 360).toDouble()
+    }
+
+    private fun EntityPlayerSP.tryJump() {
+        if (!mc.gameSettings.keyBindJump.isKeyDown) {
+            this.jump()
+        }
+    }
     override fun onDisable() {
         jump = false
         jumped = 0

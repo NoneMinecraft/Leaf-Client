@@ -32,7 +32,6 @@ class Criticals : Module() {
     private var LastRegen = 0
     private var reverse = false
     var tick = 0
-    private val timer = MSTimer()
     override fun onDisable() {
         tick = 0
         reverse = false
