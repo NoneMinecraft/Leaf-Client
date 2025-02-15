@@ -24,6 +24,6 @@ import kotlin.random.Random
         blockReachDistance
     ) { entity: Entity -> entity === targetEntity } != null
 }
-fun isMove(it: EntityPlayer):Boolean{
+fun isMove(it: Entity):Boolean{
     return  (it.posX - it.prevPosX) != 0.0 || (it.posY - it.prevPosY) != 0.0 || (it.posZ - it.prevPosZ) != 0.0
 }

@@ -1,4 +1,3 @@
-//仅供参考
 package net.ccbluex.liquidbounce.features.module.modules.combat.aura
 
 import kotlin.math.floor

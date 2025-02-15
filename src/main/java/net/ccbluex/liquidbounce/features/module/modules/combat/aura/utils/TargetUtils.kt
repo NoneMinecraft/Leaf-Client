@@ -3,11 +3,12 @@ package net.ccbluex.liquidbounce.features.module.modules.combat.aura.utils
 import net.ccbluex.liquidbounce.features.module.modules.combat.Aura
 import net.ccbluex.liquidbounce.utils.MinecraftInstance
 import net.ccbluex.liquidbounce.utils.mc
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.MovingObjectPosition
 import net.minecraft.util.Vec3
 
-fun visibility(player: EntityPlayer, target: EntityPlayer): Pair<Boolean, Vec3> {
+fun visibility(player: EntityPlayer, target: Entity): Pair<Boolean, Vec3> {
     val world = mc.theWorld
     val playerVec = Vec3(player.posX,player.posY + player.eyeHeight,player.posZ)
     val minX = target.entityBoundingBox.minX
