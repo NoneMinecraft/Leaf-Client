@@ -180,6 +180,7 @@ object Aura : Module() {
     private val randomTargetPosSymmetricalDistributionLevelModePartIIMinValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIIMinValue", 0.5f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
     private val randomTargetPosSymmetricalDistributionLevelModePartIIMaxValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIIMaxValue", 0.2f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
     private val randomTargetPosSymmetricalDistributionLevelModePartIIRate = IntegerValue("RandomTargetPosSymmetricalDistributionLevelModePartIIRate", 50, 0, 100).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSymmetricalDistributionLevelModePartIIRateRunProbabilityCheckOnlyOutside = IntegerValue("RandomTargetPosSymmetricalDistributionLevelModePartIIRateRunProbabilityCheckOnlyOutside", 50, 0, 100).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
 
     //Raycast
     private val raycastValue = BoolValue("RayCast", true)
@@ -263,6 +264,7 @@ object Aura : Module() {
     }
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
+        randomTargetPosSymmetricalDistributionLevelModePartIIRateRunProbabilityCheckOnlyOutside.get()
         if (circleValue.get()) {
             GL11.glPushMatrix()
             GL11.glTranslated(
@@ -357,7 +359,7 @@ object Aura : Module() {
             }
 
             for (entity in mc.theWorld.playerEntities?:return) {
-                if (entity == rayCastedTarget && entity is EntityPlayer && !isFriend(entity) && !isBot(entity) && entity.isEntityAlive && entity != entityList && !entity.isDead && entity != player
+                if (entity == rayCastedTarget && entity is EntityPlayer && !isFriend(entity) && !isBot(entity) && entity.isEntityAlive && (targetMode.get() == "Single" || !entityList.contains(entity)) && !entity.isDead && entity != player
                     && entity.getDistanceToEntityBox(player) <= currentRange && MathHelper.wrapAngleTo180_double(RotationUtils.getRotationDifference(entity)) <= fov.get()
                     && EntityUtils.isSelected(entity, true)) {
                     val (isVisible, _) = visibility(player, entity)
@@ -365,13 +367,14 @@ object Aura : Module() {
                         currentTarget = rayCastedTarget as EntityPlayer?
                         foundTarget = true
                         break
+
                     }
                 }else  foundTarget = false
             }
 
             if (!foundTarget) {
                 for (entity in mc.theWorld.playerEntities?:return) {
-                    if (entity is EntityPlayer && entity.isEntityAlive && !isFriend(entity) && !isBot(entity) && !entity.isDead && entity != entityList && entity != player
+                    if (entity is EntityPlayer && entity.isEntityAlive && !isFriend(entity) && !isBot(entity) && !entity.isDead && (targetMode.get() == "Single" || !entityList.contains(entity)) && entity != player
                         && EntityUtils.isSelected(entity, true) && MathHelper.wrapAngleTo180_double(RotationUtils.getRotationDifference(entity)) <= fov.get()
                         && entity.getDistanceToEntityBox(player) <= currentRange) {
                         val (isVisible, _) = visibility(player, entity)
@@ -643,7 +646,7 @@ object Aura : Module() {
             }
             else -> z
         }
-        return Vec3(baseX,baseY,baseZ)
+        return if (randomTargetPos.get()) Vec3(baseX,baseY,baseZ) else Vec3(x,y,z)
     }
     private fun attack(it:EntityPlayer){
         val event = AttackEvent(it)
@@ -672,39 +675,15 @@ object Aura : Module() {
     private fun simulationYaw(currentYaw: Float, targetYaw: Float,currentPitch: Float, targetPitch: Float) {
         when (smoothMode.get()) {
             "DataSimulationA" -> {
-                // 找到与当前yaw角度最接近的起始值
                 val closestStartYaw = findClosestValue(YawData, MathHelper.wrapAngleTo180_float(currentYaw).toDouble())
-                // 找到与目标yaw角度最接近的结束值
                 val closestEndYaw = findClosestValue(YawData, MathHelper.wrapAngleTo180_float(targetYaw).toDouble())
-
-                // 获取起始和结束yaw的索引
                 val startIndexYaw = YawData.indexOf(closestStartYaw)
                 val endIndexYaw = YawData.indexOf(closestEndYaw)
-
-                // 获取从起始到结束的yaw数据列表，按方向排序
-                val resultYaw = if (startIndexYaw <= endIndexYaw) {
-                    YawData.subList(startIndexYaw, endIndexYaw + 1)
-                } else {
-                    YawData.subList(endIndexYaw, startIndexYaw + 1).reversed()
-                }
-
-                // 判断是否有yaw数据进行处理
+                val resultYaw = if (startIndexYaw <= endIndexYaw) YawData.subList(startIndexYaw, endIndexYaw + 1) else YawData.subList(endIndexYaw, startIndexYaw + 1).reversed()
                 if (YawDataIndex < resultYaw.size) {
                     YawDataIndex++
-
-                    // 计算当前yaw角度和下一个点之间的差值
-                    val nextYaw = resultYaw[YawDataIndex].toFloat()
-                    val deltaYaw = nextYaw -  MathHelper.wrapAngleTo180_float(currentYaw)
-
-                    // 更新yaw，添加差值进行平滑过渡
-                    if (rotateValue.get()) {
-                        yaw += deltaYaw // 通过加上差值来平滑过渡
-                    } else {
-                        mc.thePlayer.rotationYaw += deltaYaw // 玩家yaw角度平滑过渡
-                    }
+                    if (rotateValue.get()) yaw = resultYaw[YawDataIndex].toFloat()  else  mc.thePlayer.rotationYaw = resultYaw[YawDataIndex].toFloat()
                 }
-
-                // 如果已经处理完所有的yaw数据，重置YawDataIndex
                 if (YawDataIndex >= resultYaw.size) YawDataIndex = 0
 
                 val closestStartPitch = findClosestValue(PitchData, MathHelper.wrapAngleTo180_float(currentPitch).toDouble())
