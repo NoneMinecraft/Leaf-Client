@@ -1,4 +1,8 @@
-
+/*
+ * FDPClient Hacked Client
+ * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
+ * https://github.com/SkidderMC/FDPClient/
+ */
 package net.ccbluex.liquidbounce.ui.client.hud.element.elements
 
 import net.ccbluex.liquidbounce.ui.client.hud.element.Border
@@ -73,7 +77,7 @@ class KeyStrokes : Element(5.0, 25.0, 1.5F, Side.default()) {
             keyStroke.render(animSpeedValue.get(), backGroundColor, textColor, highLightPercent.get(), outline.get(), outlineBoldValue.get(), fontValue.get(), blurValue.get(), this.renderX.toFloat(), this.renderY.toFloat(), scale, Companion)
         }
         if(keyStyleValue.get().equals("Jello")) {
-            RenderUtils.drawImage2(ResourceLocation("fdpclient/misc/keystrokes.png"), -3.5f, -3.5f, 54, 54)
+            RenderUtils.drawImage2(ResourceLocation("leaf/misc/keystrokes.png"), -3.5f, -3.5f, 54, 54)
         }
         if(keyStyleValue.get().equals("Juul")) {
             val fontRenderer = fontValue.get()

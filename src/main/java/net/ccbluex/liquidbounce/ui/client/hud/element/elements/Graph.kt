@@ -1,3 +1,9 @@
+/*
+ * FDPClient Hacked Client
+ * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
+ * https://github.com/SkidderMC/FDPClient/
+ * This file is a skid of https://github.com/WYSI-Foundation/LiquidBouncePlus/
+ */
 
 package net.ccbluex.liquidbounce.ui.client.hud.element.elements
 
@@ -17,6 +23,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.lang.Math.pow
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 /**
@@ -29,7 +36,7 @@ class Graph(x: Double = 75.0, y: Double = 110.0, scale: Float = 1F,
             side: Side = Side(Side.Horizontal.MIDDLE, Side.Vertical.DOWN)) : Element(x, y, scale, side) {
 
     // general
-    private val graphValue = ListValue("Graph-Value", arrayOf("Speed", "BPS", "Packet-In", "Packet-Out"), "Speed")
+    private val graphValue = ListValue("Graph-Value", arrayOf("Speed", "RotationSpeed", "Packet-In", "Packet-Out"), "Speed")
     private val updateDelay = IntegerValue("Update-Delay", 1000, 0, 5000)
     private val xMultiplier = FloatValue("xMultiplier", 7F, 1F, 20F)
     private val yMultiplier = FloatValue("yMultiplier", 7F, 0.1F, 20F)
@@ -64,7 +71,6 @@ class Graph(x: Double = 75.0, y: Double = 110.0, scale: Float = 1F,
     private var lastX = 0.0
     private var lastZ = 0.0
     private var speedVal = 0F
-
     private var lastValue = ""
 
     override fun updateElement() {
@@ -75,6 +81,7 @@ class Graph(x: Double = 75.0, y: Double = 110.0, scale: Float = 1F,
     }
 
     override fun drawElement(partialTicks: Float): Border {
+        val rotationSpeed = abs(mc.thePlayer.rotationYaw - mc.thePlayer.prevRotationYaw)
         val font = fontValue.get()
         val width = maxGraphValues.get() * xMultiplier.get()
         val markColor = Color(0.1F, 1F, 0.1F).rgb
@@ -93,7 +100,7 @@ class Graph(x: Double = 75.0, y: Double = 110.0, scale: Float = 1F,
         if (timer.hasTimePassed(updateDelay.get().toLong())) {
             when (graphValue.get().toLowerCase()) {
                 "speed" -> valueStore.add(MovementUtils.getSpeed() * 10F)
-                "bps" -> valueStore.add(speedVal)
+                "RotationSpeed" -> valueStore.add(rotationSpeed)
                 "packet-in" -> valueStore.add(PacketCounterUtils.avgInBound.toFloat())
                 "packet-out" -> valueStore.add(PacketCounterUtils.avgOutBound.toFloat())
             }
@@ -113,12 +120,12 @@ class Graph(x: Double = 75.0, y: Double = 110.0, scale: Float = 1F,
         if (displayGraphName.get()) {
             var displayString = if (nameValue.get()) when (graphValue.get().lowercase()) {
                 "speed" -> "Player speed ($working blocks/tick)"
-                "bps" -> "Player speed ($working blocks/s)"
+                "RotationSpeed" -> "$rotationSpeed"
                 "packet-in" -> "Inbound packets ($working packets/s)"
                 else -> "Outbound packets ($working packets/s)"
             } else when (graphValue.get().lowercase()) {
                 "speed" -> "Player speed"
-                "bps" -> "Player blocks/s"
+                "RotationSpeed" -> "$rotationSpeed"
                 "packet-in" -> "Inbound packets"
                 else -> "Outbound packets"
             }

@@ -1,8 +1,3 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
 package net.ccbluex.liquidbounce.ui.client.hud.element.elements
 
 import net.ccbluex.liquidbounce.LiquidBounce
@@ -37,7 +32,7 @@ class Notifications(x: Double = 0.0, y: Double = 0.0, scale: Float = 1F,side: Si
     private val whiteText = BoolValue("WhiteTextColor", true)
     private val modeColored = BoolValue("CustomModeColored", true)
     companion object {
-        val styleValue = ListValue("Mode", arrayOf("Classic", "Modern", "Tenacity", "Intellij", "Skid"), "Modern")
+        val styleValue = ListValue("Mode", arrayOf("Classic", "Modern","Intellij", "Succinct"), "Succinct")
     }
 
     /**
@@ -273,8 +268,7 @@ class Notification(
             }  */
 
         if(style.equals("Skid")){
-
-            val colors=Color(type.renderColor.red,type.renderColor.green,type.renderColor.blue,alpha/3)
+            val colors=Color(type.renderColor.red,type.renderColor.green,type.renderColor.blue,200)
             shadowRenderUtils.drawShadowWithCustomAlpha(2f, 0F, width.toFloat() + 5f, 27f - 5f, 250f) // oops
             RenderUtils.drawRect(2.0, 0.0, 4.0, 27f - 5.0, colors.rgb)
             RenderUtils.drawRect(3F, 0F, width.toFloat() + 5f, 27f - 5f, Color(0,0,0,150))
@@ -286,30 +280,30 @@ class Notification(
             return false
             }
 
-        if(style.equals("Tenacity")){ 
+        if(style.equals("Succinct")){
         val fontRenderer = Fonts.font35
         val thisWidth=100.coerceAtLeast(fontRenderer.getStringWidth(this.title).coerceAtLeast(fontRenderer.getStringWidth(this.content)) + 40)
-        val error = ResourceLocation("fdpclient/ui/notifications/icons/tenacity/cross.png")
-        val successful = ResourceLocation("fdpclient/ui/notifications/icons/tenacity/tick.png")
-        val warn = ResourceLocation("fdpclient/ui/notifications/icons/tenacity/warning.png")
-        val info = ResourceLocation("fdpclient/ui/notifications/icons/tenacity/info.png")
+        val error = ResourceLocation("leaf/ui/notifications/icons/tenacity/cross.png")
+        val successful = ResourceLocation("leaf/ui/notifications/icons/tenacity/tick.png")
+        val warn = ResourceLocation("leaf/ui/notifications/icons/tenacity/warning.png")
+        val info = ResourceLocation("leaf/ui/notifications/icons/tenacity/info.png")
         if(type.renderColor == Color(0xFF2F2F)){
-            RenderUtils.drawRoundedCornerRect(-18F,1F,thisWidth.toFloat(),height.toFloat() - 2F,5f,Color(180,0,0,190).rgb)
+            RenderUtils.drawRoundedCornerRect(-18F,1F,thisWidth.toFloat(),height.toFloat() - 2F,1f,Color(0,0,0,125).rgb)
             RenderUtils.drawImage(error,-13,5,18,18)
             Fonts.font35.drawString(title,9F,16F,Color(255,255,255,255).rgb)
             Fonts.font40.drawString(content,9F,6F,Color(255,255,255,255).rgb)
         }else if(type.renderColor == Color(0x60E092)){
-            RenderUtils.drawRoundedCornerRect(-16F,1F,thisWidth.toFloat(),height.toFloat() - 2F,5f,Color(0,180,0,190).rgb)
+            RenderUtils.drawRoundedCornerRect(-16F,1F,thisWidth.toFloat(),height.toFloat() - 2F,1f,Color(0,0,0,125).rgb)
             RenderUtils.drawImage(successful,-13,5,18,18)
             Fonts.font35.drawString(title,9F,16F,Color(255,255,255,255).rgb)
             Fonts.font40.drawString(content,9F,6F,Color(255,255,255,255).rgb)
         } else if(type.renderColor == Color(0xF5FD00)){
-            RenderUtils.drawRoundedCornerRect(-16F,1F,thisWidth.toFloat(),height.toFloat() - 2F,5f,Color(0,0,0,190).rgb)
+            RenderUtils.drawRoundedCornerRect(-16F,1F,thisWidth.toFloat(),height.toFloat() - 2F,1f,Color(0,0,0,125).rgb)
             RenderUtils.drawImage(warn,-13,5,18,18)
             Fonts.font35.drawString(title,9F,16F,Color(255,255,255,255).rgb)
             Fonts.font40.drawString(content,9F,6F,Color(255,255,255,255).rgb)
         } else {
-            RenderUtils.drawRoundedCornerRect(-16F,1F,thisWidth.toFloat(),height.toFloat() - 2F,5f,Color(0,0,0,190).rgb)
+            RenderUtils.drawRoundedCornerRect(-16F,1F,thisWidth.toFloat(),height.toFloat() - 2F,1f,Color(0,0,0,125).rgb)
             RenderUtils.drawImage(info,-13,5,18,18)
             Fonts.font35.drawString(title,9F,16F,Color(255,255,255,255).rgb)
             Fonts.font40.drawString(content,9F,6F,Color(255,255,255,255).rgb)
@@ -328,7 +322,7 @@ class Notification(
             }
 
         if(style.equals("Intellij")) {
-                val notifyDir = "fdpclient/notifications/icons/noti/intellij/"
+                val notifyDir = "leaf/notifications/icons/noti/intellij/"
                 val imgSuccess = ResourceLocation("${notifyDir}checkmark.png")
                 val imgError = ResourceLocation("${notifyDir}error.png")
                 val imgWarning = ResourceLocation("${notifyDir}warning.png")

@@ -1,4 +1,8 @@
-
+/*
+ * FDPClient Hacked Client
+ * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
+ * https://github.com/SkidderMC/FDPClient/
+ */
 package net.ccbluex.liquidbounce.ui.client.hud.element.elements
 
 import net.ccbluex.liquidbounce.LiquidBounce
@@ -158,7 +162,7 @@ class Text(
         return result.toString()
     }
     fun getClientName(i: Int,i2: Int): String{
-        return "FDPClient".substring(i,i2);
+        return "Leaf".substring(i,i2);
     }
     /**
      * Draw element
@@ -220,12 +224,12 @@ class Text(
         }
 
         // maybe.
-        if(textStyle.get().contains("FDP")) {
+        if(textStyle.get().contains("Leaf")) {
             FontLoaders.F40.drawString(
                 getClientName(0,3), 5F, 0F,Color(255,255,255,180).rgb
             )
             FontLoaders.C16.drawString(
-                getClientName(3,9), 5F + FontLoaders.F40.getStringWidth("FDP"), 13F,Color(255,255,255,180).rgb
+                getClientName(3,9), 5F + FontLoaders.F40.getStringWidth("Leaf"), 13F,Color(255,255,255,180).rgb
             )
             RenderUtils.drawRect(5f,22.5f,70f,22.8f,Color(200,200,200,120).rgb)
             FontLoaders.C14.drawString(
