@@ -2,6 +2,7 @@
 package net.ccbluex.liquidbounce.utils
 
 import net.ccbluex.liquidbounce.event.MoveEvent
+import net.minecraft.client.entity.EntityPlayerSP
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.minecraft.potion.Potion
@@ -12,6 +13,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 object MovementUtils : MinecraftInstance() {
+
 
     fun resetMotion(y: Boolean) {
         mc.thePlayer.motionX = 0.0

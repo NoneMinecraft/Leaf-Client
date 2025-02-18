@@ -1,4 +1,3 @@
-
 package net.ccbluex.liquidbounce.utils.render
 
 import net.ccbluex.liquidbounce.injection.access.StaticStorage

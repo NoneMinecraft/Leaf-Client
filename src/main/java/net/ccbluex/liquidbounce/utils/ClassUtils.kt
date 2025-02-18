@@ -1,4 +1,3 @@
-
 package net.ccbluex.liquidbounce.utils
 
 import net.ccbluex.liquidbounce.value.Value

@@ -1,4 +1,3 @@
-
 package net.ccbluex.liquidbounce.utils
 
 import org.objectweb.asm.ClassReader

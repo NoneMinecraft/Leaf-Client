@@ -5,8 +5,7 @@ import java.awt.*;
 import net.ccbluex.liquidbounce.utils.render.*;
 import net.ccbluex.liquidbounce.ui.font.*;
 
-public class MainMenuButton
-{
+public class MainMenuButton {
     private final GuiScreen parent;
     private final int id;
     private final String icon;
@@ -28,14 +27,23 @@ public class MainMenuButton
         this.x = x;
         this.y = y;
     }
-    public interface Executor
-    {
+
+    public interface Executor {
         void execute();
     }
 
     public void draw(final int mouseX, final int mouseY) {
-        RenderUtils.drawRoundedCornerRect(this.x, this.y, this.x + this.width, this.y + this.height, 5.0f, new Color(0, 0, 0, 100).getRGB());
-        Fonts.font40.drawCenteredString(this.text, this.x + this.width / 2.0f, this.y + this.height / 2.0f - 5.3f, new Color(255, 255, 255).getRGB());
+        boolean isMouseOver = mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
+        int baseColor = new Color(0, 0, 0, 180).getRGB();
+        int otherColor = new Color(8, 255, 0, 150).getRGB();
+        RenderUtils.drawRoundedRect(this.x, this.y, this.x + width, this.y + this.height, 1, baseColor);
+
+        if (!isMouseOver) {
+            RenderUtils.drawRoundedRect(width + 7, this.y, width + 3 + 7, this.y + this.height, 0.8f, otherColor);
+        }else{
+            RenderUtils.drawRoundedRect(width + 10, this.y, width + 3 + 10, this.y + this.height, 0.0f, otherColor);
+        }
+        Fonts.font40.drawCenteredString(this.text, this.x + this.width / 2.0f, this.y + this.height / 2.0f - 5.25f, new Color(255, 255, 255).getRGB());
     }
 
     public void mouseClick(final int mouseX, final int mouseY, final int mouseButton) {
