@@ -38,6 +38,8 @@ import kotlin.math.*
 
 @ModuleInfo(name = "Aura", category = ModuleCategory.COMBAT)
 object Aura : Module() {
+
+
     //Attack
     private val attack = BoolValue("Attack", true)
     private val maxAttackDelay = IntegerValue("MaxAttackDelay", 100, 0, 1000).displayable { attack.get() }
@@ -57,7 +59,7 @@ object Aura : Module() {
     private val allowAttackWhenNotBlocking = BoolValue("AllowAttackWhenNotBlocking", false).displayable { attack.get() }
 
     //AutoBlock
-    private val autoBlockMode = ListValue("AutoBlockMode", arrayOf("C08", "KeyBind","None"), "C07")
+    private val autoBlockMode = ListValue("AutoBlockMode", arrayOf("C08", "KeyBind","Animation","None"), "C08")
     private val autoBlockTrigger = ListValue("AutoBlockTrigger", arrayOf("Range-Always", "Always","Range-Delay"), "Range-Always").displayable{autoBlockMode.get() != "None"}
     private val autoBlockDelayValue = IntegerValue("AutoBlockDelay", 50, 1, 1000).displayable{autoBlockMode.get() != "None"}
     private val autoBlockRange = FloatValue("AutoBlockMaxRange", 3F, 0F, 6F).displayable{autoBlockMode.get() != "None"}
@@ -161,25 +163,25 @@ object Aura : Module() {
     private val randomTargetPosFrequency = IntegerValue("RandomTargetPosFrequency", 500, 0, 1000).displayable { randomTargetPos.get() }
     private val randomTargetPosMode = ListValue("RandomTargetPosMode", arrayOf("Random", "Perlin"), "Perlin").displayable { rotationMode.get() != "None" && randomTargetPos.get() }
     private val randomTargetLevelMode = ListValue("RandomTargetPosLevelMode", arrayOf("Single", "SymmetricalDistribution"), "Single").displayable { rotationMode.get() != "None" && randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSingleLevelModeAmount = FloatValue("PerlinNoiseRandomTargetPosSingleLevelModeAmount", 2f, 0.01f, 50f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSingleLevelModeMinSeed = IntegerValue("PerlinNoiseRandomTargetPosSingleLevelModeMinSeed", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSingleLevelModeMaxSeed = IntegerValue("PerlinNoiseRandomTargetPosSingleLevelModeMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIAmount = FloatValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIAmount", 2f, 0.01f, 50f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMinSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMinSeed", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIRate = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIAmount = FloatValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIAmount", 2f, 0.01f, 50f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMinSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMinSeed", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMaxSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIRate = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSingleLevelModeMinValue = IntegerValue("RandomTargetPosSingleLevelModeMinValue", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSingleLevelModeMaxValue = IntegerValue("RandomTargetPosSingleLevelModeMaxValue", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSymmetricalDistributionLevelModePartIMinValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIMinValue", 0.5f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSymmetricalDistributionLevelModePartIMaxValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIMaxValue", 0.2f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSymmetricalDistributionLevelModePartIRate = IntegerValue("RandomTargetPosSymmetricalDistributionLevelModePartIRate", 50, 0, 100).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSymmetricalDistributionLevelModePartIIMinValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIIMinValue", 0.5f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSymmetricalDistributionLevelModePartIIMaxValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIIMaxValue", 0.2f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
-    private val randomTargetPosSymmetricalDistributionLevelModePartIIRate = IntegerValue("RandomTargetPosSymmetricalDistributionLevelModePartIIRate", 50, 0, 100).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSingleAmount = FloatValue("PerlinNoiseRandomTargetPosSingleLevelModeAmount", 2f, 0.01f, 50f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSingleMinSeed = IntegerValue("PerlinNoiseRandomTargetPosSingleLevelModeMinSeed", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSingleMaxSeed = IntegerValue("PerlinNoiseRandomTargetPosSingleLevelModeMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP1Amount = FloatValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIAmount", 2f, 0.01f, 50f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP1MinSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMinSeed", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP1MaxSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP1Rate = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP2Amount = FloatValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIAmount", 2f, 0.01f, 50f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP2MinSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMinSeed", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP2MaxSeed = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val perlinNoiseRandomTargetPosSymmetricalDistributionP2Rate = IntegerValue("PerlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSingleMinValue = IntegerValue("RandomTargetPosSingleLevelModeMinValue", 1, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSingleMaxValue = IntegerValue("RandomTargetPosSingleLevelModeMaxValue", 10000, 1, 10000).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSymmetricalDistributionP1MinValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIMinValue", 0.5f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSymmetricalDistributionP1MaxValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIMaxValue", 0.2f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSymmetricalDistributionP1Rate = IntegerValue("RandomTargetPosSymmetricalDistributionLevelModePartIRate", 50, 0, 100).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSymmetricalDistributionP2MinValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIIMinValue", 0.5f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSymmetricalDistributionP2MaxValue = FloatValue("RandomTargetPosSymmetricalDistributionLevelModePartIIMaxValue", 0.2f, -1f, 1f).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
+    private val randomTargetPosSymmetricalDistributionP2Rate = IntegerValue("RandomTargetPosSymmetricalDistributionLevelModePartIIRate", 50, 0, 100).displayable { rotationMode.get() != "None"&& randomTargetPos.get() }
 
     //Raycast
     private val raycastValue = BoolValue("RayCast", true)
@@ -217,11 +219,12 @@ object Aura : Module() {
     private val circleAlphaValue = IntegerValue("CircleAlpha", 255, 0, 255).displayable { circleValue.get() }
     private val circleThicknessValue = FloatValue("CircleThickness", 2F, 1F, 5F).displayable { circleValue.get() }
 
-    private var RR = false
     private var speedValue = 0.0
     private var speedTick = 0
     var sprintValue = true //Sprint
     var strictStrafeValue = false //EntityLivingBase
+    var displayBlocking: Boolean = false //MixinItemRenderer
+    var blocking: Boolean = false //EntityPlayerSP
     private var lastRotation = Rotation(0.0F,0.0F)
     private val clickDelay = MSTimer()
     private var abreset = false
@@ -235,6 +238,23 @@ object Aura : Module() {
     private var currentThroughWallsRange = 0.0
     private var randomPosVec = Vec3(0.0,0.0,0.0)
     private val randomPosTimer = MSTimer()
+    private var foundTarget = false
+    private var entityList : MutableList<EntityPlayer> = arrayListOf()
+    private val switchDelayValue = MSTimer()
+    private var YawDataIndex = 0
+    private var PitchDataIndex = 0
+    var SData = false
+    var yaw = 0f
+    var pitch = 0f
+    private var randomTargetPosSingleNoise: Double? = null
+    private var randomTargetPosSingleAmount: Double? = null
+    private var randomTargetPosP1Noise: Double? = null
+    private var randomTargetPosP1Amount: Double? = null
+    private var randomTargetPosP2Noise: Double? = null
+    private var randomTargetPosP2Amount: Double? = null
+    private var randomTargetPosSingleValue: Double? = null
+    private var randomTargetPosP1Value: Double? = null
+    private var randomTargetPosP2Value: Double? = null
     override fun onEnable() {
         if (debug.get()){
            if (allowAttackWhenNotBlocking.get() && autoBlockMode.get() != "None") ChatPrint("§0[§cError§0] §7Conflict settings:id(01)\n§7at Aura.allowAttackWhenNotBlocking(BoolValue)\n§7at Aura.autoBlockMode(ListValue)")
@@ -244,13 +264,13 @@ object Aura : Module() {
         }
     }
     override fun onDisable() {
+        blocking = false
         switchDelayValue.reset()
         randomPosTimer.reset()
         CPSTimer.reset()
         autoBlockDelay.reset()
         clickDelay.reset()
         rayCastedTarget = null
-        RR = false
         foundTarget = false
         cpsUpdate = false
         allowStrictStrafe = false
@@ -323,7 +343,7 @@ object Aura : Module() {
         if (renderDebug.get()) {
             val sr = ScaledResolution(mc)
             val text = "cr:$currentRange , ctr:$currentThroughWallsRange , speedR:$speedValue , TR:$speedTick" +
-                              "cpsC:$cps , ssv:$strictStrafeValue , RR:$RR , RT:$rayCastedTarget" +
+                              "cpsC:$cps , ssv:$strictStrafeValue  , RT:$rayCastedTarget" +
                               "sprint:${mc.thePlayer.isSprinting} , block:${mc.thePlayer.isBlocking} , eat:${mc.thePlayer.isEating} " +
                               "CYaw:${mc.thePlayer.rotationYaw} , CPitch:${mc.thePlayer.rotationPitch}" +
                               "abr:${autoBlockRange.get()} , YDN:$YawDataIndex , PDN:$PitchDataIndex"
@@ -331,9 +351,7 @@ object Aura : Module() {
                 sr.scaledHeight / 2f - 60f, Color.blue.rgb)
         }
     }
-    private var foundTarget = false
-    private var entityList : MutableList<EntityPlayer> = arrayListOf()
-    private val switchDelayValue = MSTimer()
+
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         val player = mc.thePlayer ?: return
@@ -405,20 +423,33 @@ object Aura : Module() {
                 }
             } else if (fakeSwing.get()) mc.thePlayer.swingItem()
             allowStrictStrafe = true
+
             val itemStack: ItemStack? = player.heldItem
             if ((autoBlockTrigger.get() == "Range-Always" && it.getDistanceToEntityBox(player) <= autoBlockRange.get()) || (autoBlockTrigger.get() == "Always") || (autoBlockTrigger.get() == "Range-Delay" && autoBlockDelay.hasTimePassed(autoBlockDelayValue.get().toLong()))) {
                 autoBlockDelay.reset()
                 if ((!autoBlockDetectsHeldItemAreOnlySwords.get() ||(itemStack != null && itemStack.item is ItemSword)) && (!autoBlockDetectionGUIIsNullOnly.get() || mc.currentScreen == null)) {
                     when (autoBlockMode.get()) {
-                        "C08" -> mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()))
+                        "C08" -> {
+                            mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()))
+                            blocking = true
+                            displayBlocking = true
+                        }
                         "KeyBind" -> {
                             mc.gameSettings.keyBindUseItem.pressed = true
-                            abreset = true
                         }
-                        else -> ABReset()
+                        "Animation" -> {
+                            blocking = false
+                            displayBlocking = true
+                        }
+                        else -> {
+                            abReset()
+                            blocking = false
+                            displayBlocking = false
+                        }
                     }
-                } else ABReset()
-            } else ABReset()
+                } else abReset()
+            } else abReset()
+
             sprintValue = sprint.get()
             if (speedTick < randomSpeedFrequency.get()) speedTick++ else {
                 speedTick = 0
@@ -439,9 +470,7 @@ object Aura : Module() {
             val x = if (visibilityDetectionEntityBoundingBoxAllowsCalculationTheSecondCoordValue.get() && visibilityDetectionEntityBoundingBox.get() && visibilityDetection.get()) visibility(player, it).second.xCoord else it.posX
             val y = if (visibilityDetectionEntityBoundingBoxAllowsCalculationTheSecondCoordValue.get() && visibilityDetectionEntityBoundingBox.get() && visibilityDetection.get())visibility(player, it).second.yCoord else it.posY
             val z = if (visibilityDetectionEntityBoundingBoxAllowsCalculationTheSecondCoordValue.get() && visibilityDetectionEntityBoundingBox.get() && visibilityDetection.get()) visibility(player, it).second.zCoord else it.posZ
-
             randomPosVec = updatePos(it,x,y,z)
-
             val targetX = if (predictValue.get()) randomPosVec.xCoord + (it.posX - it.prevPosX) * predictSize.get() else randomPosVec.xCoord
             val targetY = if (predictValue.get()) randomPosVec.yCoord + targetPosYOffset.get()+(it.posY - it.prevPosY)* predictSize.get() else randomPosVec.yCoord + targetPosYOffset.get()
             val targetZ = if (predictValue.get()) randomPosVec.zCoord + (it.posZ - it.prevPosZ) * predictSize.get() else randomPosVec.zCoord
@@ -462,7 +491,7 @@ object Aura : Module() {
             }
             if (smoothMode.get() != "DataSimulationA" && smoothMode.get() != "DataSimulationB") {
                 var currentSpeed = 0.0f
-                if (speedValue < 0.0 && reverseDeflectionAllowedOnlyOutside.get() && hitable(it,currentRange) && !RR) speedValue = 0.0
+                if (speedValue < 0.0 && reverseDeflectionAllowedOnlyOutside.get() && hitable(it,currentRange)) speedValue = 0.0
                 when (smoothMode.get()) {
                     "Slerp" -> currentSpeed = if (!isMove(it)) slerpSpeed.get() + speedValue.toFloat() + StationaryAccelerateSpeed.get() else slerpSpeed.get() + speedValue.toFloat()
                     "AdaptiveBezier" -> currentSpeed = if (!isMove(it)) adaptiveBezierSpeed.get() + speedValue.toFloat() + StationaryAccelerateSpeed.get() else adaptiveBezierSpeed.get() + speedValue.toFloat()
@@ -509,7 +538,7 @@ object Aura : Module() {
             }
         } ?: run {
             allowStrictStrafe = false
-            ABReset()
+            abReset()
             sprintValue = true
             foundTarget = false
         }
@@ -538,113 +567,51 @@ object Aura : Module() {
             strictStrafeValue = false
         }
     }
-    private fun ABReset(){
-        if (abreset){
-            mc.gameSettings.keyBindUseItem.pressed = false
-            abreset = false
-        }
+    private fun abReset(){
+        mc.gameSettings.keyBindUseItem.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindUseItem)
+        abreset = false
+        blocking = false
+        displayBlocking = false
     }
-    private var randomTargetPosNoiseSingleLevelModeValue: Double? = null
-    private var randomTargetPosSingleLevelModeAmount: Double? = null
-    private var randomTargetPosSymmetricalDistributionLevelModeP1Value: Double? = null
-    private var randomTargetPosSymmetricalDistributionLevelModeP1Amount: Double? = null
-    private var randomTargetPosSymmetricalDistributionLevelModeP2Value: Double? = null
-    private var randomTargetPosSymmetricalDistributionLevelModeP2Amount: Double? = null
-    private var randomTargetPosSingleLevelModeValue: Double? = null
-    private var randomTargetPosSymmetricalDistributionLevelModePart1Value: Double? = null
-    private var randomTargetPosSymmetricalDistributionLevelModePart2Value: Double? = null
     private fun updatePos(it:EntityPlayer, x:Double,y:Double,z:Double):Vec3{
-        if (!randomTargetPos.get() ||
-        (randomPosTimer.hasTimePassed(randomTargetPosFrequency.get().toLong()) &&
-                it.hurtTime in minRandomTargetPosHurtTime.get()..maxRandomTargetPosHurtTime.get() && (!randomTargetPosOnlyOutside.get() || hitable(it, currentRange)))) {
-
-        randomTargetPosNoiseSingleLevelModeValue = perlinNoise(x, y, z, randomInt(
-            perlinNoiseRandomTargetPosSingleLevelModeMinSeed.get(), perlinNoiseRandomTargetPosSingleLevelModeMaxSeed.get()))
-        randomTargetPosSingleLevelModeAmount = randomTargetPosNoiseSingleLevelModeValue!! * perlinNoiseRandomTargetPosSingleLevelModeAmount.get()
-
-        randomTargetPosSymmetricalDistributionLevelModeP1Value = perlinNoise(x, y, z, randomInt(
-            perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMinSeed.get(), perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIMaxSeed.get()))
-        randomTargetPosSymmetricalDistributionLevelModeP1Amount = randomTargetPosSymmetricalDistributionLevelModeP1Value!! * perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIAmount.get()
-
-        randomTargetPosSymmetricalDistributionLevelModeP2Value = perlinNoise(x, y, z, randomInt(
-            perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMinSeed.get(), perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIMaxSeed.get()))
-        randomTargetPosSymmetricalDistributionLevelModeP2Amount = randomTargetPosSymmetricalDistributionLevelModeP2Value!! * perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIAmount.get()
-
-        randomTargetPosSingleLevelModeValue = randomDouble(
-            randomTargetPosSingleLevelModeMinValue.get().toDouble(), randomTargetPosSingleLevelModeMaxValue.get().toDouble())
-        randomTargetPosSymmetricalDistributionLevelModePart1Value = randomDouble(
-            randomTargetPosSymmetricalDistributionLevelModePartIMinValue.get().toDouble(), randomTargetPosSymmetricalDistributionLevelModePartIMaxValue.get().toDouble())
-        randomTargetPosSymmetricalDistributionLevelModePart2Value = randomDouble(
-            randomTargetPosSymmetricalDistributionLevelModePartIIMinValue.get().toDouble(), randomTargetPosSymmetricalDistributionLevelModePartIIMaxValue.get().toDouble())
+        if ((randomPosTimer.hasTimePassed(randomTargetPosFrequency.get().toLong())
+                    && it.hurtTime in minRandomTargetPosHurtTime.get()..maxRandomTargetPosHurtTime.get()
+                    && (!randomTargetPosOnlyOutside.get() || hitable(it, currentRange)))) {
+            randomTargetPosSingleNoise = perlinNoise(x,y,z,randomInt(perlinNoiseRandomTargetPosSingleMinSeed.get(),perlinNoiseRandomTargetPosSingleMaxSeed.get()))
+            randomTargetPosSingleAmount = randomTargetPosSingleNoise!! * perlinNoiseRandomTargetPosSingleAmount.get()
+            randomTargetPosP1Noise = perlinNoise(x,y,z,randomInt(perlinNoiseRandomTargetPosSymmetricalDistributionP1MinSeed.get(),perlinNoiseRandomTargetPosSymmetricalDistributionP1MaxSeed.get()))
+            randomTargetPosP1Amount = randomTargetPosP1Noise!! * perlinNoiseRandomTargetPosSymmetricalDistributionP1Amount.get()
+            randomTargetPosP2Noise = perlinNoise(x,y,z,randomInt(perlinNoiseRandomTargetPosSymmetricalDistributionP2MinSeed.get(),perlinNoiseRandomTargetPosSymmetricalDistributionP2MaxSeed.get()))
+            randomTargetPosP2Amount = randomTargetPosP2Noise!! * perlinNoiseRandomTargetPosSymmetricalDistributionP2Amount.get()
+            randomTargetPosSingleValue = randomDouble(randomTargetPosSingleMinValue.get().toDouble(), randomTargetPosSingleMaxValue.get().toDouble())
+            randomTargetPosP1Value = randomDouble(randomTargetPosSymmetricalDistributionP1MinValue.get().toDouble(), randomTargetPosSymmetricalDistributionP1MaxValue.get().toDouble())
+            randomTargetPosP2Value = randomDouble(randomTargetPosSymmetricalDistributionP2MinValue.get().toDouble(), randomTargetPosSymmetricalDistributionP2MaxValue.get().toDouble())
             randomPosTimer.reset()
+        }
+        return if (randomTargetPos.get()) Vec3(randomPosVec(x),randomPosVec(y),randomPosVec(z)) else Vec3(x,y,z)
     }
-
-        val baseX = when(randomTargetPosMode.get()) {
+    private fun randomPosVec(value:Double):Double{
+      return when(randomTargetPosMode.get()) {
             "Perlin" -> when(randomTargetLevelMode.get()) {
-                "Single" -> x + randomTargetPosSingleLevelModeAmount!!
+                "Single" -> value + randomTargetPosSingleAmount!!
                 "SymmetricalDistribution" -> when {
-                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIRate.get()) -> x + randomTargetPosSymmetricalDistributionLevelModeP1Amount!!
-                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIRate.get()) -> x + randomTargetPosSymmetricalDistributionLevelModeP2Amount!!
-                    else -> x
+                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionP1Rate.get()) -> value + randomTargetPosP1Amount!!
+                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionP2Rate.get()) -> value + randomTargetPosP2Amount!!
+                    else -> value
                 }
-                else -> x
+                else -> value
             }
             "Random" -> when(randomTargetLevelMode.get()) {
-                "Single" -> x + randomTargetPosSingleLevelModeValue!!
+                "Single" -> value + randomTargetPosSingleValue!!
                 "SymmetricalDistribution" -> when {
-                    probability(randomTargetPosSymmetricalDistributionLevelModePartIRate.get()) -> x + randomTargetPosSymmetricalDistributionLevelModePart1Value!!
-                    probability(randomTargetPosSymmetricalDistributionLevelModePartIIRate.get()) -> x + randomTargetPosSymmetricalDistributionLevelModePart2Value!!
-                    else -> x
+                    probability(randomTargetPosSymmetricalDistributionP1Rate.get()) -> value + randomTargetPosP1Value!!
+                    probability(randomTargetPosSymmetricalDistributionP2Rate.get()) -> value + randomTargetPosP2Value!!
+                    else -> value
                 }
-                else -> x
+                else -> value
             }
-            else -> x
+            else -> value
         }
-
-        val baseY = when(randomTargetPosMode.get()) {
-            "Perlin" -> when(randomTargetLevelMode.get()) {
-                "Single" -> y + randomTargetPosSingleLevelModeAmount!!
-                "SymmetricalDistribution" -> when {
-                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIRate.get()) -> y + randomTargetPosSymmetricalDistributionLevelModeP1Amount!!
-                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIRate.get()) -> y + randomTargetPosSymmetricalDistributionLevelModeP2Amount!!
-                    else -> y
-                }
-                else -> y
-            }
-            "Random" -> when(randomTargetLevelMode.get()) {
-                "Single" -> y + randomTargetPosSingleLevelModeValue!!
-                "SymmetricalDistribution" -> when {
-                    probability(randomTargetPosSymmetricalDistributionLevelModePartIRate.get()) -> y + randomTargetPosSymmetricalDistributionLevelModePart1Value!!
-                    probability(randomTargetPosSymmetricalDistributionLevelModePartIIRate.get()) -> y + randomTargetPosSymmetricalDistributionLevelModePart2Value!!
-                    else -> y
-                }
-                else -> y
-            }
-            else -> y
-        }
-
-        val baseZ = when(randomTargetPosMode.get()) {
-            "Perlin" -> when(randomTargetLevelMode.get()) {
-                "Single" -> z + randomTargetPosSingleLevelModeAmount!!
-                "SymmetricalDistribution" -> when {
-                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIRate.get()) -> z + randomTargetPosSymmetricalDistributionLevelModeP1Amount!!
-                    probability(perlinNoiseRandomTargetPosSymmetricalDistributionLevelModePartIIRate.get()) -> z + randomTargetPosSymmetricalDistributionLevelModeP2Amount!!
-                    else -> z
-                }
-                else -> z
-            }
-            "Random" -> when(randomTargetLevelMode.get()) {
-                "Single" -> z + randomTargetPosSingleLevelModeValue!!
-                "SymmetricalDistribution" -> when {
-                    probability(randomTargetPosSymmetricalDistributionLevelModePartIRate.get()) -> z + randomTargetPosSymmetricalDistributionLevelModePart1Value!!
-                    probability(randomTargetPosSymmetricalDistributionLevelModePartIIRate.get()) -> z + randomTargetPosSymmetricalDistributionLevelModePart2Value!!
-                    else -> z
-                }
-                else -> z
-            }
-            else -> z
-        }
-        return if (randomTargetPos.get()) Vec3(baseX,baseY,baseZ) else Vec3(x,y,z)
     }
     private fun attack(it:EntityPlayer){
         val event = AttackEvent(it)
@@ -664,12 +631,6 @@ object Aura : Module() {
             probability(extraReverseDeflectionRate.get())) 0.0 else maxSpeed.toDouble()
         return if (randomSpeedValue.get()) randomDouble(min, max) else 0.0
     }
-    private var YawDataIndex = 0
-    private var PitchDataIndex = 0
-    var SData = false
-    var yaw = 0f
-    var pitch = 0f
-
     private fun simulationYaw(currentYaw: Float, targetYaw: Float,currentPitch: Float, targetPitch: Float) {
         when (smoothMode.get()) {
             "DataSimulationA" -> {
