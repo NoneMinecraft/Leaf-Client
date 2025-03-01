@@ -43,21 +43,22 @@ import kotlin.random.Random
 
 @ModuleInfo(name = "RageBot", category = ModuleCategory.Rage)
 object RageBot : Module() {
+    //HitBox
+    val priority = ListValue("HitBox-Priority", arrayOf("Head", "Chest", "Feet"), "Head")
+    private val headAimOffset = FloatValue("HeadAimOffset", 0F, -1F, 1F)
+    private val chestAimOffset = FloatValue("ChestAimOffset", 0F, -1F, 1F)
+    private val feetAimOffset = FloatValue("FeetAimOffset", 0F, -1F, 1F)
 
-    private var lastServerPos: Double? = null
-    val pitchOffset = FloatValue("PitchOffset", 0.2F, -0.5F, 5F)
+    //Pos
     val getPosMode = ListValue("TargetPosMode", arrayOf("Pos", "ServerPos","Custom"), "ServerPos")
     val getPlayerPosMode = ListValue("PlayerPosMode", arrayOf("Pos", "ServerPos"), "ServerPos")
     val getVelocityMode = ListValue("VelocityMode", arrayOf("Pos", "ServerPos","MixServerPosAndPrevPos","MixPosAndLastTickPos","PracticalityMix","Custom"), "Pos")
     val scriptEngineMode = ListValue("ScriptEngineMode", arrayOf("JavaScript"), "JavaScript")
-    val getVelocityModeCustomCode = TextValue("CustomVelocityCode","serverPos - lastTickPos")
-    val getPosModeCustomCode = TextValue("CustomPosCode","serverPos")
+    val getPosModeCustomCode = TextValue("CustomTargetPosCode","serverPos").displayable { getPosMode.get() == "Custom" }
+    val getVelocityModeCustomCode = TextValue("CustomVelocityCode","serverPos - lastTickPos").displayable { getVelocityMode.get() == "Custom" }
 
-    val visibilitySensitivityTick = IntegerValue("visibilitySensitivityTick", 0, 0, 10)
-    val enableAccumulation = BoolValue("EnableAccumulation", true)
-
+    //Range
     private val range = FloatValue("MaxRange", 70F, 50F, 200F)
-    val rotateValue = BoolValue("SilentRotate", false)
     private val autoRange = BoolValue("AutoRange", true)
     private val akRange = FloatValue("AutoRange-CustomRange-AKRange", 50F, 20F, 100F).displayable {autoRange.get()}
     private val m4Range = FloatValue("AutoRange-CustomRange-M4Range", 50F, 20F, 100F).displayable {autoRange.get()}
@@ -67,20 +68,29 @@ object RageBot : Module() {
     private val deagleRange = FloatValue("AutoRange-CustomRange-DeagleRange", 40F, 20F, 100F).displayable {autoRange.get()}
     private val shotgunRange = FloatValue("AutoRange-CustomRange-ShotGunRange", 20F, 20F, 100F).displayable {autoRange.get()}
 
+    //Predict
     private val targetPredict = BoolValue("TargetPredict", true)
     val targetPredictSize = FloatValue("TargetPredictSize", 4.3F, 0F, 10F).displayable { targetPredict.get() }
     private val targetPredictMaxVelocity = FloatValue("TargetPredictMaxVelocity", 10.0F, 0.01F, 10F).displayable { targetPredict.get() }
-    private val targetPredictMinVelocity = FloatValue("TargetPredictMinVelocity", 10.0F, 0.01F, 10F).displayable { targetPredict.get() }
-    private val playerPredict = BoolValue("PlayerPredict", false)
-    private val playerPredictSize = FloatValue("PlayerPredictSize", 4.3F, 0F, 10F).displayable { playerPredict.get() }
-
+    private val targetPredictMinVelocity = FloatValue("TargetPredictMinVelocity", 0.01F, 0.01F, 10F).displayable { targetPredict.get() }
     private val targetVisibilityPredict = BoolValue("TargetVisibilityPredict", true)
     private val targetVisibilityPredictSize = FloatValue("TargetVisibilityPredictSize", 1.5F, 1F, 10F).displayable { targetVisibilityPredict.get() }
     private val targetThroughWallPredictFire = BoolValue("TargetVisibilityPredictFire", true).displayable { targetPredict.get() }
+    private val playerPredict = BoolValue("PlayerPredict", false)
+    private val playerPredictSize = FloatValue("PlayerPredictSize", 4.3F, 0F, 10F).displayable { playerPredict.get() }
 
+    //Visibility
+    val visibilitySensitivityTick = IntegerValue("VisibilitySensitivityTick", 0, 0, 10)
+    val enableAccumulation = BoolValue("EnableSensitivityAccumulation", true)
+    private val boundingBox = BoolValue("BoundingBoxDetection", true)
+    private val size = FloatValue("BoundingBoxDetection-SizeReductionValue", 0F, -1F, 1F).displayable { boundingBox.get() }
+    private val boundingBoxStep = FloatValue("BoundingBoxDetection-Step", 0.15F, 0.05F, 0.5F).displayable { boundingBox.get() }
+
+    //Fire
     val fireMode = ListValue("FireMode", arrayOf("Legit", "Packet"), "Packet")
     val fireTick = IntegerValue("FireTick", 1, 0, 5).displayable { fireMode.get() == "Legit" }
 
+    //NoSpread
     private val noSpreadValue = BoolValue("NoSpread", true)
     private val noSpreadMode = ListValue("NoSpreadMode", arrayOf("Switch", "Packet","SwitchOffsets","PacketOffsets"), "Switch").displayable {noSpreadValue.get()}
     val noSpreadTriggerMode = ListValue("NoSpreadTriggerMode", arrayOf("Fired", "Tick"), "Tick").displayable {noSpreadValue.get()}
@@ -90,53 +100,55 @@ object RageBot : Module() {
     val noSpreadSwitchOffsetsYawTick2 = FloatValue("noSpreadSwitchOffsetsYawTick2", 0.0F, -2F, 2F).displayable {noSpreadValue.get()}
     val noSpreadTick = IntegerValue("NoSpreadBaseTick", 2, 0, 5).displayable {noSpreadValue.get()}
 
+    //FireLimit
+    private val fireLimit = BoolValue("FireLimit", false)
+    private val posYValue = FloatValue("FireLimit-TargetRiseVelocityY", 0.8F, -1F, 1F).displayable { fireLimit.get() }
+    private val fallValue = FloatValue("FireLimit-TargetFallVelocity", 0.8F, -1F, 1F).displayable { fireLimit.get() }
+    private val timeLimitedPrediction = BoolValue("FireLimit-TimeLimitedPrediction", false).displayable { fireLimit.get() }
+    private val timeLimitedPredictionTicksValue = IntegerValue("FireLimit-TimeLimitedPredictionTicks", 5, 0, 40).displayable { fireLimit.get() }
+    private val maxRandomRange = IntegerValue("FireLimit-MaxRandomRange", 5, 0, 40).displayable { fireLimit.get() }
+    private val minRandomRange = IntegerValue("FireLimit-MinRandomRange", 1, 0, 40).displayable { fireLimit.get() }
+    private val timeLimitedAwpOnly = BoolValue("FireLimit-AwpOnly", true).displayable { fireLimit.get() }
+
+    //DistanceOffset
+    private val distanceOffsetValue = BoolValue("DistanceOffset", true)
+    private val distanceOffsetMultiplier = FloatValue("DistanceOffset-Multiplier", 0.1F, 0.01F, 2F).displayable { distanceOffsetValue.get() }
+    private val distanceOffsetMaxRange = FloatValue("DistanceOffset-MaxRange", 75F, 1F, 100F).displayable { distanceOffsetValue.get() }
+
+    //Sneak
     private val autoSneak = BoolValue("AutoSneak", true)
     private val autoSneakMode = ListValue("AutoSneakMode", arrayOf("Legit", "Packet"), "Packet").displayable {autoSneak.get()}
     private val autoSneakTriggerMode = ListValue("AutoSneakTriggerMode", arrayOf("Always", "OnlyFire"), "OnlyFire").displayable {autoSneak.get()}
     private val autoSneakOnlyAwp = BoolValue("AutoSneakOnlyAwp", true).displayable {autoSneak.get()}
 
-    private val fireLimit = BoolValue("FireLimit", false)
-    private val posYValue = FloatValue("FireLimit-TargetVelocityY", 0.8F, -1F, 1F).displayable { fireLimit.get() }
-    private val fallValue = FloatValue("FireLimit-TargetFallVelocity", 0.8F, -1F, 1F).displayable { fireLimit.get() }
-    private val timeLimitedPrediction = BoolValue("FireLimit-TimeLimitedPrediction", false).displayable { fireLimit.get() }
-    private val timeLimitedPredictionTicksValue = IntegerValue("FireLimit-TimeLimitedPredictionTicks", 5, 0, 40).displayable { fireLimit.get() }
-    private val maxRandomRange = IntegerValue("FireLimit-MaxRandomRange", 5, 0, 40).displayable { fireLimit.get() }
-    private val minRandomRange = IntegerValue("FireLimit-MainRandomRange", 1, 0, 40).displayable { fireLimit.get() }
-    private val timeLimitedAwpOnly = BoolValue("FireLimit-AwpOnly", true).displayable { fireLimit.get() }
+    //delayControl
+    private val delayControl = BoolValue("DelayControl", true)
+    private val delayControlPrediction = BoolValue("DelayControlPrediction", true).displayable { delayControl.get() }
+    private  val delayControlPredictionModeMinDelayValue = IntegerValue("DelayControlPredictionModeMinDelayValue", 150, 1, 800).displayable { delayControl.get() }
 
+    //Jitter
     private val jitter = BoolValue("Jitter", false)
     private val jitterYaw = BoolValue("JitterYaw", true).displayable { jitter.get() }
     private val jitterPitch = BoolValue("JitterPitch", false).displayable { jitter.get() }
     private val jitterFrequency = IntegerValue("JitterFrequency", 1, 1, 40).displayable { jitter.get() }
     private val jitterAmplitude = IntegerValue("JitterAmplitude", 1, 1, 40).displayable { jitter.get() }
 
-    private val hitBoxValue = BoolValue("HitBox", true)
-    val priority = ListValue("Priority", arrayOf("Head", "Chest", "Feet"), "Head").displayable { hitBoxValue.get() }
-    private val headAimOffset = FloatValue("HeadAimOffset", 0F, -1F, 1F).displayable { hitBoxValue.get() }
-    private val chestAimOffset = FloatValue("ChestAimOffset", 0F, -1F, 1F).displayable { hitBoxValue.get() }
-    private val feetAimOffset = FloatValue("FeetAimOffset", 0F, -1F, 1F).displayable { hitBoxValue.get() }
-
-    private val boundingBox = BoolValue("BoundingBoxDetection", true)
-    private val size = FloatValue("BoundingBoxDetection-SizeReductionValue", 0F, -1F, 1F).displayable { boundingBox.get() }
-    private val boundingBoxStep = FloatValue("BoundingBox-Step", 0.15F, 0.05F, 0.5F)
-    private val distanceOffsetValue = BoolValue("DistanceOffset", true)
-    private val distanceOffsetMultiplier = FloatValue("DistanceOffsetMultiplier", 0.1F, 0.01F, 0.99F).displayable { distanceOffsetValue.get() }
-    private val distanceOffsetMaxRange = FloatValue("DistanceOffsetMaxRange", 75F, 1F, 100F).displayable { distanceOffsetValue.get() }
-
-    private val sneakYOffset = FloatValue("SneakYOffset", 0.2F, -1F, 1F)
-    private val playerVecYVecYOffset = FloatValue("PlayerVecYVecYOffset", 0.2F, -1F, 1F)
-
+    //RayTrace
     private val stopOnLiquid = BoolValue("RayTraceBlocks-StopOnLiquid", true)
     private val ignoreBlockWithoutBoundingBox = BoolValue("RayTraceBlocks-IgnoreBlockWithoutBoundingBox", true)
     private val returnLastUncollidableBlock = BoolValue("RayTraceBlocks-ReturnLastUncollidableBlock", false)
 
-    private val delayControl = BoolValue("DelayControl", true)
-    private val delayControlPrediction = BoolValue("DelayControlPrediction", true)
-    private  val delayControlPredictionModeMinDelayValue = IntegerValue("DelayControlPredictionModeMinDelayValue", 80, 1, 200)
+    //Rotate
+    val rotateValue = BoolValue("SilentRotate", false)
+    private val strictStrafe = BoolValue("StrictStrafe", true).displayable { rotateValue.get() }
 
-    private val strictStrafe = BoolValue("StrictStrafe", true)
+    //Other
     private val sprint = BoolValue("Sprint", true)
+    val pitchOffset = FloatValue("PitchOffset", 0.0F, -5F, 5F)
+    private val sneakYOffset = FloatValue("SneakYOffset", 0.2F, -1F, 1F)
+    private val playerVecYVecYOffset = FloatValue("PlayerYOffset", 0.2F, -1F, 1F)
 
+    //Debug
     private val spreadDebug = BoolValue("SpreadDebug", false)
     private val velocityDebug = BoolValue("VelocityDebug", false)
     private val posDebug = BoolValue("PosDebug", false)
@@ -144,6 +156,7 @@ object RageBot : Module() {
     private val targetDebugMaxHurtTime = IntegerValue("TargetDebug-MaxHurtTime", 10, 1, 10)
     private val targetDebugMinHurtTime = IntegerValue("TargetDebug-MinHurtTime", 10, 1, 10)
 
+    //Render
     private val hitEffect = BoolValue("HitEffect", true)
     private val hitEffectMode = ListValue("HitEffectMode", arrayOf("Lighting", "Critical","Fire"), "Lighting").displayable { hitEffect.get() }
     private val lightingSoundValue = BoolValue("LightingSound", true).displayable { hitEffectMode.get() == "Lighting" }
@@ -154,14 +167,14 @@ object RageBot : Module() {
     private val circleBlueValue = IntegerValue("CircleBlue", 255, 0, 255).displayable { circleValue.get() }
     private val circleAlphaValue = IntegerValue("CircleAlpha", 255, 0, 255).displayable { circleValue.get() }
     private val circleThicknessValue = FloatValue("CircleThickness", 2F, 1F, 5F).displayable { circleValue.get() }
-
     private val lineValue = BoolValue("Line", true)
-    private val lineYOffset = FloatValue("LineYOffset", 1F, -10F, 10F)
+    private val lineYOffset = FloatValue("LineYOffset", 1F, -10F, 10F).displayable { lineValue.get() }
     private val lineRedValue = IntegerValue("LineRed", 255, 0, 255).displayable { lineValue.get() }
     private val lineGreenValue = IntegerValue("LineGreen", 255, 0, 255).displayable { lineValue.get() }
     private val lineBlueValue = IntegerValue("LineBlue", 255, 0, 255).displayable { lineValue.get() }
     private val lineAlphaValue = IntegerValue("LineAlpha", 255, 0, 255).displayable { lineValue.get() }
     private val lineThicknessValue = FloatValue("LineThickness", 2F, 1F, 5F).displayable { lineValue.get() }
+
 
     private var part:TargetPart = TargetPart.HEAD
     private var ac = 0
@@ -586,13 +599,6 @@ object RageBot : Module() {
                 return@confirm point
             }
         }
-    }
-
-    fun update(currentServerPos:Double):Boolean{
-        if (lastServerPos == null || currentServerPos != lastServerPos) {
-            lastServerPos = currentServerPos
-            return true
-        }else return false
     }
     private fun stopSneak(){
         mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak)
