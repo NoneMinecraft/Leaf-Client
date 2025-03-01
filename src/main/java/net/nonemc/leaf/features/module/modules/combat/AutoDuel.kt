@@ -1,4 +1,4 @@
-//DCJ BOT by N0ne
+﻿//DCJ BOT by N0ne
 package net.nonemc.leaf.features.module.modules.combat
 
 import net.nonemc.leaf.event.EventTarget

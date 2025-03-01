@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.rage.rage.control
+﻿package net.nonemc.leaf.features.module.modules.rage.rage.control
 
 import net.nonemc.leaf.utils.mc
 private var lastHeldItemCount = 0

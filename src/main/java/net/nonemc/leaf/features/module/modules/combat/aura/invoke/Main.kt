@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.combat.aura.invoke
+﻿package net.nonemc.leaf.features.module.modules.combat.aura.invoke
 
 import net.nonemc.leaf.features.module.modules.combat.aura.PerlinNoise
 import net.nonemc.leaf.utils.RaycastUtils

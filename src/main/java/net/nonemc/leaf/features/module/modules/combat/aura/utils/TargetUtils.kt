@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.combat.aura.utils
+﻿package net.nonemc.leaf.features.module.modules.combat.aura.utils
 
 import net.nonemc.leaf.features.module.modules.combat.Aura
 import net.nonemc.leaf.utils.mc

@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.combat.aura.value
+﻿package net.nonemc.leaf.features.module.modules.combat.aura.value
 
 class Value {
 

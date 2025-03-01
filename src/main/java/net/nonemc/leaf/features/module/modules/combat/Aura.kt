@@ -1,4 +1,4 @@
-//All the code was written by N0ne.
+﻿//All the code was written by N0ne.
 package net.nonemc.leaf.features.module.modules.combat
 
 import net.nonemc.leaf.Leaf
@@ -38,8 +38,6 @@ import kotlin.math.*
 
 @ModuleInfo(name = "Aura", category = ModuleCategory.COMBAT)
 object Aura : Module() {
-
-
     //Attack
     private val attack = BoolValue("Attack", true)
     private val maxAttackDelay = IntegerValue("MaxAttackDelay", 100, 0, 1000).displayable { attack.get() }
@@ -73,11 +71,35 @@ object Aura : Module() {
     private val maxThroughWallsRange = FloatValue("MaxThroughWallsRange", 3F, 0F, 6F).displayable { !visibilityDetection.get() }
     private val minThroughWallsRange = FloatValue("MinThroughWallsRange", 3F, 0F, 6F).displayable { !visibilityDetection.get() }
 
-    //Rotation
     private val rotationMode = ListValue("RotationMode", arrayOf("Smooth","None"), "Smooth")
-    private val smoothMode = ListValue("SmoothMode", arrayOf("None", "Slerp","AdaptiveBezier","AdaptiveSlerp", "DataSimulationA", "DataSimulationB", "Sinusoidal", "Spring", "CosineInterpolation", "LogarithmicInterpolation", "ElasticSpring", "Bezier", "Custom"), "Slerp").displayable { rotationMode.get() == "Smooth" }
+    private val smoothMode = ListValue("SmoothMode", arrayOf("None", "BasicSimulation","Slerp","AdaptiveBezier","AdaptiveSlerp", "DataSimulationA", "DataSimulationB", "Sinusoidal", "Spring", "CosineInterpolation", "LogarithmicInterpolation", "ElasticSpring", "Bezier", "Custom"), "Slerp").displayable { rotationMode.get() == "Smooth" }
     val customSmoothCode = TextValue("CustomSmoothCode","ifelseifelseifelseifelse").displayable { smoothMode.get() == "Custom" }
     val rotateValue = BoolValue("SilentRotate", false).displayable { rotationMode.get() != "None" }
+    private val basicSimulationSpeed = FloatValue("BasicSimulationSpeed", 0.2f, 0.01f, 1f)
+    val basicSimulationBaseSpeed = FloatValue("BasicSimulation-BaseSpeed", 180f, 50f, 360f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationSpeedMultLarge = FloatValue("BasicSimulation-SpeedMult-Large", 1.8f, 1.0f, 3.0f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationSpeedMultMedium = FloatValue("BasicSimulation-SpeedMult-Medium", 1.2f, 0.8f, 2.0f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationSpeedMultSmall = FloatValue("BasicSimulation-SpeedMult-Small", 0.8f, 0.5f, 1.5f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationBaseAccel = FloatValue("BasicSimulation-BaseAcceleration", 720f, 300f, 1200f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationAccelMultLarge = FloatValue("BasicSimulation-AccelMult-Large", 2.0f, 1.0f, 4.0f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationAccelMultMedium = FloatValue("BasicSimulation-AccelMult-Medium", 1.5f, 0.8f, 3.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationAccelMultSmall = FloatValue("BasicSimulation-AccelMult-Small", 1.0f, 0.5f, 2.0f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationPBase = FloatValue("BasicSimulation-PID-P-Base", 1.8f, 0.5f, 3.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationPAttenuation = FloatValue("BasicSimulation-PID-P-Attenuation", 0.6f, 0.1f, 1.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationIBase = FloatValue("BasicSimulation-PID-I-Base", 0.08f, 0.01f, 0.2f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationIAttenuation = FloatValue("BasicSimulation-PID-I-Attenuation", 0.9f, 0.5f, 1.0f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationDBase = FloatValue("BasicSimulation-PID-D-Base", 0.3f, 0.1f, 1.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationDAttenuation = FloatValue("BasicSimulation-PID-D-Attenuation", 0.8f, 0.5f, 1.0f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationJitterHigh = FloatValue("BasicSimulation-Jitter-High", 1.8f, 0.0f, 3.0f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationJitterMedium = FloatValue("BasicSimulation-Jitter-Medium", 1.2f, 0.0f, 2.5f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationJitterLow = FloatValue("BasicSimulation-Jitter-Low", 0.6f, 0.0f, 2.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationDampingFactor = FloatValue("BasicSimulation-Damping", 0.2f, 0.0f, 0.5f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationFatigueDecay = FloatValue("BasicSimulation-FatigueDecay", 0.97f, 0.9f, 1.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationFatigueRecover = FloatValue("BasicSimulation-FatigueRecover", 0.4f, 0.1f, 0.9f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationOvershootDecay = FloatValue("BasicSimulation-OvershootDecay", 0.6f, 0.3f, 1.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationOvershootThreshold = FloatValue("BasicSimulation-OvershootThreshold", 0.2f, 0.05f, 0.5f) .displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationFineTuningThreshold = FloatValue("BasicSimulation-FineTuningThreshold", 3f, 1f, 10f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
+    val basicSimulationMicroJitter = FloatValue("BasicSimulation-MicroJitter", 0.3f, 0.1f, 1.0f).displayable { smoothMode.get() == "BasicSimulation" &&rotationMode.get() != "None" }
     private val randomSpeedValue = BoolValue("RandomSpeed", true).displayable { rotationMode.get() != "None" }
     private val randomSpeedFrequency = IntegerValue("RandomSpeedFrequency", 1, 1, 10).displayable { randomSpeedValue.get()&&rotationMode.get() != "None" }
     private val slerpSpeed = FloatValue("SlerpTurnSpeed", 0.2f, 0.01f, 1f).displayable { smoothMode.get() == "Slerp" &&rotationMode.get() != "None"}
@@ -219,6 +241,7 @@ object Aura : Module() {
     private val circleAlphaValue = IntegerValue("CircleAlpha", 255, 0, 255).displayable { circleValue.get() }
     private val circleThicknessValue = FloatValue("CircleThickness", 2F, 1F, 5F).displayable { circleValue.get() }
 
+    private var fatigueFactor: Float = 1f
     private var speedValue = 0.0
     private var speedTick = 0
     var sprintValue = true //Sprint
@@ -255,6 +278,11 @@ object Aura : Module() {
     private var randomTargetPosSingleValue: Double? = null
     private var randomTargetPosP1Value: Double? = null
     private var randomTargetPosP2Value: Double? = null
+    private var basicSimulationCurrentSpeed: Float = 0f
+    private var basicSimulationLastUpdateTime: Long = 0L
+    private var basicSimulationLastError: Float = 0f
+    private var basicSimulationIntegral: Float = 0f
+
     override fun onEnable() {
         if (debug.get()){
            if (allowAttackWhenNotBlocking.get() && autoBlockMode.get() != "None") ChatPrint("§0[§cError§0] §7Conflict settings:id(01)\n§7at Aura.allowAttackWhenNotBlocking(BoolValue)\n§7at Aura.autoBlockMode(ListValue)")
@@ -281,6 +309,7 @@ object Aura : Module() {
         mc.gameSettings.keyBindUseItem.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindUseItem)
         mc.gameSettings.keyBindAttack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindAttack)
     }
+
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
         if (circleValue.get()) {
@@ -687,6 +716,73 @@ object Aura : Module() {
                 val delta = MathHelper.wrapAngleTo180_float(target - current)
                 return current + delta * speed
             }
+            "BasicSimulation" -> {
+                val delta = MathHelper.wrapAngleTo180_float(target - current)
+                val currentTime = System.currentTimeMillis()
+                val dt = if (basicSimulationLastUpdateTime == 0L) {
+                    0.05f
+                } else {
+                    ((currentTime - basicSimulationLastUpdateTime).coerceAtMost(100L) / 1000.0f).coerceAtLeast(0.001f)
+                }
+
+                val baseSpeed = basicSimulationSpeed.get()
+                val maxAngularSpeed = baseSpeed * basicSimulationBaseSpeed.get() * when {
+                    Math.abs(delta) > 90 -> basicSimulationSpeedMultLarge.get()
+                    Math.abs(delta) > 30 -> basicSimulationSpeedMultMedium.get()
+                    else -> basicSimulationSpeedMultSmall.get()
+                }
+
+                val acceleration = basicSimulationBaseAccel.get() * when {
+                    Math.abs(delta) > 90 -> basicSimulationAccelMultLarge.get()
+                    Math.abs(delta) > 30 -> basicSimulationAccelMultMedium.get()
+                    else -> basicSimulationAccelMultSmall.get()
+                }
+
+                val kP = basicSimulationPBase.get() * (1 - basicSimulationPAttenuation.get() * Math.exp(-Math.abs(delta) / 30.0).toFloat())
+                val kI = basicSimulationIBase.get() * (1 - basicSimulationIAttenuation.get() * Math.exp(-Math.abs(delta) / 15.0).toFloat())
+                val kD = basicSimulationDBase.get() * (1 - basicSimulationDAttenuation.get() * Math.exp(-Math.abs(delta) / 20.0).toFloat())
+
+                val error = delta
+                basicSimulationIntegral += error * dt * 0.5f
+                basicSimulationIntegral = basicSimulationIntegral.coerceIn(-100f, 100f)
+
+                val derivative = if (dt > 0) (error - basicSimulationLastError) / dt else 0f
+                val pidOutput = kP * error + kI * basicSimulationIntegral + kD * derivative
+                var desiredSpeed = pidOutput.coerceIn(-maxAngularSpeed, maxAngularSpeed)
+
+                val maxAccel = acceleration * dt
+                val speedChange = (desiredSpeed - basicSimulationCurrentSpeed).coerceIn(-maxAccel, maxAccel)
+                basicSimulationCurrentSpeed += speedChange
+
+                val dampingFactor = 1 - basicSimulationDampingFactor.get() * Math.exp(-Math.abs(error) / 45.0).toFloat()
+                basicSimulationCurrentSpeed *= dampingFactor
+
+                var newYaw = current + basicSimulationCurrentSpeed * dt
+
+                val jitter = when {
+                    Math.abs(basicSimulationCurrentSpeed) > 120 -> (Math.random() - 0.5) * basicSimulationJitterHigh.get()
+                    Math.abs(basicSimulationCurrentSpeed) > 60 -> (Math.random() - 0.5) * basicSimulationJitterMedium.get()
+                    else -> (Math.random() - 0.5) * basicSimulationJitterLow.get()
+                }
+                newYaw += jitter.toFloat()
+
+                val remainingDelta = MathHelper.wrapAngleTo180_float(target - newYaw)
+                if (Math.abs(remainingDelta) < Math.abs(error) * basicSimulationOvershootThreshold.get()) {
+                    basicSimulationCurrentSpeed *= basicSimulationOvershootDecay.get().coerceAtLeast(Math.abs(remainingDelta) / 15.0f)
+                }
+                if (Math.abs(remainingDelta) < basicSimulationFineTuningThreshold.get()) {
+                    newYaw += (Math.random().toFloat() - 0.5f) * basicSimulationMicroJitter.get()
+                    basicSimulationCurrentSpeed *= 0.2f
+                }
+                fatigueFactor = basicSimulationFatigueDecay.get() * fatigueFactor +
+                        (1 - basicSimulationFatigueDecay.get()) *
+                        (1 - basicSimulationFatigueRecover.get() * Math.tanh((dt * 0.5f).toDouble()).toFloat())
+                basicSimulationCurrentSpeed *= fatigueFactor
+                basicSimulationLastError = error
+                basicSimulationLastUpdateTime = currentTime
+
+                return newYaw
+            }
             "AdaptiveBezier" -> {
                 val t = speed / 10f
                 val p0 = adaptiveBezierP0.get()
@@ -769,6 +865,74 @@ object Aura : Module() {
                 val delta = MathHelper.wrapAngleTo180_float(target - current)
                 return current + delta * speed
             }
+            "BasicSimulation" -> {
+                val delta = MathHelper.wrapAngleTo180_float(target - current)
+                val currentTime = System.currentTimeMillis()
+                val dt = if (basicSimulationLastUpdateTime == 0L) {
+                    0.05f
+                } else {
+                    ((currentTime - basicSimulationLastUpdateTime).coerceAtMost(100L) / 1000.0f).coerceAtLeast(0.001f)
+                }
+
+                val baseSpeed = basicSimulationSpeed.get()
+                val maxAngularSpeed = baseSpeed * basicSimulationBaseSpeed.get() * when {
+                    Math.abs(delta) > 90 -> basicSimulationSpeedMultLarge.get()
+                    Math.abs(delta) > 30 -> basicSimulationSpeedMultMedium.get()
+                    else -> basicSimulationSpeedMultSmall.get()
+                }
+
+                val acceleration = basicSimulationBaseAccel.get() * when {
+                    Math.abs(delta) > 90 -> basicSimulationAccelMultLarge.get()
+                    Math.abs(delta) > 30 -> basicSimulationAccelMultMedium.get()
+                    else -> basicSimulationAccelMultSmall.get()
+                }
+
+                val kP = basicSimulationPBase.get() * (1 - basicSimulationPAttenuation.get() * Math.exp(-Math.abs(delta) / 30.0).toFloat())
+                val kI = basicSimulationIBase.get() * (1 - basicSimulationIAttenuation.get() * Math.exp(-Math.abs(delta) / 15.0).toFloat())
+                val kD = basicSimulationDBase.get() * (1 - basicSimulationDAttenuation.get() * Math.exp(-Math.abs(delta) / 20.0).toFloat())
+
+                val error = delta
+                basicSimulationIntegral += error * dt * 0.5f
+                basicSimulationIntegral = basicSimulationIntegral.coerceIn(-100f, 100f)
+
+                val derivative = if (dt > 0) (error - basicSimulationLastError) / dt else 0f
+                val pidOutput = kP * error + kI * basicSimulationIntegral + kD * derivative
+                var desiredSpeed = pidOutput.coerceIn(-maxAngularSpeed, maxAngularSpeed)
+
+                val maxAccel = acceleration * dt
+                val speedChange = (desiredSpeed - basicSimulationCurrentSpeed).coerceIn(-maxAccel, maxAccel)
+                basicSimulationCurrentSpeed += speedChange
+
+                val dampingFactor = 1 - basicSimulationDampingFactor.get() * Math.exp(-Math.abs(error) / 45.0).toFloat()
+                basicSimulationCurrentSpeed *= dampingFactor
+
+                var newPitch = current + basicSimulationCurrentSpeed * dt
+
+                val jitter = when {
+                    Math.abs(basicSimulationCurrentSpeed) > 120 -> (Math.random() - 0.5) * basicSimulationJitterHigh.get()
+                    Math.abs(basicSimulationCurrentSpeed) > 60 -> (Math.random() - 0.5) * basicSimulationJitterMedium.get()
+                    else -> (Math.random() - 0.5) * basicSimulationJitterLow.get()
+                }
+                newPitch += jitter.toFloat()
+
+                val remainingDelta = MathHelper.wrapAngleTo180_float(target - newPitch)
+                if (Math.abs(remainingDelta) < Math.abs(error) * basicSimulationOvershootThreshold.get()) {
+                    basicSimulationCurrentSpeed *= basicSimulationOvershootDecay.get().coerceAtLeast(Math.abs(remainingDelta) / 15.0f)
+                }
+                if (Math.abs(remainingDelta) < basicSimulationFineTuningThreshold.get()) {
+                    newPitch += (Math.random().toFloat() - 0.5f) * basicSimulationMicroJitter.get()
+                    basicSimulationCurrentSpeed *= 0.2f
+                }
+                fatigueFactor = basicSimulationFatigueDecay.get() * fatigueFactor +
+                        (1 - basicSimulationFatigueDecay.get()) *
+                        (1 - basicSimulationFatigueRecover.get() * Math.tanh((dt * 0.5f).toDouble()).toFloat())
+                basicSimulationCurrentSpeed *= fatigueFactor
+                basicSimulationLastError = error
+                basicSimulationLastUpdateTime = currentTime
+
+                return newPitch
+            }
+
             "AdaptiveBezier" -> {
                 val t = speed / 10f
                 val p0 = adaptiveBezierP0.get()
@@ -849,4 +1013,5 @@ object Aura : Module() {
             else -> return target
         }
     }
+
 }

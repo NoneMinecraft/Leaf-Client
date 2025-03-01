@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.combat.aura.utils
+﻿package net.nonemc.leaf.features.module.modules.combat.aura.utils
 
 import kotlin.random.Random
 

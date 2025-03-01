@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.combat.aura.data
+﻿package net.nonemc.leaf.features.module.modules.combat.aura.data
 
 val PitchData = listOf(
     -90.0, -89.89719, -89.48593, -88.766235,

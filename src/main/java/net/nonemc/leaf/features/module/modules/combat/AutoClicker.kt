@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */

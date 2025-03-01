@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.combat.aura.data
+﻿package net.nonemc.leaf.features.module.modules.combat.aura.data
 
 import net.nonemc.leaf.features.module.modules.combat.Aura
 

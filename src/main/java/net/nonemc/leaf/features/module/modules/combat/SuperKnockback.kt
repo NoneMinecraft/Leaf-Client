@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.combat
+﻿package net.nonemc.leaf.features.module.modules.combat
 
 import net.nonemc.leaf.event.AttackEvent
 import net.nonemc.leaf.event.UpdateEvent

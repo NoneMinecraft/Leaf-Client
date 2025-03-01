@@ -1,4 +1,4 @@
-//All the code was written by N0ne.
+﻿//All the code was written by N0ne.
 package net.nonemc.leaf.features.module.modules.combat
 
 import net.nonemc.leaf.event.*
