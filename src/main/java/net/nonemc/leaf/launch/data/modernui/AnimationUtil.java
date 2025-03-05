@@ -13,6 +13,7 @@ public class AnimationUtil {
         }
         return current + movement;
     }
+
     public static float calculateCompensation(float target, float current, long delta, int speed) {
         float diff = current - target;
         if (delta < 1L) {
@@ -75,11 +76,11 @@ public class AnimationUtil {
     public static float moveUD(float current, float end, float smoothSpeed, float minSpeed) {
         float movement = (end - current) * smoothSpeed;
         if (movement > 10.0f) {
-            movement = Math.max((float) minSpeed, (float) movement);
-            movement = Math.min((float) (end - current), (float) movement);
+            movement = Math.max(minSpeed, movement);
+            movement = Math.min(end - current, movement);
         } else if (movement < 10.0f) {
-            movement = Math.min((float) (-minSpeed), (float) movement);
-            movement = Math.max((float) (end - current), (float) movement);
+            movement = Math.min(-minSpeed, movement);
+            movement = Math.max(end - current, movement);
         }
         return current + movement;
     }

@@ -1,13 +1,5 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.normal
 
-import net.nonemc.leaf.event.EventState
-import net.nonemc.leaf.event.MotionEvent
-import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
-import net.nonemc.leaf.utils.RotationUtils
-import net.nonemc.leaf.utils.VecRotation
-import net.nonemc.leaf.utils.misc.FallingPlayer
-import net.nonemc.leaf.utils.timer.TickTimer
-import net.nonemc.leaf.value.FloatValue
 import net.minecraft.init.Blocks
 import net.minecraft.init.Items
 import net.minecraft.item.ItemBlock
@@ -16,6 +8,14 @@ import net.minecraft.network.play.client.C09PacketHeldItemChange
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
 import net.minecraft.util.Vec3
+import net.nonemc.leaf.event.EventState
+import net.nonemc.leaf.event.MotionEvent
+import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
+import net.nonemc.leaf.utils.RotationUtils
+import net.nonemc.leaf.utils.VecRotation
+import net.nonemc.leaf.utils.misc.FallingPlayer
+import net.nonemc.leaf.utils.timer.TickTimer
+import net.nonemc.leaf.value.FloatValue
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -32,6 +32,7 @@ class MLGNofall : NoFallMode("MLG") {
         currentMlgItemIndex = 0
         currentMlgBlock = null
     }
+
     override fun onMotion(event: MotionEvent) {
         if (event.eventState == EventState.PRE) {
             currentMlgRotation = null
@@ -44,9 +45,12 @@ class MLGNofall : NoFallMode("MLG") {
             if (mc.thePlayer.fallDistance > minFallDistanceValue.get()) {
                 val fallingPlayer = FallingPlayer(mc.thePlayer)
                 val maxDist = mc.playerController.blockReachDistance + 1.5
-                val collision = fallingPlayer.findCollision(ceil(1.0 / mc.thePlayer.motionY * -maxDist).toInt()) ?: return
-                var ok = Vec3(mc.thePlayer.posX, mc.thePlayer.posY + mc.thePlayer.eyeHeight, mc.thePlayer.posZ).distanceTo(
-                    Vec3(collision).addVector(0.5, 0.5, 0.5)) < mc.playerController.blockReachDistance + sqrt(0.75)
+                val collision =
+                    fallingPlayer.findCollision(ceil(1.0 / mc.thePlayer.motionY * -maxDist).toInt()) ?: return
+                var ok =
+                    Vec3(mc.thePlayer.posX, mc.thePlayer.posY + mc.thePlayer.eyeHeight, mc.thePlayer.posZ).distanceTo(
+                        Vec3(collision).addVector(0.5, 0.5, 0.5)
+                    ) < mc.playerController.blockReachDistance + sqrt(0.75)
 
                 if (mc.thePlayer.motionY < collision.y + 1 - mc.thePlayer.posY)
                     ok = true
@@ -85,9 +89,12 @@ class MLGNofall : NoFallMode("MLG") {
 
             if (stack.item is ItemBucket)
                 mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, stack)
-            else if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, stack, currentMlgBlock, EnumFacing.UP, Vec3(0.0,0.5,0.0).add(
-                    Vec3(currentMlgBlock ?: return)
-                )))
+            else if (mc.playerController.onPlayerRightClick(
+                    mc.thePlayer, mc.theWorld, stack, currentMlgBlock, EnumFacing.UP, Vec3(0.0, 0.5, 0.0).add(
+                        Vec3(currentMlgBlock ?: return)
+                    )
+                )
+            )
                 mlgTimer.reset()
 
             if (mc.thePlayer.inventory.currentItem != currentMlgItemIndex)

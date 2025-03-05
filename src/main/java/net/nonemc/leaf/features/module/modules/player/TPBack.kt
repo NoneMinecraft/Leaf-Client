@@ -1,5 +1,9 @@
 package net.nonemc.leaf.features.module.modules.player
 
+import net.minecraft.network.Packet
+import net.minecraft.network.play.INetHandlerPlayServer
+import net.minecraft.network.play.client.*
+import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -11,18 +15,14 @@ import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.network.Packet
-import net.minecraft.network.play.INetHandlerPlayServer
-import net.minecraft.network.play.client.*
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import org.lwjgl.input.Keyboard
 import java.util.concurrent.LinkedBlockingQueue
 
 @ModuleInfo(name = "TPBack", category = ModuleCategory.PLAYER)
 class TPBack : Module() {
     //Old KKCraft Intave Bypass
-    private val delay = IntegerValue("Delay",500,0,1000)
-    private val badPacketValue = FloatValue("BadPacketHeight",10F,0F,100F)
+    private val delay = IntegerValue("Delay", 500, 0, 1000)
+    private val badPacketValue = FloatValue("BadPacketHeight", 10F, 0F, 100F)
     private val shortcutKey = Keyboard.KEY_U
     private val shortcutKey2 = Keyboard.KEY_I
     private var tags = false
@@ -40,12 +40,13 @@ class TPBack : Module() {
     private val sleepTime = MSTimer()
     override fun onDisable() {
         if (isDelay)
-        act2 = false
+            act2 = false
         isDelay = false
         act = false
         time.reset()
         sleepTime.reset()
     }
+
     override fun onEnable() {
         time.reset()
         tags = false
@@ -70,49 +71,55 @@ class TPBack : Module() {
                 reduceTimer.reset()
             }
         } else {
-            if (flagsTime> 0) {
-                flag ++
+            if (flagsTime > 0) {
+                flag++
                 timer.reset()
                 reduceTimer.reset()
                 flagsTime = 0
                 stuck = true
                 tags = false
-             if (sleepTime.hasTimePassed(100)) ChatPrint("§0[§8TP§0] §6发生一次意外标记:按下KEY_U重新标记,否则无法执行返回")
+                if (sleepTime.hasTimePassed(100)) ChatPrint("§0[§8TP§0] §6发生一次意外标记:按下KEY_U重新标记,否则无法执行返回")
             }
-            if (timer.hasTimePassed(1500) && reduceTimer.hasTimePassed(500) && flagsTime> 0) {
+            if (timer.hasTimePassed(1500) && reduceTimer.hasTimePassed(500) && flagsTime > 0) {
                 flagsTime -= 1
                 reduceTimer.reset()
             }
         }
     }
+
     @EventTarget
     fun onWorld(event: WorldEvent) {
         reset()
     }
+
     @EventTarget
     fun onPacket(event: PacketEvent) {
         val packet = event.packet
-       if (isDelay){
-           if (!act) {
-               blink()
-               act = true
-               mc.thePlayer!!.setPosition(mc.thePlayer.posX, mc.thePlayer.posY- badPacketValue.get(),mc.thePlayer.posZ)
+        if (isDelay) {
+            if (!act) {
+                blink()
+                act = true
+                mc.thePlayer!!.setPosition(
+                    mc.thePlayer.posX,
+                    mc.thePlayer.posY - badPacketValue.get(),
+                    mc.thePlayer.posZ
+                )
 
-               time.reset()
-           }else{
-               if (!act2){
-                   if (time.hasTimePassed(delay.get().toLong())){
-                       blink()
-                       act2 = false
-                       act = false
-                       isDelay = false
-                       time.reset()
-                   }
-               }
-           }
-           runDelayPacket(event)
-           sleepTime.reset()
-       }
+                time.reset()
+            } else {
+                if (!act2) {
+                    if (time.hasTimePassed(delay.get().toLong())) {
+                        blink()
+                        act2 = false
+                        act = false
+                        isDelay = false
+                        time.reset()
+                    }
+                }
+            }
+            runDelayPacket(event)
+            sleepTime.reset()
+        }
         if (packet is S08PacketPlayerPosLook) {
             flagsTime++
             reduceTimer.reset()
@@ -121,12 +128,14 @@ class TPBack : Module() {
             }
         }
     }
+
     private fun reset() {
         stuck = false
         flagsTime = 0
         timer.reset()
         reduceTimer.reset()
     }
+
     private fun blink() {
         try {
             disableLogger = true
@@ -138,7 +147,8 @@ class TPBack : Module() {
             disableLogger = false
         }
     }
-    private fun runDelayPacket(event: PacketEvent){
+
+    private fun runDelayPacket(event: PacketEvent) {
         val packet = event.packet
         if (mc.thePlayer == null || disableLogger) return
         if (packet is C03PacketPlayer) { // Cancel all movement stuff
@@ -153,9 +163,10 @@ class TPBack : Module() {
             packets.add(packet as Packet<INetHandlerPlayServer>)
         }
     }
-    private fun runLag(){
-        mc?.thePlayer!!.setPosition(mc.thePlayer.posX, mc.thePlayer.posY- 1,mc.thePlayer.posZ)
-        ChatPrint("§0[§8TP§0] §6标记了一处地点[§8${mc.thePlayer.posX}, ${mc.thePlayer.posY -1},${mc.thePlayer.posZ}§6]\n§6按下KEY_U重新标记,按下KEY_I返回该位置")
+
+    private fun runLag() {
+        mc?.thePlayer!!.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - 1, mc.thePlayer.posZ)
+        ChatPrint("§0[§8TP§0] §6标记了一处地点[§8${mc.thePlayer.posX}, ${mc.thePlayer.posY - 1},${mc.thePlayer.posZ}§6]\n§6按下KEY_U重新标记,按下KEY_I返回该位置")
         tags = true
     }
 }

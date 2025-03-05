@@ -5,9 +5,9 @@
  */
 package net.nonemc.leaf.features.module.modules.movement.speeds.aac
 
+import net.minecraft.util.MathHelper
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
 import net.nonemc.leaf.utils.MovementUtils
-import net.minecraft.util.MathHelper
 
 class AACBHop : SpeedMode("AACBHop") {
     override fun onPreMotion() {

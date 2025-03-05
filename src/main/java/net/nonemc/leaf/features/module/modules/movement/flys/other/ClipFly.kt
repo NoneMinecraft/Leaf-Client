@@ -1,5 +1,6 @@
 package net.nonemc.leaf.features.module.modules.movement.flys.other
 
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.EventState
 import net.nonemc.leaf.event.MotionEvent
 import net.nonemc.leaf.event.PacketEvent
@@ -8,8 +9,6 @@ import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.network.play.client.C03PacketPlayer
-
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -43,7 +42,11 @@ class ClipFly : FlyMode("Clip") {
         mc.thePlayer.motionZ = motionZValue.get().toDouble()
         if (timer.hasTimePassed(delayValue.get().toLong())) {
             val yaw = Math.toRadians(mc.thePlayer.rotationYaw.toDouble())
-            mc.thePlayer.setPosition(mc.thePlayer.posX + (-sin(yaw) * xValue.get()), mc.thePlayer.posY + yValue.get(), mc.thePlayer.posZ + (cos(yaw) * zValue.get()))
+            mc.thePlayer.setPosition(
+                mc.thePlayer.posX + (-sin(yaw) * xValue.get()),
+                mc.thePlayer.posY + yValue.get(),
+                mc.thePlayer.posZ + (cos(yaw) * zValue.get())
+            )
             timer.reset()
             lastJump = true
         }
@@ -54,10 +57,10 @@ class ClipFly : FlyMode("Clip") {
         val packet = event.packet
 
         if (packet is C03PacketPlayer) {
-            if(spoofValue.get()) {
+            if (spoofValue.get()) {
                 packet.onGround = true
             }
-            if(groundValue.get() && (timer.hasTimePassed(delayValue.get().toLong()) || lastJump)) {
+            if (groundValue.get() && (timer.hasTimePassed(delayValue.get().toLong()) || lastJump)) {
                 packet.onGround = true
                 lastJump = false
             }

@@ -1,6 +1,7 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.tenacity.impl;
 
 import net.minecraft.client.Minecraft;
+
 public abstract class Component {
 
     public Minecraft mc = Minecraft.getMinecraft();

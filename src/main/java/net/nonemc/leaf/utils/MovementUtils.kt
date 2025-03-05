@@ -1,11 +1,10 @@
-
 package net.nonemc.leaf.utils
 
-import net.nonemc.leaf.event.MoveEvent
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.minecraft.potion.Potion
 import net.minecraft.util.AxisAlignedBB
+import net.nonemc.leaf.event.MoveEvent
 import kotlin.math.asin
 import kotlin.math.cos
 import kotlin.math.sin
@@ -17,7 +16,7 @@ object MovementUtils : MinecraftInstance() {
     fun resetMotion(y: Boolean) {
         mc.thePlayer.motionX = 0.0
         mc.thePlayer.motionZ = 0.0
-        if(y) mc.thePlayer.motionY = 0.0
+        if (y) mc.thePlayer.motionY = 0.0
     }
 
     fun getSpeed(): Float {
@@ -54,36 +53,43 @@ object MovementUtils : MinecraftInstance() {
         mc.thePlayer.motionZ = cos(direction) * speed
     }
 
-    fun doTargetStrafe(curTarget: EntityLivingBase, direction_: Float, radius: Float, moveEvent: MoveEvent, mathRadius: Int = 0) {
-        if(!isMoving()) return
+    fun doTargetStrafe(
+        curTarget: EntityLivingBase,
+        direction_: Float,
+        radius: Float,
+        moveEvent: MoveEvent,
+        mathRadius: Int = 0
+    ) {
+        if (!isMoving()) return
 
         var forward_ = 0.0
         var strafe_ = 0.0
         val speed_ = sqrt(moveEvent.x * moveEvent.x + moveEvent.z * moveEvent.z)
 
-        if(speed_ <= 0.0001)
+        if (speed_ <= 0.0001)
             return
 
         var _direction = 0.0
-        if(direction_ > 0.001) {
+        if (direction_ > 0.001) {
             _direction = 1.0
-        }else if(direction_ < -0.001) {
+        } else if (direction_ < -0.001) {
             _direction = -1.0
         }
         var curDistance = (0.01).toFloat()
         if (mathRadius == 1) {
             curDistance = mc.thePlayer.getDistanceToEntity(curTarget)
-        }else if (mathRadius == 0) {
-            curDistance = sqrt((mc.thePlayer.posX - curTarget.posX) * (mc.thePlayer.posX - curTarget.posX) + (mc.thePlayer.posZ - curTarget.posZ) * (mc.thePlayer.posZ - curTarget.posZ)).toFloat()
+        } else if (mathRadius == 0) {
+            curDistance =
+                sqrt((mc.thePlayer.posX - curTarget.posX) * (mc.thePlayer.posX - curTarget.posX) + (mc.thePlayer.posZ - curTarget.posZ) * (mc.thePlayer.posZ - curTarget.posZ)).toFloat()
         }
-        if(curDistance < radius - speed_) {
+        if (curDistance < radius - speed_) {
             forward_ = -1.0
-        }else if(curDistance > radius + speed_) {
+        } else if (curDistance > radius + speed_) {
             forward_ = 1.0
-        }else {
+        } else {
             forward_ = (curDistance - radius) / speed_
         }
-        if(curDistance < radius + speed_*2 && curDistance > radius - speed_*2) {
+        if (curDistance < radius + speed_ * 2 && curDistance > radius - speed_ * 2) {
             strafe_ = 1.0
         }
         strafe_ *= _direction
@@ -93,11 +99,11 @@ object MovementUtils : MinecraftInstance() {
         forward_ /= covert_
         strafe_ /= covert_
         var turnAngle = Math.toDegrees(asin(strafe_))
-        if(turnAngle > 0) {
-            if(forward_ < 0)
+        if (turnAngle > 0) {
+            if (forward_ < 0)
                 turnAngle = 180F - turnAngle
-        }else {
-            if(forward_ < 0)
+        } else {
+            if (forward_ < 0)
                 turnAngle = -180F - turnAngle
         }
         strafeYaw = Math.toRadians((strafeYaw + turnAngle))
@@ -272,7 +278,10 @@ object MovementUtils : MinecraftInstance() {
     }
 
     fun isOnGround(height: Double): Boolean {
-        return !mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.entityBoundingBox.offset(0.0, -height, 0.0)).isEmpty()
+        return !mc.theWorld.getCollidingBoundingBoxes(
+            mc.thePlayer,
+            mc.thePlayer.entityBoundingBox.offset(0.0, -height, 0.0)
+        ).isEmpty()
     }
 
     fun getBaseMoveSpeed(): Double {

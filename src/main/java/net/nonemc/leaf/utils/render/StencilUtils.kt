@@ -1,8 +1,7 @@
-
 package net.nonemc.leaf.utils.render
 
-import net.nonemc.leaf.utils.ClientUtils.mc
 import net.minecraft.client.shader.Framebuffer
+import net.nonemc.leaf.utils.ClientUtils.mc
 import org.lwjgl.opengl.EXTFramebufferObject
 import org.lwjgl.opengl.EXTPackedDepthStencil
 import org.lwjgl.opengl.GL11.*

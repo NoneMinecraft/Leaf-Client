@@ -8,11 +8,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class CFont {
+    private final float imgSize = 512.0f;
     protected Font font;
     protected boolean antiAlias;
     protected boolean fractionalMetrics;
     protected DynamicTexture tex;
-    private final float imgSize = 512.0f;
     protected CharData[] charData = new CharData[256];
     protected int fontHeight = -1;
     protected int charOffset = 0;

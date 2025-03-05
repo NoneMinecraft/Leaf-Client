@@ -4,7 +4,6 @@ Code By None
 * */
 package net.nonemc.leaf.features
 
-import net.nonemc.leaf.utils.mc
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.ScaledResolution
@@ -13,15 +12,26 @@ import net.minecraft.init.Items
 import net.minecraft.network.play.client.C01PacketChatMessage
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ChatComponentText
+import net.nonemc.leaf.utils.mc
 import org.lwjgl.opengl.GL11
 import kotlin.math.atan
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
+
 var Pitch = 0.0F
 
 object MainLib {
-     fun renderLine(startX: Float, startY: Float, endX: Float, endY: Float, red: Float, green: Float, blue: Float, alpha: Float) {
+    fun renderLine(
+        startX: Float,
+        startY: Float,
+        endX: Float,
+        endY: Float,
+        red: Float,
+        green: Float,
+        blue: Float,
+        alpha: Float
+    ) {
         GL11.glPushMatrix()
         GL11.glEnable(GL11.GL_BLEND)
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
@@ -39,6 +49,7 @@ object MainLib {
         GL11.glDisable(GL11.GL_BLEND)
         GL11.glPopMatrix()
     }
+
     fun FindItems(items: Items): Int {
         for (i in 1 until mc.thePlayer.inventory.mainInventory.size) {
             val stack = mc.thePlayer.inventory.getStackInSlot(i)
@@ -48,7 +59,17 @@ object MainLib {
         }
         return -1
     }
-    private fun drawGradientPanel(x: Double, y: Double, width: Double, height: Double , r: Int ,g: Int,b: Int,step:Int) {
+
+    private fun drawGradientPanel(
+        x: Double,
+        y: Double,
+        width: Double,
+        height: Double,
+        r: Int,
+        g: Int,
+        b: Int,
+        step: Int
+    ) {
         GL11.glPushMatrix()
         GL11.glDisable(GL11.GL_TEXTURE_2D)
         GL11.glEnable(GL11.GL_BLEND)
@@ -73,7 +94,8 @@ object MainLib {
         GL11.glDisable(GL11.GL_BLEND)
         GL11.glPopMatrix()
     }
-    fun drawPanel(x: Double, y: Double, width: Double, height: Double , r: Int ,g: Int,b: Int,alpha:Int) {
+
+    fun drawPanel(x: Double, y: Double, width: Double, height: Double, r: Int, g: Int, b: Int, alpha: Int) {
         GL11.glPushMatrix()
         GL11.glDisable(GL11.GL_TEXTURE_2D)
         GL11.glEnable(GL11.GL_BLEND)
@@ -94,7 +116,7 @@ object MainLib {
     }
 
     //drawText("text",1,1,1,1,1,Fonts.font28)
-     fun drawText(text: String, x: Int, y: Int, r: Int, g: Int, b: Int , font:FontRenderer) {
+    fun drawText(text: String, x: Int, y: Int, r: Int, g: Int, b: Int, font: FontRenderer) {
         val fontRenderer: FontRenderer = font
         GL11.glPushMatrix()
         GL11.glEnable(GL11.GL_BLEND)
@@ -107,19 +129,20 @@ object MainLib {
         GL11.glPopMatrix()
     }
 
-    fun relativePositioningX (value : Double):Double{
+    fun relativePositioningX(value: Double): Double {
         val scaledResolution = ScaledResolution(Minecraft.getMinecraft())
         val screenWidth = scaledResolution.scaledWidth
         val referenceWidth = screenWidth.toDouble()
         return ((value / referenceWidth) * screenWidth)
     }
 
-    fun relativePositioningY (value : Double):Double{
+    fun relativePositioningY(value: Double): Double {
         val scaledResolution = ScaledResolution(Minecraft.getMinecraft())
         val screenHeight = scaledResolution.scaledHeight
         val referenceHeight = screenHeight.toDouble()
         return ((value / referenceHeight) * screenHeight)
     }
+
     var timerTick = 0
     fun updateTimer(isStart: Boolean, seconds: Int, minutes: Int): Pair<Int, Int> {
 
@@ -146,7 +169,7 @@ object MainLib {
         return Pair(timerSeconds, timerMinutes)
     }
 
-fun block () {
+    fun block() {
         val playerPos = BlockPos(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ)
         val radius = 1
         val nonAirBlocks: MutableList<BlockPos> = ArrayList()
@@ -174,7 +197,7 @@ fun block () {
             }
 
             if (closestBlock != null) {
-             mc.thePlayer.rotationYaw= Math.toDegrees(
+                mc.thePlayer.rotationYaw = Math.toDegrees(
                     atan2(
                         closestBlock.z - mc.thePlayer.posZ,
                         closestBlock.x - mc.thePlayer.posX
@@ -183,7 +206,7 @@ fun block () {
                 ).toFloat() - 90
 
 
-                   mc.thePlayer.rotationPitch = Math.toDegrees(
+                mc.thePlayer.rotationPitch = Math.toDegrees(
 
                     -atan(
                         (closestBlock.y - mc.thePlayer.posY) / sqrt(
@@ -196,7 +219,8 @@ fun block () {
 
                 ).toFloat()
             }
-        }}
+        }
+    }
 
 
     fun checkVoid(): Boolean {
@@ -216,26 +240,32 @@ fun block () {
         return dangerous
     }
 
-    fun RightClick(pressed:Boolean){
-    mc.gameSettings.keyBindUseItem.pressed = pressed
+    fun RightClick(pressed: Boolean) {
+        mc.gameSettings.keyBindUseItem.pressed = pressed
     }
-    fun LeftClick(pressed:Boolean){
+
+    fun LeftClick(pressed: Boolean) {
         mc.gameSettings.keyBindAttack.pressed = pressed
     }
-    fun Jump(pressed:Boolean){
+
+    fun Jump(pressed: Boolean) {
         mc.gameSettings.keyBindJump.pressed = pressed
     }
-    fun Sneak(pressed:Boolean){
+
+    fun Sneak(pressed: Boolean) {
         mc.gameSettings.keyBindSneak.pressed = pressed
     }
-    fun Chat(message:String){
+
+    fun Chat(message: String) {
         mc.thePlayer.sendQueue.addToSendQueue(C01PacketChatMessage(message))
     }
-    fun tell(player:String , message:String){
+
+    fun tell(player: String, message: String) {
         mc.thePlayer.sendQueue.addToSendQueue(C01PacketChatMessage("/tell $player $message"))
     }
-    fun ChatPrint(message:String){
-    mc.ingameGUI.chatGUI.printChatMessage(ChatComponentText(message))
-}
+
+    fun ChatPrint(message: String) {
+        mc.ingameGUI.chatGUI.printChatMessage(ChatComponentText(message))
+    }
 
 }

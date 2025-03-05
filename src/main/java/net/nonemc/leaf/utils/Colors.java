@@ -4,9 +4,9 @@ import java.awt.*;
 import java.text.NumberFormat;
 
 public class Colors {
-    public static int getColor(int color,int a){
-        Color color1=new Color(color);
-        return new Color(color1.getRed(),color1.getGreen(),color1.getBlue(),a).getRGB();
+    public static int getColor(int color, int a) {
+        Color color1 = new Color(color);
+        return new Color(color1.getRed(), color1.getGreen(), color1.getBlue(), a).getRGB();
     }
 
     public static int getColor(Color color) {
@@ -34,6 +34,7 @@ public class Colors {
         float weight = value / max;
         return blend(colorRange[0], colorRange[1], 1.0f - weight);
     }
+
     public static Color blend(Color color1, Color color2, double ratio) {
         float r = (float) ratio;
         float ir = 1.0f - r;
@@ -69,6 +70,7 @@ public class Colors {
         }
         return color;
     }
+
     public static int[] getFractionIndicies(float[] fractions, float progress) {
         int startPoint;
         int[] range = new int[2];
@@ -81,6 +83,7 @@ public class Colors {
         range[1] = startPoint;
         return range;
     }
+
     public static int getColor(int red, int green, int blue, int alpha) {
         int color = 0;
         color |= alpha << 24;
@@ -91,7 +94,7 @@ public class Colors {
     }
 
     public static int getRainbow(int speed, int offset) {
-        float hue = (System.currentTimeMillis() + (long)offset) % (long)speed;
-        return Color.getHSBColor((float)(hue /= (float)speed), (float)0.4f, (float)1.0f).getRGB();
+        float hue = (System.currentTimeMillis() + (long) offset) % (long) speed;
+        return Color.getHSBColor(hue /= (float) speed, 0.4f, 1.0f).getRGB();
     }
 }

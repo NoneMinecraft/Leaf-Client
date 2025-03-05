@@ -1,6 +1,7 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.potion.Potion
+import net.minecraft.potion.PotionEffect
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.ClientShutdownEvent
 import net.nonemc.leaf.event.EventTarget
@@ -11,8 +12,6 @@ import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
 
 @ModuleInfo(name = "AntiBlind", category = ModuleCategory.RENDER)
 class AntiBlind : Module() {

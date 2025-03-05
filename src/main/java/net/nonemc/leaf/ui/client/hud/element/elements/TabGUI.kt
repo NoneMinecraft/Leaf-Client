@@ -5,6 +5,8 @@
  */
 package net.nonemc.leaf.ui.client.hud.element.elements
 
+import net.minecraft.client.gui.FontRenderer
+import net.minecraft.client.renderer.GlStateManager
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
@@ -20,8 +22,6 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.FontValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.client.gui.FontRenderer
-import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 
@@ -85,8 +85,10 @@ class TabGUI(x: Double = 5.0, y: Double = 25.0) : Element(x = x, y = y) {
             ColorUtils.rainbowWithAlpha(alphaValue.get())
         }
 
-        val backgroundColor = Color(backgroundRedValue.get(), backgroundGreenValue.get(), backgroundBlueValue.get(),
-            backgroundAlphaValue.get())
+        val backgroundColor = Color(
+            backgroundRedValue.get(), backgroundGreenValue.get(), backgroundBlueValue.get(),
+            backgroundAlphaValue.get()
+        )
 
         val borderColor = if (!borderRainbow.get()) {
             Color(borderRedValue.get(), borderGreenValue.get(), borderBlueValue.get(), borderAlphaValue.get())
@@ -98,7 +100,15 @@ class TabGUI(x: Double = 5.0, y: Double = 25.0) : Element(x = x, y = y) {
         val guiHeight = tabs.size * tabHeight.get()
 
         if (borderValue.get()) {
-            RenderUtils.drawBorderedRect(1F, 0F, width.get(), guiHeight, borderStrength.get(), borderColor.rgb, backgroundColor.rgb)
+            RenderUtils.drawBorderedRect(
+                1F,
+                0F,
+                width.get(),
+                guiHeight,
+                borderStrength.get(),
+                borderColor.rgb,
+                backgroundColor.rgb
+            )
         } else {
             RenderUtils.drawRect(1F, 0F, width.get(), guiHeight, backgroundColor.rgb)
         }
@@ -128,11 +138,15 @@ class TabGUI(x: Double = 5.0, y: Double = 25.0) : Element(x = x, y = y) {
 
             if (arrowsValue.get()) {
                 if (side.horizontal == Side.Horizontal.RIGHT) {
-                    fontRenderer.drawString(if (!categoryMenu && selectedCategory == index) ">" else "<", 3F, y + 2F,
-                        0xffffff, textShadow.get())
+                    fontRenderer.drawString(
+                        if (!categoryMenu && selectedCategory == index) ">" else "<", 3F, y + 2F,
+                        0xffffff, textShadow.get()
+                    )
                 } else {
-                    fontRenderer.drawString(if (!categoryMenu && selectedCategory == index) "<" else ">",
-                        width.get() - 8F, y + 2F, 0xffffff, textShadow.get())
+                    fontRenderer.drawString(
+                        if (!categoryMenu && selectedCategory == index) "<" else ">",
+                        width.get() - 8F, y + 2F, 0xffffff, textShadow.get()
+                    )
                 }
             }
 
@@ -143,7 +157,16 @@ class TabGUI(x: Double = 5.0, y: Double = 25.0) : Element(x = x, y = y) {
                     width.get() + 5
                 }
 
-                tab.drawTab(tabX, y, color.rgb, backgroundColor.rgb, borderColor.rgb, borderStrength.get(), upperCaseValue.get(), fontRenderer)
+                tab.drawTab(
+                    tabX,
+                    y,
+                    color.rgb,
+                    backgroundColor.rgb,
+                    borderColor.rgb,
+                    borderStrength.get(),
+                    upperCaseValue.get(),
+                    fontRenderer
+                )
             }
             y += tabHeight.get()
         }
@@ -290,7 +313,8 @@ class TabGUI(x: Double = 5.0, y: Double = 25.0) : Element(x = x, y = y) {
 
             for (module in modules)
                 if (fontRenderer.getStringWidth(if (upperCase) module.name.uppercase() else module.name) + 4 > maxWidth) {
-                    maxWidth = (fontRenderer.getStringWidth(if (upperCase) module.name.uppercase() else module.name) + 7F).toInt()
+                    maxWidth =
+                        (fontRenderer.getStringWidth(if (upperCase) module.name.uppercase() else module.name) + 7F).toInt()
                 }
 
             menuWidth = maxWidth
@@ -298,19 +322,35 @@ class TabGUI(x: Double = 5.0, y: Double = 25.0) : Element(x = x, y = y) {
             val menuHeight = modules.size * tabHeight.get()
 
             if (borderValue.get()) {
-                RenderUtils.drawBorderedRect(x - 1F, y - 1F, x + menuWidth - 2F, y + menuHeight - 1F, borderStrength, borderColor, backgroundColor)
+                RenderUtils.drawBorderedRect(
+                    x - 1F,
+                    y - 1F,
+                    x + menuWidth - 2F,
+                    y + menuHeight - 1F,
+                    borderStrength,
+                    borderColor,
+                    backgroundColor
+                )
             } else {
                 RenderUtils.drawRect(x - 1F, y - 1F, x + menuWidth - 2F, y + menuHeight - 1F, backgroundColor)
             }
 
-            RenderUtils.drawRect(x - 1.toFloat(), y + itemY - 1, x + menuWidth - 2F, y + itemY + tabHeight.get() - 1, color)
+            RenderUtils.drawRect(
+                x - 1.toFloat(),
+                y + itemY - 1,
+                x + menuWidth - 2F,
+                y + itemY + tabHeight.get() - 1,
+                color
+            )
             GlStateManager.resetColor()
 
             modules.forEachIndexed { index, module ->
                 val moduleColor = if (module.state) 0xffffff else Color(205, 205, 205).rgb
 
-                fontRenderer.drawString(if (upperCase) module.name.uppercase() else module.name, x + 2F,
-                    y + tabHeight.get() * index + textPositionY.get(), moduleColor, textShadow.get())
+                fontRenderer.drawString(
+                    if (upperCase) module.name.uppercase() else module.name, x + 2F,
+                    y + tabHeight.get() * index + textPositionY.get(), moduleColor, textShadow.get()
+                )
             }
         }
     }

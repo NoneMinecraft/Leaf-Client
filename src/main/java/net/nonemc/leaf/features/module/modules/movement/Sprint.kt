@@ -1,6 +1,7 @@
-
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.network.play.client.C0BPacketEntityAction
+import net.minecraft.potion.Potion
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -14,15 +15,17 @@ import net.nonemc.leaf.utils.RotationUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.network.play.client.C0BPacketEntityAction
-import net.minecraft.potion.Potion
 
 @ModuleInfo(name = "Sprint", category = ModuleCategory.MOVEMENT, defaultOn = true)
 class Sprint : Module() {
     private val mode = ListValue("Mode", arrayOf("Normal", "Legit"), "Legit")
     val jumpDirectionsValue = BoolValue("JumpDirections", false)
     val allDirectionsValue = BoolValue("AllDirections", true)
-    private val allDirectionsBypassValue = ListValue("AllDirectionsBypass", arrayOf("Rotate", "Rotate2", "Toggle", "Minemora", "Spoof", "LimitSpeed", "None"), "None").displayable { allDirectionsValue.get() }
+    private val allDirectionsBypassValue = ListValue(
+        "AllDirectionsBypass",
+        arrayOf("Rotate", "Rotate2", "Toggle", "Minemora", "Spoof", "LimitSpeed", "None"),
+        "None"
+    ).displayable { allDirectionsValue.get() }
     private val blindnessValue = BoolValue("Blindness", true)
     val useItemValue = BoolValue("UseItem", false)
     val foodValue = BoolValue("Food", true)
@@ -31,15 +34,30 @@ class Sprint : Module() {
     val checkServerSideGround = BoolValue("CheckServerSideOnlyGround", false).displayable { checkServerSide.get() }
     private val noPacket = BoolValue("NoPacket", false)
     private val allDirectionsLimitSpeedGround = BoolValue("AllDirectionsLimitSpeedOnlyGround", true)
-    private val allDirectionsLimitSpeedValue = FloatValue("AllDirectionsLimitSpeed", 0.7f, 0.5f, 1f).displayable { allDirectionsBypassValue.displayable && allDirectionsBypassValue.equals("LimitSpeed") }
+    private val allDirectionsLimitSpeedValue = FloatValue(
+        "AllDirectionsLimitSpeed",
+        0.7f,
+        0.5f,
+        1f
+    ).displayable { allDirectionsBypassValue.displayable && allDirectionsBypassValue.equals("LimitSpeed") }
 
     private var spoofStat = false
         set(value) {
             if (field != value) {
                 if (value) {
-                    mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING))
+                    mc.netHandler.addToSendQueue(
+                        C0BPacketEntityAction(
+                            mc.thePlayer,
+                            C0BPacketEntityAction.Action.STOP_SPRINTING
+                        )
+                    )
                 } else {
-                    mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SPRINTING))
+                    mc.netHandler.addToSendQueue(
+                        C0BPacketEntityAction(
+                            mc.thePlayer,
+                            C0BPacketEntityAction.Action.START_SPRINTING
+                        )
+                    )
                 }
                 field = value
             }
@@ -48,7 +66,7 @@ class Sprint : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         if (sprintValue) {
-        if (mode.get() == "Normal") {
+            if (mode.get() == "Normal") {
 
                 mc.thePlayer.isSprinting = true
 
@@ -158,10 +176,10 @@ class Sprint : Module() {
                         }
                     }
                 }
-            }else{
-            mc.gameSettings.keyBindSprint.pressed = true
-        }
-        }else{
+            } else {
+                mc.gameSettings.keyBindSprint.pressed = true
+            }
+        } else {
             mc.gameSettings.keyBindSprint.pressed = false
         }
     }

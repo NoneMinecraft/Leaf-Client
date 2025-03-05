@@ -48,9 +48,10 @@ class BindCommand : Command("bind", emptyArray()) {
 
         return when (args.size) {
             1 -> Leaf.moduleManager.modules
-                    .map { it.name }
-                    .filter { it.startsWith(moduleName, true) }
-                    .toList()
+                .map { it.name }
+                .filter { it.startsWith(moduleName, true) }
+                .toList()
+
             else -> emptyList()
         }
     }

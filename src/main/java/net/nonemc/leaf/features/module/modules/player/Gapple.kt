@@ -4,6 +4,14 @@
  */
 package net.nonemc.leaf.features.module.modules.player
 
+import net.minecraft.client.gui.inventory.GuiContainer
+import net.minecraft.init.Items
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
+import net.minecraft.network.play.client.C09PacketHeldItemChange
+import net.minecraft.network.play.server.S09PacketHeldItemChange
+import net.minecraft.potion.Potion
+import net.minecraft.util.MathHelper
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -17,14 +25,6 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.client.gui.inventory.GuiContainer
-import net.minecraft.init.Items
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
-import net.minecraft.network.play.client.C09PacketHeldItemChange
-import net.minecraft.network.play.server.S09PacketHeldItemChange
-import net.minecraft.potion.Potion
-import net.minecraft.util.MathHelper
 import java.util.*
 
 @ModuleInfo(name = "Gapple", category = ModuleCategory.PLAYER)
@@ -85,14 +85,15 @@ class Gapple : Module() {
                         tryHeal = false
                         timer.reset()
                         delay = MathHelper.getRandomIntegerInRange(Random(), min.get(), max.get())
-                    }else {
+                    } else {
                         tryHeal = false
                     }
                 }
+
                 "legitauto" -> {
                     if (eating == -1) {
                         val gappleInHotbar = InventoryUtils.findItem(36, 45, Items.golden_apple)
-                        if(gappleInHotbar == -1) {
+                        if (gappleInHotbar == -1) {
                             tryHeal = false
                             return
                         }
@@ -106,6 +107,7 @@ class Gapple : Module() {
                         delay = MathHelper.getRandomIntegerInRange(Random(), min.get(), max.get())
                     }
                 }
+
                 "head" -> {
                     val headInHotbar = InventoryUtils.findItem(36, 45, Items.skull)
                     if (headInHotbar != -1) {
@@ -115,7 +117,7 @@ class Gapple : Module() {
                         timer.reset()
                         tryHeal = false
                         delay = MathHelper.getRandomIntegerInRange(Random(), min.get(), max.get())
-                    }else {
+                    } else {
                         tryHeal = false
                     }
                 }
@@ -127,9 +129,15 @@ class Gapple : Module() {
         val absorp = MathHelper.ceiling_double_int(mc.thePlayer.absorptionAmount.toDouble())
         if ((groundCheck.get() && !mc.thePlayer.onGround) || (invCheck.get() && mc.currentScreen is GuiContainer) || (absorp > 0 && absorpCheck.get()))
             return
-        if (waitRegen.get() && mc.thePlayer.isPotionActive(Potion.regeneration) && mc.thePlayer.getActivePotionEffect(Potion.regeneration).duration > regenSec.get() * 20.0f)
+        if (waitRegen.get() && mc.thePlayer.isPotionActive(Potion.regeneration) && mc.thePlayer.getActivePotionEffect(
+                Potion.regeneration
+            ).duration > regenSec.get() * 20.0f
+        )
             return
-        if (!isDisable && (mc.thePlayer.health <= (percent.get() / 100.0f) * mc.thePlayer.maxHealth) && timer.hasTimePassed(delay.toLong())) {
+        if (!isDisable && (mc.thePlayer.health <= (percent.get() / 100.0f) * mc.thePlayer.maxHealth) && timer.hasTimePassed(
+                delay.toLong()
+            )
+        ) {
             if (tryHeal)
                 return
             tryHeal = true

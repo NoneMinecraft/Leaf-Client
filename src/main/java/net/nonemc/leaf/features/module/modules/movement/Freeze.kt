@@ -4,6 +4,7 @@
  */
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -11,7 +12,6 @@ import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.minecraft.network.play.client.C03PacketPlayer
 
 @ModuleInfo(name = "Freeze", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.RESPAWN)
 class Freeze : Module() {

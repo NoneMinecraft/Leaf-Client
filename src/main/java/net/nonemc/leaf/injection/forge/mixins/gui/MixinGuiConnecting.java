@@ -1,11 +1,11 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
-import net.nonemc.leaf.utils.ServerUtils;
-import net.nonemc.leaf.utils.extensions.RendererExtensionKt;
-import net.nonemc.leaf.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
+import net.nonemc.leaf.utils.ServerUtils;
+import net.nonemc.leaf.utils.extensions.RendererExtensionKt;
+import net.nonemc.leaf.utils.render.RenderUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,7 +32,7 @@ public abstract class MixinGuiConnecting extends GuiScreen {
         String ip = "Unknown";
 
         final ServerData serverData = mc.getCurrentServerData();
-        if(serverData != null)
+        if (serverData != null)
             ip = serverData.serverIP;
 
         RendererExtensionKt.drawCenteredString(mc.fontRendererObj, "Connecting to", this.width / 2, this.height / 4 + 110, 0xFFFFFF, true);

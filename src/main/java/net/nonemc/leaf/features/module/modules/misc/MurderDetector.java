@@ -1,5 +1,13 @@
 package net.nonemc.leaf.features.module.modules.misc;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.event.EventTarget;
 import net.nonemc.leaf.event.UpdateEvent;
@@ -9,22 +17,14 @@ import net.nonemc.leaf.features.module.ModuleInfo;
 import net.nonemc.leaf.ui.client.hud.element.elements.Notification;
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType;
 import net.nonemc.leaf.utils.ClientUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 
 import java.util.HashMap;
 
 @ModuleInfo(name = "MurderDetector", category = ModuleCategory.MISC)
 public class MurderDetector extends Module {
-    public static Minecraft mc=Minecraft.getMinecraft();
-    public static int[] itemIds={288,396,412,398,75,50};
-    public static Item[] itemTypes=new Item[] {
+    public static Minecraft mc = Minecraft.getMinecraft();
+    public static int[] itemIds = {288, 396, 412, 398, 75, 50};
+    public static Item[] itemTypes = new Item[]{
             Items.fishing_rod,
             Items.diamond_hoe,
             Items.golden_hoe,
@@ -54,22 +54,21 @@ public class MurderDetector extends Module {
             Items.wooden_shovel
     };
     public static HashMap<EntityPlayer, KillerData> killerData = new HashMap<EntityPlayer, KillerData>();
+
     @EventTarget
-    public static void onUpdate(UpdateEvent event){
+    public static void onUpdate(UpdateEvent event) {
         for (Entity entity : mc.theWorld.loadedEntityList) {
-            if (entity instanceof EntityLivingBase) {
-                EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
-                if (entityLivingBase instanceof EntityPlayer) {
-                    EntityPlayer player = (EntityPlayer) entityLivingBase;
-                    if(player.inventory.getCurrentItem()!=null) {
-                        MurderDetector murderDetector=new MurderDetector();
-                        if(killerData.get(player)==null){
+            if (entity instanceof EntityLivingBase entityLivingBase) {
+                if (entityLivingBase instanceof EntityPlayer player) {
+                    if (player.inventory.getCurrentItem() != null) {
+                        MurderDetector murderDetector = new MurderDetector();
+                        if (killerData.get(player) == null) {
                             if (murderDetector.isWeapon(player.inventory.getCurrentItem().getItem())) {
-                                ClientUtils.INSTANCE.displayChatMessage("§a[%module.MurderDetector.name%]§c "+player.getName()+" is Killer!!!");
-                                Leaf.hud.addNotification(new Notification("§a[%module.MurderDetector.name%]§c",player.getName()+" is Killer!!!" , NotifyType.WARNING,4000,500));
-                                if(killerData.get(player) == null) killerData.put(player, new KillerData(player));
+                                ClientUtils.INSTANCE.displayChatMessage("§a[%module.MurderDetector.name%]§c " + player.getName() + " is Killer!!!");
+                                Leaf.hud.addNotification(new Notification("§a[%module.MurderDetector.name%]§c", player.getName() + " is Killer!!!", NotifyType.WARNING, 4000, 500));
+                                if (killerData.get(player) == null) killerData.put(player, new KillerData(player));
                             }
-                        }else{
+                        } else {
                             if (!murderDetector.isWeapon(player.inventory.getCurrentItem().getItem())) {
                                 killerData.remove(player);
                             }
@@ -80,29 +79,33 @@ public class MurderDetector extends Module {
             }
         }
     }
+
     @Override
-    public void onEnable(){
+    public void onEnable() {
         killerData.clear();
     }
-    public boolean isWeapon(Item item){
-        for(int id:itemIds){
-            Item itemId=Item.getItemById(id);
+
+    public boolean isWeapon(Item item) {
+        for (int id : itemIds) {
+            Item itemId = Item.getItemById(id);
             //ClientUtils.INSTANCE.displayChatMessage(itemId+":"+item);
-            if(item==itemId){
+            if (item == itemId) {
                 return true;
             }
         }
-        for(Item id:itemTypes){
-            if(item==id){
+        for (Item id : itemTypes) {
+            if (item == id) {
                 return true;
             }
         }
         return false;
     }
 }
+
 class KillerData {
-    public static String playerName="";
-    public KillerData(EntityPlayer player){
+    public static String playerName = "";
+
+    public KillerData(EntityPlayer player) {
 
     }
 }

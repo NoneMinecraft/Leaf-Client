@@ -4,13 +4,13 @@
  */
 package net.nonemc.leaf.features.module.modules.misc
 
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.item.ItemArmor
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.value.BoolValue
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.item.ItemArmor
 
 @ModuleInfo(name = "Teams", category = ModuleCategory.MISC)
 class Teams : Module() {
@@ -23,7 +23,8 @@ class Teams : Module() {
     fun isInYourTeam(entity: EntityLivingBase): Boolean {
         mc.thePlayer ?: return false
         if (scoreboardValue.get() && mc.thePlayer.team != null && entity.team != null &&
-                mc.thePlayer.team.isSameTeam(entity.team)) {
+            mc.thePlayer.team.isSameTeam(entity.team)
+        ) {
             return true
         }
         if (swValue.get() && mc.thePlayer.displayName != null && entity.displayName != null) {
@@ -44,7 +45,10 @@ class Teams : Module() {
             if (myArmor != null && entityArmor != null) {
                 val myItemArmor = myArmor.item as ItemArmor
                 val entityItemArmor = entityArmor.item as ItemArmor
-                if (myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && entityItemArmor.armorMaterial == ItemArmor.ArmorMaterial.LEATHER && entityItemArmor.getColor(entityArmor) == 0xFF0000) {
+                if (myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.CHAIN && entityItemArmor.armorMaterial == ItemArmor.ArmorMaterial.LEATHER && entityItemArmor.getColor(
+                        entityArmor
+                    ) == 0xFF0000
+                ) {
                     return true
                 }
                 if (myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.IRON && entityItemArmor.getColor(entityArmor) == 0x0000FF) {
@@ -60,7 +64,7 @@ class Teams : Module() {
                 }
 
                 if (myItemArmor.getColor(myArmor) == entityItemArmor.getColor(entityArmor) && entityItemArmor.armorMaterial == ItemArmor.ArmorMaterial.LEATHER && myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.LEATHER) {
-                        return true
+                    return true
                 }
                 if (myItemArmor.armorMaterial == ItemArmor.ArmorMaterial.LEATHER && myItemArmor.getColor(myArmor) == 0x0000FF) {
                     if (entityItemArmor.armorMaterial == ItemArmor.ArmorMaterial.IRON) {

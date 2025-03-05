@@ -4,7 +4,7 @@ import net.nonemc.leaf.utils.mc
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun moveTo(currentYaw:Float, targetYaw: Float) {
+fun moveTo(currentYaw: Float, targetYaw: Float) {
     val settings = mc.gameSettings
     val targetRad = Math.toRadians(targetYaw.toDouble())
     val worldDirX = -sin(targetRad).toFloat()

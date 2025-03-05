@@ -1,13 +1,18 @@
 package net.nonemc.leaf.utils.render
 
-import net.nonemc.leaf.injection.access.StaticStorage
-import net.nonemc.leaf.utils.MinecraftInstance
 import net.minecraft.client.shader.Framebuffer
 import net.minecraft.client.shader.ShaderGroup
 import net.minecraft.util.ResourceLocation
+import net.nonemc.leaf.injection.access.StaticStorage
+import net.nonemc.leaf.utils.MinecraftInstance
 
 object BlurUtils : MinecraftInstance() {
-    private val blurShader: ShaderGroup = ShaderGroup(mc.textureManager, mc.resourceManager, mc.framebuffer, ResourceLocation("shaders/post/blurArea.json"))
+    private val blurShader: ShaderGroup = ShaderGroup(
+        mc.textureManager,
+        mc.resourceManager,
+        mc.framebuffer,
+        ResourceLocation("shaders/post/blurArea.json")
+    )
     private lateinit var buffer: Framebuffer
     private var lastScale = 0
     private var lastScaleWidth = 0

@@ -5,22 +5,24 @@
  */
 package net.nonemc.leaf.features.module.modules.movement.speeds.other
 
+import net.minecraft.client.settings.GameSettings
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
 import net.nonemc.leaf.utils.MovementUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.client.settings.GameSettings
 
 @Suppress("UnclearPrecedenceOfBinaryExpression")
 class CustomSpeed : SpeedMode("Custom") {
     private val speedValue = FloatValue("CustomSpeed", 1.6f, 0f, 2f)
     private val doLaunchSpeedValue = BoolValue("CustomDoLaunchSpeed", true)
-    private val launchSpeedValue = FloatValue("CustomLaunchSpeed", 1.6f, 0.2f, 2f).displayable { doLaunchSpeedValue.get() }
+    private val launchSpeedValue =
+        FloatValue("CustomLaunchSpeed", 1.6f, 0.2f, 2f).displayable { doLaunchSpeedValue.get() }
     private val strafeBeforeJump = BoolValue("CustomLaunchMoveBeforeJump", false)
     private val doMinimumSpeedValue = BoolValue("CustomDoMinimumSpeed", true)
-    private val minimumSpeedValue = FloatValue("CustomMinimumSpeed", 0.25f, 0.1f, 2f).displayable { doMinimumSpeedValue.get() }
+    private val minimumSpeedValue =
+        FloatValue("CustomMinimumSpeed", 0.25f, 0.1f, 2f).displayable { doMinimumSpeedValue.get() }
     private val addYMotionValue = FloatValue("CustomAddYMotion", 0f, 0f, 2f)
     private val doCustomYValue = BoolValue("CustomDoModifyJumpY", true)
     private val yValue = FloatValue("CustomY", 0.42f, 0f, 4f).displayable { doCustomYValue.get() }
@@ -29,19 +31,30 @@ class CustomSpeed : SpeedMode("Custom") {
     private val downTimerValue = FloatValue("CustomDownTimer", 1f, 0.1f, 2f)
     private val upAirSpeedValue = FloatValue("CustomUpAirSpeed", 2.03f, 0.5f, 3.5f)
     private val downAirSpeedValue = FloatValue("CustomDownAirSpeed", 2.01f, 0.5f, 3.5f)
-    private val strafeValue = ListValue("CustomStrafe", arrayOf("Strafe", "Boost", "AirSpeed", "Plus", "PlusOnlyUp", "PlusOnlyDown", "Non-Strafe"), "Boost")
-    private val plusMode = ListValue("PlusBoostMode", arrayOf("Add", "Multiply"), "Add").displayable { strafeValue.equals("Plus") || strafeValue.equals("PlusOnlyUp") || strafeValue.equals("PlusOnlyDown") }
-    private val plusMultiply = FloatValue("PlusMultiplyAmount", 1.1f, 1f, 2f).displayable { plusMode.equals("Multiply") && (strafeValue.equals("Plus") || strafeValue.equals("PlusOnlyUp") || strafeValue.equals("PlusOnlyDown")) }
+    private val strafeValue = ListValue(
+        "CustomStrafe",
+        arrayOf("Strafe", "Boost", "AirSpeed", "Plus", "PlusOnlyUp", "PlusOnlyDown", "Non-Strafe"),
+        "Boost"
+    )
+    private val plusMode = ListValue(
+        "PlusBoostMode",
+        arrayOf("Add", "Multiply"),
+        "Add"
+    ).displayable { strafeValue.equals("Plus") || strafeValue.equals("PlusOnlyUp") || strafeValue.equals("PlusOnlyDown") }
+    private val plusMultiply = FloatValue("PlusMultiplyAmount", 1.1f, 1f, 2f).displayable {
+        plusMode.equals("Multiply") && (strafeValue.equals("Plus") || strafeValue.equals("PlusOnlyUp") || strafeValue.equals(
+            "PlusOnlyDown"
+        ))
+    }
     private val groundStay = IntegerValue("CustomGroundStay", 0, 0, 10)
     private val groundResetXZValue = BoolValue("CustomGroundResetXZ", false)
     private val resetXZValue = BoolValue("CustomResetXZ", false)
     private val resetYValue = BoolValue("CustomResetY", false)
-    private val doJump = BoolValue("CustomDoJump",true)
+    private val doJump = BoolValue("CustomDoJump", true)
     private val GroundSpaceKeyPressed = BoolValue("CustomPressSpaceKeyOnGround", true)
     private val AirSpaceKepPressed = BoolValue("CustomPressSpaceKeyInAir", false)
     private val usePreMotion = BoolValue("CustomUsePreMotion", true)
 
-    
 
     private var groundTick = 0
 
@@ -49,7 +62,11 @@ class CustomSpeed : SpeedMode("Custom") {
     override fun onPreMotion() {
         if (!usePreMotion.get()) return
         if (MovementUtils.isMoving()) {
-            mc.timer.timerSpeed = if (mc.thePlayer.motionY> 0) { upTimerValue.get() } else { downTimerValue.get() }
+            mc.timer.timerSpeed = if (mc.thePlayer.motionY > 0) {
+                upTimerValue.get()
+            } else {
+                downTimerValue.get()
+            }
 
             when {
                 mc.thePlayer.onGround -> {
@@ -82,7 +99,7 @@ class CustomSpeed : SpeedMode("Custom") {
                     }
                     groundTick++
                 }
-                
+
                 else -> {
                     groundTick = 0
                     if (AirSpaceKepPressed.get()) {
@@ -104,6 +121,7 @@ class CustomSpeed : SpeedMode("Custom") {
                                 MovementUtils.strafe()
                             }
                         }
+
                         "plus" -> {
                             when (plusMode.get().lowercase()) {
                                 "plus" -> MovementUtils.move(speedValue.get() * 0.1f)
@@ -113,6 +131,7 @@ class CustomSpeed : SpeedMode("Custom") {
                                 }
                             }
                         }
+
                         "plusonlyup" -> {
                             if (mc.thePlayer.motionY > 0) {
                                 when (plusMode.get().lowercase()) {
@@ -126,6 +145,7 @@ class CustomSpeed : SpeedMode("Custom") {
                                 MovementUtils.strafe()
                             }
                         }
+
                         "plusonlydown" -> {
                             if (mc.thePlayer.motionY < 0) {
                                 when (plusMode.get().lowercase()) {
@@ -148,11 +168,15 @@ class CustomSpeed : SpeedMode("Custom") {
             mc.thePlayer.motionZ = 0.0
         }
     }
-    
+
     override fun onUpdate() {
         if (usePreMotion.get()) return
         if (MovementUtils.isMoving()) {
-            mc.timer.timerSpeed = if (mc.thePlayer.motionY> 0) { upTimerValue.get() } else { downTimerValue.get() }
+            mc.timer.timerSpeed = if (mc.thePlayer.motionY > 0) {
+                upTimerValue.get()
+            } else {
+                downTimerValue.get()
+            }
 
             when {
                 mc.thePlayer.onGround -> {
@@ -185,7 +209,7 @@ class CustomSpeed : SpeedMode("Custom") {
                     }
                     groundTick++
                 }
-                
+
                 else -> {
                     groundTick = 0
                     if (AirSpaceKepPressed.get()) {
@@ -207,6 +231,7 @@ class CustomSpeed : SpeedMode("Custom") {
                                 MovementUtils.strafe()
                             }
                         }
+
                         "plus" -> {
                             when (plusMode.get().lowercase()) {
                                 "plus" -> MovementUtils.move(speedValue.get() * 0.1f)
@@ -216,6 +241,7 @@ class CustomSpeed : SpeedMode("Custom") {
                                 }
                             }
                         }
+
                         "plusonlyup" -> {
                             if (mc.thePlayer.motionY > 0) {
                                 when (plusMode.get().lowercase()) {
@@ -229,6 +255,7 @@ class CustomSpeed : SpeedMode("Custom") {
                                 MovementUtils.strafe()
                             }
                         }
+
                         "plusonlydown" -> {
                             if (mc.thePlayer.motionY < 0) {
                                 when (plusMode.get().lowercase()) {
@@ -251,7 +278,6 @@ class CustomSpeed : SpeedMode("Custom") {
             mc.thePlayer.motionZ = 0.0
         }
     }
-
 
 
     override fun onEnable() {

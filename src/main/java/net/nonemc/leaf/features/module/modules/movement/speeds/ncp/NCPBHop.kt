@@ -5,10 +5,10 @@
  */
 package net.nonemc.leaf.features.module.modules.movement.speeds.ncp
 
+import net.minecraft.potion.Potion
 import net.nonemc.leaf.event.MoveEvent
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
 import net.nonemc.leaf.utils.MovementUtils
-import net.minecraft.potion.Potion
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.cos

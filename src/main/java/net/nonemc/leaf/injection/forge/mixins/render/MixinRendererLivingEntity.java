@@ -1,15 +1,18 @@
 package net.nonemc.leaf.injection.forge.mixins.render;
 
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.features.module.modules.render.*;
-import net.nonemc.leaf.utils.EntityUtils;
-import net.nonemc.leaf.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityLivingBase;
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.features.module.modules.render.Chams;
+import net.nonemc.leaf.features.module.modules.render.ESP;
+import net.nonemc.leaf.features.module.modules.render.NameTags;
+import net.nonemc.leaf.features.module.modules.render.TrueSight;
+import net.nonemc.leaf.utils.EntityUtils;
+import net.nonemc.leaf.utils.render.RenderUtils;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -61,11 +64,11 @@ public abstract class MixinRendererLivingEntity extends MixinRender {
         final TrueSight trueSight = Leaf.moduleManager.getModule(TrueSight.class);
         boolean semiVisible = !visible && (!entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer) || (trueSight.getState() && trueSight.getEntitiesValue().get()));
 
-        if(visible || semiVisible) {
-            if(!this.bindEntityTexture(entitylivingbaseIn))
+        if (visible || semiVisible) {
+            if (!this.bindEntityTexture(entitylivingbaseIn))
                 return;
 
-            if(semiVisible) {
+            if (semiVisible) {
                 GlStateManager.pushMatrix();
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 0.15F);
                 GlStateManager.depthMask(false);
@@ -75,7 +78,7 @@ public abstract class MixinRendererLivingEntity extends MixinRender {
             }
 
             final ESP esp = Leaf.moduleManager.getModule(ESP.class);
-            if(esp.getState() && EntityUtils.INSTANCE.isSelected(entitylivingbaseIn, false)) {
+            if (esp.getState() && EntityUtils.INSTANCE.isSelected(entitylivingbaseIn, false)) {
                 Minecraft mc = Minecraft.getMinecraft();
                 boolean fancyGraphics = mc.gameSettings.fancyGraphics;
                 mc.gameSettings.fancyGraphics = false;
@@ -129,7 +132,7 @@ public abstract class MixinRendererLivingEntity extends MixinRender {
                 GL11.glPopMatrix();
             }
 
-            if(semiVisible) {
+            if (semiVisible) {
                 GlStateManager.disableBlend();
                 GlStateManager.alphaFunc(516, 0.1F);
                 GlStateManager.popMatrix();
@@ -138,7 +141,7 @@ public abstract class MixinRendererLivingEntity extends MixinRender {
         }
     }
 
-    @Redirect(method={"renderName(Lnet/minecraft/entity/EntityLivingBase;DDD)V"}, at=@At(value="FIELD", target="Lnet/minecraft/client/renderer/entity/RenderManager;playerViewX:F"))
+    @Redirect(method = {"renderName(Lnet/minecraft/entity/EntityLivingBase;DDD)V"}, at = @At(value = "FIELD", target = "Lnet/minecraft/client/renderer/entity/RenderManager;playerViewX:F"))
     private float renderName(RenderManager renderManager) {
         return Minecraft.getMinecraft().gameSettings.thirdPersonView == 2 ? -renderManager.playerViewX : renderManager.playerViewX;
     }

@@ -1,11 +1,11 @@
 package net.nonemc.leaf.features.module.modules.player
 
+import net.minecraft.util.BlockPos
 import net.nonemc.leaf.event.ClickBlockEvent
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.minecraft.util.BlockPos
 
 @ModuleInfo(name = "AutoTool", category = ModuleCategory.PLAYER)
 class AutoTool : Module() {

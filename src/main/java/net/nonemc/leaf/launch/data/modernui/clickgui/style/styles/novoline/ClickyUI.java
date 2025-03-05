@@ -2,10 +2,10 @@ package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.novoline;
 
 
 import com.google.common.collect.Lists;
-import net.nonemc.leaf.features.module.ModuleCategory;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.nonemc.leaf.features.module.ModuleCategory;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class ClickyUI extends GuiScreen {
     public static ArrayList<Window> windows = Lists.newArrayList();
-    public int scrollVelocity;
     public static boolean binding;
+    public int scrollVelocity;
 
     public ClickyUI() {
         if (windows.isEmpty()) {
@@ -26,7 +26,7 @@ public class ClickyUI extends GuiScreen {
             int n2 = 0;
             while (n2 < n) {
                 ModuleCategory c = arrmoduleType[n2];
-                windows.add(new Window(c, 20 , x));
+                windows.add(new Window(c, 20, x));
                 x += 30;
                 ++n2;
             }

@@ -4,8 +4,13 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import kotlin.math.roundToInt
 
-open class NumberValue(name: String, value: Double, val minimum: Double = 0.0, val maximum: Double = Double.MAX_VALUE,val inc: Double/* = 1.0*/)
-    : Value<Double>(name, value) {
+open class NumberValue(
+    name: String,
+    value: Double,
+    val minimum: Double = 0.0,
+    val maximum: Double = Double.MAX_VALUE,
+    val inc: Double/* = 1.0*/
+) : Value<Double>(name, value) {
 
     fun set(newValue: Number) {
         set(newValue.toDouble())
@@ -17,6 +22,7 @@ open class NumberValue(name: String, value: Double, val minimum: Double = 0.0, v
         if (element.isJsonPrimitive)
             value = element.asDouble
     }
+
     open fun getDouble(): Double {
         return ((this.get() as Number).toDouble() / this.inc).roundToInt() * this.inc
     }

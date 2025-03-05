@@ -2,5 +2,6 @@ package net.nonemc.leaf.utils
 
 object MouseUtils {
     @JvmStatic
-    fun mouseWithinBounds(mouseX: Int, mouseY: Int, x: Float, y: Float, x2: Float, y2: Float) = mouseX >= x && mouseX < x2 && mouseY >= y && mouseY < y2
+    fun mouseWithinBounds(mouseX: Int, mouseY: Int, x: Float, y: Float, x2: Float, y2: Float) =
+        mouseX >= x && mouseX < x2 && mouseY >= y && mouseY < y2
 }

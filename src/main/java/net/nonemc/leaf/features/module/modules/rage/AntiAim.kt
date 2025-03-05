@@ -2,8 +2,9 @@
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
- package net.nonemc.leaf.features.module.modules.rage
+package net.nonemc.leaf.features.module.modules.rage
 
+import net.minecraft.util.MathHelper
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.StrafeEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -16,18 +17,17 @@ import net.nonemc.leaf.utils.RotationUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.util.MathHelper
 
 @ModuleInfo(name = "AntiAim", category = ModuleCategory.Rage)
 class AntiAim : Module() {
-    private val yaw = FloatValue("Yaw",45F,-180F,180F)
-    private val pitch = FloatValue("Pitch",45F,-90F,90F)
-    private val auto = BoolValue("Auto",true)
-    private val yawOffset = FloatValue("AutoYawOffset",45F,-180F,180F)
+    private val yaw = FloatValue("Yaw", 45F, -180F, 180F)
+    private val pitch = FloatValue("Pitch", 45F, -90F, 90F)
+    private val auto = BoolValue("Auto", true)
+    private val yawOffset = FloatValue("AutoYawOffset", 45F, -180F, 180F)
     private val rotateValue = BoolValue("SilentRotate", true)
     private val dynamic = BoolValue("Dynamic", true)
-    private val dynamicAmplitude = FloatValue("DynamicAmplitude",15F,0F,180F)
-    private val dynamicTick = IntegerValue("DynamicTick",10,1,20)
+    private val dynamicAmplitude = FloatValue("DynamicAmplitude", 15F, 0F, 180F)
+    private val dynamicTick = IntegerValue("DynamicTick", 10, 1, 20)
     private val whenRageBotIsIdle = BoolValue("WhenRageBotIsIdle", true)
     private val strictStrafe = BoolValue("StrictStrafe", true)
     private val onSneak = BoolValue("OnSneak", true)
@@ -39,6 +39,7 @@ class AntiAim : Module() {
         pitchValue = 0F
         rotationTick = 0
     }
+
     @EventTarget
     fun onStrafe(event: StrafeEvent) {
         if (strictStrafe.get()) {
@@ -69,9 +70,10 @@ class AntiAim : Module() {
             event.cancelEvent()
         }
     }
+
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if ((!whenRageBotIsIdle.get() || idle()) &&(!onSneak.get() || mc.thePlayer.isSneaking)) {
+        if ((!whenRageBotIsIdle.get() || idle()) && (!onSneak.get() || mc.thePlayer.isSneaking)) {
             if (rotateValue.get()) RotationUtils.setTargetRotation(Rotation(yawValue, pitchValue)) else {
                 mc.thePlayer.rotationYaw = yawValue
                 mc.thePlayer.rotationPitch = pitchValue

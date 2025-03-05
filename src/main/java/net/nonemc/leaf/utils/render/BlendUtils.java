@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.render;
 
 import java.awt.*;
@@ -10,7 +9,7 @@ public enum BlendUtils {
 
     String colorCode;
 
-    private BlendUtils(String colorCode) {
+    BlendUtils(String colorCode) {
         this.colorCode = colorCode;
     }
 
@@ -33,7 +32,7 @@ public enum BlendUtils {
             float max = range[1] - range[0];
             float value = progress - range[0];
             float weight = value / max;
-            Color color = blend(colorRange[0], colorRange[1], (double)(1.0F - weight));
+            Color color = blend(colorRange[0], colorRange[1], 1.0F - weight);
             return color;
         } else {
             throw new IllegalArgumentException("Fractions and colours must have equal number of elements");
@@ -44,7 +43,7 @@ public enum BlendUtils {
         int[] range = new int[2];
 
         int startPoint;
-        for(startPoint = 0; startPoint < fractions.length && fractions[startPoint] <= progress; ++startPoint) {
+        for (startPoint = 0; startPoint < fractions.length && fractions[startPoint] <= progress; ++startPoint) {
         }
 
         if (startPoint >= fractions.length) {
@@ -57,7 +56,7 @@ public enum BlendUtils {
     }
 
     public static Color blend(Color color1, Color color2, double ratio) {
-        float r = (float)ratio;
+        float r = (float) ratio;
         float ir = 1.0F - r;
         float[] rgb1 = color1.getColorComponents(new float[3]);
         float[] rgb2 = color2.getColorComponents(new float[3]);

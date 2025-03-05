@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.features.module.modules.world
 
 import net.nonemc.leaf.event.EventTarget

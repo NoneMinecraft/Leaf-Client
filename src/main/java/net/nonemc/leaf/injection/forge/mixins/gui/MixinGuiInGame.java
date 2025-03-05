@@ -1,5 +1,13 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.event.Render2DEvent;
 import net.nonemc.leaf.features.module.modules.client.Animations;
@@ -10,14 +18,6 @@ import net.nonemc.leaf.features.module.modules.render.Crosshair;
 import net.nonemc.leaf.injection.access.StaticStorage;
 import net.nonemc.leaf.utils.render.ColorUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiPlayerTabOverlay;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -33,12 +33,10 @@ import java.awt.*;
 public abstract class MixinGuiInGame extends MixinGui {
 
     @Shadow
-    protected abstract void renderHotbarItem(int index, int xPos, int yPos, float partialTicks, EntityPlayer player);
-
-    @Shadow
     @Final
     protected static ResourceLocation widgetsTexPath;
-
+    @Final
+    private static ResourceLocation ICONS;
     @Shadow
     @Final
     protected GuiPlayerTabOverlay overlayPlayerList;
@@ -47,13 +45,8 @@ public abstract class MixinGuiInGame extends MixinGui {
     @Final
     protected Minecraft mc;
 
-
-    @Final
-    private static ResourceLocation ICONS;
-
-
-
-
+    @Shadow
+    protected abstract void renderHotbarItem(int index, int xPos, int yPos, float partialTicks, EntityPlayer player);
 
     @Inject(method = "renderScoreboard", at = @At("HEAD"), cancellable = true)
     private void renderScoreboard(CallbackInfo callbackInfo) {
@@ -72,17 +65,17 @@ public abstract class MixinGuiInGame extends MixinGui {
 
         float tabHope = this.mc.gameSettings.keyBindPlayerList.isKeyDown() ? 1f : 0f;
         final Animations animations = Animations.INSTANCE;
-        if(animations.getTabHopePercent() != tabHope) {
+        if (animations.getTabHopePercent() != tabHope) {
             animations.setLastTabSync(System.currentTimeMillis());
             animations.setTabHopePercent(tabHope);
         }
-        if(animations.getTabPercent() > 0 && tabHope == 0) {
+        if (animations.getTabPercent() > 0 && tabHope == 0) {
             overlayPlayerList.renderPlayerlist(sr.getScaledWidth(), mc.theWorld.getScoreboard(), mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(0));
         }
 
-        if(Minecraft.getMinecraft().getRenderViewEntity() instanceof EntityPlayer) {
-            String hotbarType = HotbarSettings.getHotbarValue().get();  
-                //    if(hud.getState() = true){else {false};
+        if (Minecraft.getMinecraft().getRenderViewEntity() instanceof EntityPlayer) {
+            String hotbarType = HotbarSettings.getHotbarValue().get();
+            //    if(hud.getState() = true){else {false};
             Minecraft mc = Minecraft.getMinecraft();
             int middleScreen = sr.getScaledWidth() / 2;
             GlStateManager.resetColor();
@@ -92,22 +85,22 @@ public abstract class MixinGuiInGame extends MixinGui {
             float f = this.zLevel;
             this.zLevel = -90.0F;
             GlStateManager.resetColor();
-            int itemX = i - 91 + HotbarSettings.INSTANCE.getHotbarEasePos(entityplayer.inventory.currentItem * 20);
-            float posInv =  91 - i + itemX;
+            int itemX = i - 91 + net.nonemc.leaf.features.module.modules.client.HotbarSettings.INSTANCE.getHotbarEasePos(entityplayer.inventory.currentItem * 20);
+            float posInv = 91 - i + itemX;
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            if(hotbarType == "Rise") {
+            if (hotbarType == "Rise") {
                 GlStateManager.disableTexture2D();
-                RenderUtils.quickDrawRect(i - 91, sr.getScaledHeight() - 22, i + 91, sr.getScaledHeight(), new Color(0, 0, 0, HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
-                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 22, itemX + 22, sr.getScaledHeight() - 21, ColorUtils.INSTANCE.rainbow());
-                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 21, itemX + 22, sr.getScaledHeight(), new Color(0, 0, 0, HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
+                RenderUtils.quickDrawRect(i - 91, sr.getScaledHeight() - 22, i + 91, sr.getScaledHeight(), new Color(0, 0, 0, net.nonemc.leaf.features.module.modules.client.HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
+                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 22, itemX + 22, sr.getScaledHeight() - 21, ColorUtils.rainbow());
+                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 21, itemX + 22, sr.getScaledHeight(), new Color(0, 0, 0, net.nonemc.leaf.features.module.modules.client.HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
                 GlStateManager.enableTexture2D();
-            } else if(hotbarType == "Full") {
+            } else if (hotbarType == "Full") {
                 GlStateManager.disableTexture2D();
-                RenderUtils.quickDrawRect(0, sr.getScaledHeight() - 23, sr.getScaledWidth(), sr.getScaledHeight(), new Color(0, 0, 0, HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
-                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 23, itemX + 22, sr.getScaledHeight() - 21, ColorUtils.INSTANCE.rainbow());
-                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 21, itemX + 22, sr.getScaledHeight(), new Color(0, 0, 0, HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
+                RenderUtils.quickDrawRect(0, sr.getScaledHeight() - 23, sr.getScaledWidth(), sr.getScaledHeight(), new Color(0, 0, 0, net.nonemc.leaf.features.module.modules.client.HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
+                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 23, itemX + 22, sr.getScaledHeight() - 21, ColorUtils.rainbow());
+                RenderUtils.quickDrawRect(itemX, sr.getScaledHeight() - 21, itemX + 22, sr.getScaledHeight(), new Color(0, 0, 0, net.nonemc.leaf.features.module.modules.client.HotbarSettings.INSTANCE.getHotbarAlphaValue().get()));
                 GlStateManager.enableTexture2D();
             } else if (hotbarType == "Rounded") {
                 RenderUtils.originalRoundedRect(middleScreen - 91, sr.getScaledHeight() - 2, middleScreen + 91, sr.getScaledHeight() - 22, 3F, Integer.MIN_VALUE);
@@ -122,19 +115,17 @@ public abstract class MixinGuiInGame extends MixinGui {
             this.zLevel = f;
             RenderHelper.enableGUIStandardItemLighting();
 
-            if (hotbarType == "Rounded") { 
-                for (int j = 0; j < 9; ++j)
-                {
+            if (hotbarType == "Rounded") {
+                for (int j = 0; j < 9; ++j) {
                     int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
-                    int l = sr.getScaledHeight() - 19 - (true ? 1 : 0); 
+                    int l = sr.getScaledHeight() - 19 - (1);
                     this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
 
                 }
             } else {
-                for (int j = 0; j < 9; ++j)
-                {
+                for (int j = 0; j < 9; ++j) {
                     int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
-                    int l = sr.getScaledHeight() - 16 - 3; 
+                    int l = sr.getScaledHeight() - 16 - 3;
                     this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
 
                 }
@@ -151,13 +142,13 @@ public abstract class MixinGuiInGame extends MixinGui {
     private void renderPumpkinOverlay(final CallbackInfo callbackInfo) {
         final AntiBlind antiBlind = Leaf.moduleManager.getModule(AntiBlind.class);
 
-        if(antiBlind.getState() && antiBlind.getPumpkinEffectValue().get())
+        if (antiBlind.getState() && antiBlind.getPumpkinEffectValue().get())
             callbackInfo.cancel();
     }
 
     @Inject(method = "renderBossHealth", at = @At("HEAD"), cancellable = true)
     private void renderBossHealth(CallbackInfo callbackInfo) {
-        final AntiBlind antiBlind = (AntiBlind) Leaf.moduleManager.getModule(AntiBlind.class);
+        final AntiBlind antiBlind = Leaf.moduleManager.getModule(AntiBlind.class);
         if (antiBlind.getState() && antiBlind.getBossHealth().get())
             callbackInfo.cancel();
     }
@@ -168,4 +159,4 @@ public abstract class MixinGuiInGame extends MixinGui {
         if (crossHair.getState())
             cir.setReturnValue(false);
     }
- }
+}

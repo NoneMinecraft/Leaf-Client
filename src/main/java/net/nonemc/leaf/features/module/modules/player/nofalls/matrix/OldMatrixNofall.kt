@@ -1,10 +1,10 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.matrix
 
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 
 class OldMatrixNofall : NoFallMode("OldMatrix") {
     private var isDmgFalling = false
@@ -21,19 +21,33 @@ class OldMatrixNofall : NoFallMode("OldMatrix") {
     }
 
     override fun onPacket(event: PacketEvent) {
-        if(event.packet is S08PacketPlayerPosLook && matrixFlagWait > 0) {
+        if (event.packet is S08PacketPlayerPosLook && matrixFlagWait > 0) {
             matrixFlagWait = 0
             mc.timer.timerSpeed = 1.00f
             event.cancelEvent()
         }
-        if(event.packet is C03PacketPlayer && isDmgFalling) {
+        if (event.packet is C03PacketPlayer && isDmgFalling) {
             if (event.packet.onGround && mc.thePlayer.onGround) {
                 matrixFlagWait = 2
                 isDmgFalling = false
                 event.cancelEvent()
                 mc.thePlayer.onGround = false
-                mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(event.packet.x, event.packet.y - 256, event.packet.z, false))
-                mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(event.packet.x, (-10).toDouble() , event.packet.z, true))
+                mc.netHandler.addToSendQueue(
+                    C03PacketPlayer.C04PacketPlayerPosition(
+                        event.packet.x,
+                        event.packet.y - 256,
+                        event.packet.z,
+                        false
+                    )
+                )
+                mc.netHandler.addToSendQueue(
+                    C03PacketPlayer.C04PacketPlayerPosition(
+                        event.packet.x,
+                        (-10).toDouble(),
+                        event.packet.z,
+                        true
+                    )
+                )
                 mc.timer.timerSpeed = 0.18f
             }
         }

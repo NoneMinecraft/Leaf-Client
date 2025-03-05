@@ -4,6 +4,7 @@
  */
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.client.Minecraft
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
@@ -12,11 +13,10 @@ import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.client.Minecraft
 
 @ModuleInfo(name = "FastFall", category = ModuleCategory.MOVEMENT)
 class FastFall : Module() {
-    private val modeValue = ListValue("Mode", arrayOf("Intave13",",Motion"), "Intave13")
+    private val modeValue = ListValue("Mode", arrayOf("Intave13", ",Motion"), "Intave13")
     private val MaxFallDistance = FloatValue("MaxFallDistance", 5F, 1F, 100F)
     private val FallSpeed = FloatValue("FallSpeed", 5F, 1F, 20F)
     private val NoXZ = BoolValue("NoXZ", true)
@@ -45,7 +45,7 @@ class FastFall : Module() {
                     }
                 }
             }
-        }   else {
+        } else {
             if (falling) {
                 onNotFalling()
                 falling = false
@@ -55,15 +55,17 @@ class FastFall : Module() {
     }
 
     private fun Timer() {
-        if(NoXZ.get()){
-            mc.thePlayer.motionX= 0.0
-            mc.thePlayer.motionZ= 0.0
+        if (NoXZ.get()) {
+            mc.thePlayer.motionX = 0.0
+            mc.thePlayer.motionZ = 0.0
         }
-    mc.timer.timerSpeed = FallSpeed.get()
+        mc.timer.timerSpeed = FallSpeed.get()
     }
+
     private fun onNotFalling() {
         mc.timer.timerSpeed = 1F
     }
+
     override val tag: String
         get() = modeValue.get()
 }

@@ -1,34 +1,35 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.Slight;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.nonemc.leaf.ui.font.Fonts;
 import net.nonemc.leaf.ui.font.GameFontRenderer;
 import net.nonemc.leaf.utils.render.Colors;
 import net.nonemc.leaf.value.FloatValue;
 import net.nonemc.leaf.value.IntegerValue;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 
 import static net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.Slight.RenderUtil.getAnimationState;
+
 public class UISlider {
 
-    FloatValue  value;
-    IntegerValue valuee;
     public float x;
     public float y;
     public int x2;
     public int y2;
-    private boolean isDraging;
-    private boolean clickNotDraging;
     public boolean showValue;
     public int tX;
     public int tY;
     public int dragX;
     public int dragY;
+    FloatValue value;
+    IntegerValue valuee;
     float ani = 0.0F;
     float aniH;
+    private boolean isDraging;
+    private boolean clickNotDraging;
 
     public UISlider(FloatValue value) {
         this.value = value;
@@ -54,7 +55,7 @@ public class UISlider {
         int Ranbow = (new Color(0, col.getGreen() / 3 + 40, col.getGreen() / 2 + 100)).getRGB();
         int Ranbow1 = (new Color(0, col.getGreen() / 3 + 20, col.getGreen() / 2 + 100)).getRGB();
         GameFontRenderer tahoma20 = Fonts.font35;
-        float n = (((Float) this.value.getValue()).floatValue() - this.value.getMinimum()) / (this.value.getMaximum() - this.value.getMinimum());
+        float n = (this.value.getValue().floatValue() - this.value.getMinimum()) / (this.value.getMaximum() - this.value.getMinimum());
 
         tahoma20.drawString(this.value.getName(), x - 75.0F, y - 3.0F, Colors.WHITE.c);
         Fonts.font35.drawString(this.value.getValue() + "", x + 250.0F - (float) Fonts.font35.getStringWidth(this.value.getValue() + ""), y - 1.0F, (new Color(Colors.GREY.c)).brighter().brighter().getRGB());
@@ -62,12 +63,11 @@ public class UISlider {
             this.ani = (float) ((double) (x + 250.0F) - (370.0D - 370.0D * (double) n));
         }
 
-        this.ani = (float) getAnimationState((double) this.ani, (double) ((float) ((double) (x + 250.0F) - (370.0D - 370.0D * (double) n))), (double) ((float) Math.max(10.0D, Math.abs((double) this.ani - ((double) (x + 120.0F) - (370.0D - 370.0D * (double) n))) * 30.0D * 0.3D)));
+        this.ani = (float) getAnimationState(this.ani, (float) ((double) (x + 250.0F) - (370.0D - 370.0D * (double) n)), (float) Math.max(10.0D, Math.abs((double) this.ani - ((double) (x + 120.0F) - (370.0D - 370.0D * (double) n))) * 30.0D * 0.3D));
         if (this.showValue) {
-            ;
         }
         RenderUtil.drawRect(x - 75.0F, y + 3.0F + 11.0F, x + 250.0F, y + 4.0F + 11.0F, (new Color(60, 60, 60)).getRGB());
-        RenderUtil.drawGradientRect2((double) (x - 75.0F), (double) (y + 3.0F + 11.0F), (double) this.ani, (double) (y + 4.0F + 11.0F), Ranbow, (new Color(4555775)).getRGB());
+        RenderUtil.drawGradientRect2(x - 75.0F, y + 3.0F + 11.0F, this.ani, y + 4.0F + 11.0F, Ranbow, (new Color(4555775)).getRGB());
     }
 
     public void draww(float x, float y) {
@@ -78,7 +78,7 @@ public class UISlider {
         int Ranbow = (new Color(0, col.getGreen() / 3 + 40, col.getGreen() / 2 + 100)).getRGB();
         int Ranbow1 = (new Color(0, col.getGreen() / 3 + 20, col.getGreen() / 2 + 100)).getRGB();
         GameFontRenderer tahoma20 = Fonts.font35;
-        int n = (((Integer) this.valuee.getValue()).intValue() - this.valuee.getMinimum()) / (this.valuee.getMaximum() - this.valuee.getMinimum());
+        int n = (this.valuee.getValue().intValue() - this.valuee.getMinimum()) / (this.valuee.getMaximum() - this.valuee.getMinimum());
 
         tahoma20.drawString(this.valuee.getName(), x - 75.0F, y - 3.0F, Colors.WHITE.c);
         Fonts.font35.drawString(this.valuee.getValue() + "", x + 250.0F - (float) Fonts.font35.getStringWidth(this.valuee.getValue() + ""), y - 1.0F, (new Color(Colors.GREY.c)).brighter().brighter().getRGB());
@@ -86,13 +86,12 @@ public class UISlider {
             this.ani = (float) ((double) (x + 250.0F) - (370.0D - 370.0D * (double) n));
         }
 
-        this.ani = (float) getAnimationState((double) this.ani, (double) ((float) ((double) (x + 250.0F) - (370.0D - 370.0D * (double) n))), (double) ((float) Math.max(10.0D, Math.abs((double) this.ani - ((double) (x + 120.0F) - (370.0D - 370.0D * (double) n))) * 30.0D * 0.3D)));
+        this.ani = (float) getAnimationState(this.ani, (float) ((double) (x + 250.0F) - (370.0D - 370.0D * (double) n)), (float) Math.max(10.0D, Math.abs((double) this.ani - ((double) (x + 120.0F) - (370.0D - 370.0D * (double) n))) * 30.0D * 0.3D));
         if (this.showValue) {
-            ;
         }
 
-RenderUtil.drawRect(x - 75.0F, y + 3.0F + 11.0F, x + 250.0F, y + 4.0F + 11.0F, (new Color(60, 60, 60)).getRGB());
-        RenderUtil.drawGradientRect2((double) (x - 75.0F), (double) (y + 3.0F + 11.0F), (double) this.ani, (double) (y + 4.0F + 11.0F), Ranbow, (new Color(4555775)).getRGB());
+        RenderUtil.drawRect(x - 75.0F, y + 3.0F + 11.0F, x + 250.0F, y + 4.0F + 11.0F, (new Color(60, 60, 60)).getRGB());
+        RenderUtil.drawGradientRect2(x - 75.0F, y + 3.0F + 11.0F, this.ani, y + 4.0F + 11.0F, Ranbow, (new Color(4555775)).getRGB());
     }
 
     public void drawAll(float x, float y, int tx, int ty) {
@@ -101,11 +100,7 @@ RenderUtil.drawRect(x - 75.0F, y + 3.0F + 11.0F, x + 250.0F, y + 4.0F + 11.0F, (
 
         new ScaledResolution(Minecraft.getMinecraft());
 
-        if (this.isHovered(tx, ty, this.x - 100.0F, this.y - 3.0F + 11.0F, this.x - 10.0F, this.y + 10.0F + 11.0F)) {
-            this.showValue = true;
-        } else {
-            this.showValue = false;
-        }
+        this.showValue = this.isHovered(tx, ty, this.x - 100.0F, this.y - 3.0F + 11.0F, this.x - 10.0F, this.y + 10.0F + 11.0F);
 
         if (Mouse.isButtonDown(0)) {
             if (!this.isHovered(tx, ty, this.x - 75.0F, this.y - 3.0F + 11.0F, this.x + 250.0F, this.y + 10.0F + 11.0F) && !this.isDraging) {
@@ -145,11 +140,7 @@ RenderUtil.drawRect(x - 75.0F, y + 3.0F + 11.0F, x + 250.0F, y + 4.0F + 11.0F, (
 
         new ScaledResolution(Minecraft.getMinecraft());
 
-        if (this.isHovered(tx, ty, this.x - 100.0F, this.y - 3.0F + 11.0F, this.x - 10.0F, this.y + 10.0F + 11.0F)) {
-            this.showValue = true;
-        } else {
-            this.showValue = false;
-        }
+        this.showValue = this.isHovered(tx, ty, this.x - 100.0F, this.y - 3.0F + 11.0F, this.x - 10.0F, this.y + 10.0F + 11.0F);
 
         if (Mouse.isButtonDown(0)) {
             if (!this.isHovered(tx, ty, this.x - 75.0F, this.y - 3.0F + 11.0F, this.x + 250.0F, this.y + 10.0F + 11.0F) && !this.isDraging) {
@@ -169,7 +160,7 @@ RenderUtil.drawRect(x - 75.0F, y + 3.0F + 11.0F, x + 250.0F, y + 4.0F + 11.0F, (
                     n = 1;
                 }
 
-                int n2 = (int) ((double) (Math.round((float) (this.valuee.getMaximum() - this.valuee.getMinimum())) * n) + (double) this.valuee.getMinimum() * 1.0D / 1.0D);
+                int n2 = (int) ((double) (Math.round((float) (this.valuee.getMaximum() - this.valuee.getMinimum())) * n) + (double) this.valuee.getMinimum());
 
                 this.valuee.set((Number) Integer.valueOf(n2));
             }

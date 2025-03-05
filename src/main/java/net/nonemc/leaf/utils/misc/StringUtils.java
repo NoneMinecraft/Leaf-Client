@@ -9,8 +9,8 @@ import java.util.Map;
 
 public final class StringUtils {
 
-    private static final Map<String,String> pinyinMap=new HashMap<>();
-    private static HashMap<String,String> airCache = new HashMap<>();
+    private static final Map<String, String> pinyinMap = new HashMap<>();
+    private static final HashMap<String, String> airCache = new HashMap<>();
 
     public static String toCompleteString(final String[] args) {
         return toCompleteString(args, 0);
@@ -21,27 +21,27 @@ public final class StringUtils {
     }
 
     public static String toCompleteString(final String[] args, final int start, final String join) {
-        if(args.length <= start) return "";
+        if (args.length <= start) return "";
 
         return String.join(join, Arrays.copyOfRange(args, start, args.length));
     }
 
     public static String replace(final String string, final String searchChars, String replaceChars) {
-        if(string.isEmpty() || searchChars.isEmpty() || searchChars.equals(replaceChars))
+        if (string.isEmpty() || searchChars.isEmpty() || searchChars.equals(replaceChars))
             return string;
 
-        if(replaceChars == null)
+        if (replaceChars == null)
             replaceChars = "";
 
         final int stringLength = string.length();
         final int searchCharsLength = searchChars.length();
         final StringBuilder stringBuilder = new StringBuilder(string);
 
-        for(int i = 0; i < stringLength; i++) {
+        for (int i = 0; i < stringLength; i++) {
             final int start = stringBuilder.indexOf(searchChars, i);
 
-            if(start == -1) {
-                if(i == 0)
+            if (start == -1) {
+                if (i == 0)
                     return string;
 
                 return stringBuilder.toString();
@@ -54,12 +54,12 @@ public final class StringUtils {
     }
 
     public static String toPinyin(final String inString, final String fill) {
-        if(pinyinMap.isEmpty()) {
+        if (pinyinMap.isEmpty()) {
             try {
                 String[] dict = IOUtils.toString(StringUtils.class.getClassLoader().getResourceAsStream("assets/minecraft/leaf/misc/pinyin"), Charsets.UTF_8).split(";");
-                for(String word:dict){
-                    String[] wordData=word.split(",");
-                    pinyinMap.put(wordData[0],wordData[1]);
+                for (String word : dict) {
+                    String[] wordData = word.split(",");
+                    pinyinMap.put(wordData[0], wordData[1]);
                 }
             } catch (final Exception e) {
                 e.printStackTrace();
@@ -68,13 +68,13 @@ public final class StringUtils {
         final String[] strSections = inString.split("");
         final StringBuilder result = new StringBuilder();
         boolean lastIsPinyin = false;
-        for(String section : strSections){
+        for (String section : strSections) {
             if (pinyinMap.containsKey(section)) {
                 result.append(fill);
                 result.append(pinyinMap.get(section));
                 lastIsPinyin = true;
             } else {
-                if(lastIsPinyin) {
+                if (lastIsPinyin) {
                     result.append(fill);
                 }
                 result.append(section);
@@ -85,12 +85,12 @@ public final class StringUtils {
     }
 
     public static String injectAirString(String str) {
-        if(airCache.containsKey(str)) return airCache.get(str);
+        if (airCache.containsKey(str)) return airCache.get(str);
 
         StringBuilder stringBuilder = new StringBuilder();
 
         boolean hasAdded = false;
-        for(char c : str.toCharArray()) {
+        for (char c : str.toCharArray()) {
             stringBuilder.append(c);
             if (!hasAdded) stringBuilder.append('\uF8FF');
             hasAdded = true;

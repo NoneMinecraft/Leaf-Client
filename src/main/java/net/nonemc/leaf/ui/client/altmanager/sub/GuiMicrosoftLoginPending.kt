@@ -2,13 +2,13 @@ package net.nonemc.leaf.ui.client.altmanager.sub
 
 import me.liuli.elixir.account.MicrosoftAccount
 import me.liuli.elixir.compat.OAuthServer
+import net.minecraft.client.gui.GuiButton
+import net.minecraft.client.gui.GuiScreen
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.ui.i18n.LanguageManager
 import net.nonemc.leaf.utils.ClientUtils
 import net.nonemc.leaf.utils.extensions.drawCenteredString
 import net.nonemc.leaf.utils.misc.MiscUtils
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.client.gui.GuiScreen
 
 class GuiMicrosoftLoginPending(private val prevGui: GuiScreen) : GuiScreen() {
     private var stage = "Initializing..."

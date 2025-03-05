@@ -15,6 +15,7 @@ class HealthDebug : Module() {
         LastRegen = 0
         ticks = 0
     }
+
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         val player = mc.thePlayer
@@ -23,10 +24,11 @@ class HealthDebug : Module() {
         val currentHealth = player.health
         val maxHealth = player.maxHealth
         ticks = updateRegenTimer(hungerLevel, saturationLevel, currentHealth, maxHealth)
-        if (hungerLevel > 18){
+        if (hungerLevel > 18) {
             ChatPrint("§b[Leaf] RegenTicks: §7$ticks")
         }
     }
+
     private fun updateRegenTimer(hunger: Int, saturation: Float, currentHealth: Float, maxHealth: Float): Int {
         if (currentHealth < maxHealth) {
             if (hunger >= 18 && saturation > 0) {

@@ -2,6 +2,6 @@
 
 import net.nonemc.leaf.utils.mc
 
-fun ping():Int{
-   return mc.netHandler.getPlayerInfo(mc.thePlayer.uniqueID).responseTime
+fun ping(): Int {
+    return mc.netHandler.getPlayerInfo(mc.thePlayer.uniqueID).responseTime
 }

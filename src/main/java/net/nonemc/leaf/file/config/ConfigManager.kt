@@ -51,7 +51,13 @@ class ConfigManager {
         }
 
         for (section in sections) {
-            section.load(if (json.has(section.sectionName)) { json.getAsJsonObject(section.sectionName) } else { JsonObject() })
+            section.load(
+                if (json.has(section.sectionName)) {
+                    json.getAsJsonObject(section.sectionName)
+                } else {
+                    JsonObject()
+                }
+            )
         }
 
         if (!configFile.exists()) {
@@ -88,7 +94,7 @@ class ConfigManager {
     }
 
     private fun saveTicker() {
-        if(!needSave) {
+        if (!needSave) {
             return
         }
         save()
@@ -99,7 +105,11 @@ class ConfigManager {
     }
 
     fun loadConfigSet() {
-        val configSet = if (configSetFile.exists()) { JsonParser().parse(configSetFile.reader(Charsets.UTF_8)).asJsonObject } else { JsonObject() }
+        val configSet = if (configSetFile.exists()) {
+            JsonParser().parse(configSetFile.reader(Charsets.UTF_8)).asJsonObject
+        } else {
+            JsonObject()
+        }
 
         nowConfigInFile = if (configSet.has("file")) {
             configSet.get("file").asString
@@ -140,7 +150,7 @@ class ConfigManager {
 
                 when (args[0]) {
                     "load" -> {
-                        val url = StringUtils.toCompleteString(args, 1)
+                        StringUtils.toCompleteString(args, 1)
                         try {
                         } catch (e: Exception) {
                             e.printStackTrace()

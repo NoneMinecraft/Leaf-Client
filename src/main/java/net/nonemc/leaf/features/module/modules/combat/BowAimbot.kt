@@ -1,5 +1,8 @@
 ﻿package net.nonemc.leaf.features.module.modules.combat
 
+import net.minecraft.entity.Entity
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.item.ItemBow
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -12,9 +15,6 @@ import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.entity.Entity
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.item.ItemBow
 import java.awt.Color
 
 @ModuleInfo(name = "BowAimbot", category = ModuleCategory.COMBAT)

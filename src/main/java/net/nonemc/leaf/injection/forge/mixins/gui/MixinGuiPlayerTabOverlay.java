@@ -1,12 +1,12 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
-import net.nonemc.leaf.features.module.modules.client.Animations;
-import net.nonemc.leaf.injection.access.StaticStorage;
-import net.nonemc.leaf.utils.render.EaseUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
+import net.nonemc.leaf.features.module.modules.client.Animations;
+import net.nonemc.leaf.injection.access.StaticStorage;
+import net.nonemc.leaf.utils.render.EaseUtils;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -6,6 +6,8 @@
 package net.nonemc.leaf.ui.client.hud.element.elements
 
 import com.google.gson.JsonElement
+import net.minecraft.client.renderer.texture.DynamicTexture
+import net.minecraft.util.ResourceLocation
 import net.nonemc.leaf.ui.client.hud.element.Border
 import net.nonemc.leaf.ui.client.hud.element.Element
 import net.nonemc.leaf.ui.client.hud.element.ElementInfo
@@ -13,8 +15,6 @@ import net.nonemc.leaf.utils.misc.MiscUtils
 import net.nonemc.leaf.utils.misc.RandomUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.TextValue
-import net.minecraft.client.renderer.texture.DynamicTexture
-import net.minecraft.util.ResourceLocation
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.nio.file.Files

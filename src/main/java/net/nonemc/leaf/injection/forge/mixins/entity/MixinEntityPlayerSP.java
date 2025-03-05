@@ -1,16 +1,5 @@
 package net.nonemc.leaf.injection.forge.mixins.entity;
 
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.event.*;
-import net.nonemc.leaf.features.module.modules.combat.Aura;
-import net.nonemc.leaf.features.module.modules.combat.Criticals;
-import net.nonemc.leaf.features.module.modules.movement.Fly;
-import net.nonemc.leaf.features.module.modules.movement.InventoryMove;
-import net.nonemc.leaf.features.module.modules.movement.NoSlow;
-import net.nonemc.leaf.features.module.modules.movement.Sprint;
-import net.nonemc.leaf.features.module.modules.world.Scaffold;
-import net.nonemc.leaf.utils.Rotation;
-import net.nonemc.leaf.utils.RotationUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -29,6 +18,17 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.event.*;
+import net.nonemc.leaf.features.module.modules.combat.Aura;
+import net.nonemc.leaf.features.module.modules.combat.Criticals;
+import net.nonemc.leaf.features.module.modules.movement.Fly;
+import net.nonemc.leaf.features.module.modules.movement.InventoryMove;
+import net.nonemc.leaf.features.module.modules.movement.NoSlow;
+import net.nonemc.leaf.features.module.modules.movement.Sprint;
+import net.nonemc.leaf.features.module.modules.world.Scaffold;
+import net.nonemc.leaf.utils.Rotation;
+import net.nonemc.leaf.utils.RotationUtils;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -44,31 +44,43 @@ import java.util.List;
 public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
 
     @Shadow
-    private boolean serverSneakState;
-
-    @Shadow
     public boolean serverSprintState;
+    @Shadow
+    public int sprintingTicksLeft;
+    @Shadow
+    public float timeInPortal;
+    @Shadow
+    public float prevTimeInPortal;
+    @Shadow
+    public MovementInput movementInput;
+    @Shadow
+    public float horseJumpPower;
+    @Shadow
+    public int horseJumpPowerCounter;
+    @Shadow
+    @Final
+    public NetHandlerPlayClient sendQueue;
+    @Shadow
+    protected int sprintToggleTimer;
+    @Shadow
+    protected Minecraft mc;
+    @Shadow
+    private boolean serverSneakState;
+    @Shadow
+    private double lastReportedPosX;
+    @Shadow
+    private int positionUpdateTicks;
+    @Shadow
+    private double lastReportedPosY;
+    @Shadow
+    private double lastReportedPosZ;
+    @Shadow
+    private float lastReportedYaw;
+    @Shadow
+    private float lastReportedPitch;
 
     @Shadow
     public abstract void playSound(String name, float volume, float pitch);
-
-    @Shadow
-    public int sprintingTicksLeft;
-
-    @Shadow
-    protected int sprintToggleTimer;
-
-    @Shadow
-    public float timeInPortal;
-
-    @Shadow
-    public float prevTimeInPortal;
-
-    @Shadow
-    protected Minecraft mc;
-
-    @Shadow
-    public MovementInput movementInput;
 
     @Shadow
     public abstract void setSprinting(boolean sprinting);
@@ -80,48 +92,20 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
     public abstract void sendPlayerAbilities();
 
     @Shadow
-    public float horseJumpPower;
-
-    @Shadow
-    public int horseJumpPowerCounter;
-
-    @Shadow
     protected abstract void sendHorseJump();
 
     @Shadow
     public abstract boolean isRidingHorse();
 
     @Shadow
-    @Final
-    public NetHandlerPlayClient sendQueue;
-
-    @Shadow
     public abstract boolean isSneaking();
-
-    @Shadow
-    private double lastReportedPosX;
-
-    @Shadow
-    private int positionUpdateTicks;
-
-    @Shadow
-    private double lastReportedPosY;
-
-    @Shadow
-    private double lastReportedPosZ;
-
-    @Shadow
-    private float lastReportedYaw;
-
-    @Shadow
-    private float lastReportedPitch;
 
     @Shadow
     protected abstract boolean isCurrentViewEntity();
 
     /**
      * @author CCBlueX, liulihaocai
-     *
+     * <p>
      * use inject to make sure this works with ViaForge mod
      */
     @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
@@ -321,7 +305,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer {
             this.setSprinting(false);
 
         final InventoryMove inventoryMove = Leaf.moduleManager.getModule(InventoryMove.class);
-        if(inventoryMove.getNoSprintValue().equals("Real") && inventoryMove.getInvOpen())
+        if (inventoryMove.getNoSprintValue().equals("Real") && inventoryMove.getInvOpen())
             this.setSprinting(false);
 
         //aac may check it :(

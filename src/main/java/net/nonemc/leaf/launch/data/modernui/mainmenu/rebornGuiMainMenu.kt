@@ -1,23 +1,23 @@
 package net.nonemc.leaf.launch.data.modernui.mainmenu
 
+import net.minecraft.client.gui.*
+import net.minecraft.client.resources.I18n
+import net.minecraft.util.ResourceLocation
+import net.minecraftforge.fml.client.GuiModList
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.font.FontLoaders
 import net.nonemc.leaf.ui.btn.TestBtn
 import net.nonemc.leaf.ui.client.altmanager.GuiAltManager
 import net.nonemc.leaf.ui.i18n.LanguageManager
-import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.utils.misc.MiscUtils
-import net.minecraft.client.gui.*
-import net.minecraft.client.resources.I18n
-import net.minecraft.util.ResourceLocation
-import net.minecraftforge.fml.client.GuiModList
+import net.nonemc.leaf.utils.render.RenderUtils
 import java.awt.Color
 
 class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
     var drawed = false
     var clicked = false
     var displayed = false
-    
+
     fun drawBtns() {
         this.buttonList.add(
             TestBtn(
@@ -29,7 +29,11 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 I18n.format("menu.singleplayer"),
                 null,
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 170) } else { Color(255, 255, 255, 170) }
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 170)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
         this.buttonList.add(
@@ -42,7 +46,11 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 I18n.format("menu.multiplayer"),
                 null,
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
@@ -56,7 +64,11 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 LanguageManager.get("ui.altmanager"),
                 null,
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
@@ -70,7 +82,11 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 LanguageManager.get("ui.mods"),
                 null,
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
@@ -83,9 +99,17 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 25,
                 25,
                 I18n.format("menu.quit"),
-                if (Leaf.Darkmode.equals(true)) { ResourceLocation("leaf/imgs/icon/quitDark.png") } else { ResourceLocation("leaf/imgs/icon/quit.png") },
+                if (Leaf.Darkmode.equals(true)) {
+                    ResourceLocation("leaf/imgs/icon/quitDark.png")
+                } else {
+                    ResourceLocation("leaf/imgs/icon/quit.png")
+                },
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
@@ -97,10 +121,18 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 25,
                 25,
                 I18n.format("menu.options").replace(".", ""),
-                if (Leaf.Darkmode.equals(true)) { ResourceLocation("leaf/imgs/icon/settingDark.png") } else { ResourceLocation("leaf/imgs/icon/setting.png") },
+                if (Leaf.Darkmode.equals(true)) {
+                    ResourceLocation("leaf/imgs/icon/settingDark.png")
+                } else {
+                    ResourceLocation("leaf/imgs/icon/setting.png")
+                },
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
-                )
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
+            )
         )
 
         this.buttonList.add(
@@ -111,13 +143,21 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 25,
                 25,
                 I18n.format("ui.background"),
-                if (Leaf.Darkmode.equals(true)) { ResourceLocation("leaf/imgs/icon/wallpaperDark.png") } else { ResourceLocation("leaf/imgs/icon/wallpaper.png") },
+                if (Leaf.Darkmode.equals(true)) {
+                    ResourceLocation("leaf/imgs/icon/wallpaperDark.png")
+                } else {
+                    ResourceLocation("leaf/imgs/icon/wallpaper.png")
+                },
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
-              this.buttonList.add(
+        this.buttonList.add(
             TestBtn(
                 204,
                 this.width - 125,
@@ -125,25 +165,49 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
                 25,
                 25,
                 "Website",
-                if (Leaf.Darkmode.equals(true)) { ResourceLocation("leaf/imgs/icon/websiteDark.png") } else { ResourceLocation("leaf/imgs/icon/website.png") },
+                if (Leaf.Darkmode.equals(true)) {
+                    ResourceLocation("leaf/imgs/icon/websiteDark.png")
+                } else {
+                    ResourceLocation("leaf/imgs/icon/website.png")
+                },
                 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
 
         this.buttonList.add(
             TestBtn(
-                203, this.width - 155, 10, 25, 25, "Discord", if (Leaf.Darkmode.equals(true)) { ResourceLocation("leaf/imgs/icon/discordDark.png") } else { ResourceLocation("leaf/imgs/icon/discord.png") }, 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                203, this.width - 155, 10, 25, 25, "Discord", if (Leaf.Darkmode.equals(true)) {
+                    ResourceLocation("leaf/imgs/icon/discordDark.png")
+                } else {
+                    ResourceLocation("leaf/imgs/icon/discord.png")
+                }, 2,
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
 
         this.buttonList.add(
             TestBtn(
-                205, 20, 10, 25, 25, "Toggle theme", if (Leaf.Darkmode.equals(true)) { ResourceLocation("leaf/imgs/icon/moon-nightDark.png") } else { ResourceLocation("leaf/imgs/icon/moon-night.png") }, 2,
-                if (Leaf.Darkmode.equals(true)) { Color(20, 20, 20, 180) } else { Color(255, 255, 255, 170) }
+                205, 20, 10, 25, 25, "Toggle theme", if (Leaf.Darkmode.equals(true)) {
+                    ResourceLocation("leaf/imgs/icon/moon-nightDark.png")
+                } else {
+                    ResourceLocation("leaf/imgs/icon/moon-night.png")
+                }, 2,
+                if (Leaf.Darkmode.equals(true)) {
+                    Color(20, 20, 20, 180)
+                } else {
+                    Color(255, 255, 255, 170)
+                }
             )
         )
 
@@ -153,7 +217,7 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
 
     /* For modification, please keep "Designed by SkidderMC" */
     override fun initGui() {
-        val defaultHeight = (this.height / 3.5).toInt()
+        (this.height / 3.5).toInt()
         drawBtns()
         super.initGui()
     }
@@ -162,11 +226,19 @@ class rebornGuiMainMenu : GuiScreen(), GuiYesNoCallback {
         drawBackground(0)
         val defaultHeight = (this.height).toFloat()
         val defaultWidth = (this.width).toFloat()
-        if (Leaf.Darkmode.equals(true)) { RenderUtils.drawRect(0F, 0F, defaultWidth, defaultHeight, Color(0, 0, 0, 0)) } else { RenderUtils.drawRect(0F, 0F, defaultWidth, defaultHeight, Color(0, 0, 0, 100)) }
-        val i = 0
-        val defaultHeight1 = (this.height).toDouble()
-        val defaultWidth1 = (this.width).toDouble()
-        FontLoaders.F40.drawCenteredString( Leaf.CLIENT_NAME, this.width.toDouble() / 2, this.height.toDouble() / 2 - 60, Color(255, 255, 255, 200).rgb)
+        if (Leaf.Darkmode.equals(true)) {
+            RenderUtils.drawRect(0F, 0F, defaultWidth, defaultHeight, Color(0, 0, 0, 0))
+        } else {
+            RenderUtils.drawRect(0F, 0F, defaultWidth, defaultHeight, Color(0, 0, 0, 100))
+        }
+        (this.height).toDouble()
+        (this.width).toDouble()
+        FontLoaders.F40.drawCenteredString(
+            Leaf.CLIENT_NAME,
+            this.width.toDouble() / 2,
+            this.height.toDouble() / 2 - 60,
+            Color(255, 255, 255, 200).rgb
+        )
 
 
         FontLoaders.F16.drawString(

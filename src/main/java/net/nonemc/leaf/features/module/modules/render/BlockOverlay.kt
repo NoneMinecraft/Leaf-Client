@@ -1,6 +1,8 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.block.Block
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.util.BlockPos
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render2DEvent
 import net.nonemc.leaf.event.Render3DEvent
@@ -15,9 +17,6 @@ import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.block.Block
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.util.BlockPos
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -47,7 +46,12 @@ class BlockOverlay : Module() {
         val blockPos = currentBlock ?: return
         val block = mc.theWorld.getBlockState(blockPos).block ?: return
         val partialTicks = event.partialTicks
-        val color = if (colorRainbowValue.get()) ColorUtils.rainbowWithAlpha(colorAlphaValue.get()) else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get(), colorAlphaValue.get())
+        val color = if (colorRainbowValue.get()) ColorUtils.rainbowWithAlpha(colorAlphaValue.get()) else Color(
+            colorRedValue.get(),
+            colorGreenValue.get(),
+            colorBlueValue.get(),
+            colorAlphaValue.get()
+        )
 
         GlStateManager.enableBlend()
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO)
@@ -63,8 +67,8 @@ class BlockOverlay : Module() {
         val z = mc.thePlayer.lastTickPosZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * partialTicks
 
         val axisAlignedBB = block.getSelectedBoundingBox(mc.theWorld, blockPos)
-                .expand(0.0020000000949949026, 0.0020000000949949026, 0.0020000000949949026)
-                .offset(-x, -y, -z)
+            .expand(0.0020000000949949026, 0.0020000000949949026, 0.0020000000949949026)
+            .offset(-x, -y, -z)
 
         RenderUtils.drawSelectionBoundingBox(axisAlignedBB)
         RenderUtils.drawFilledBox(axisAlignedBB)
@@ -87,11 +91,13 @@ class BlockOverlay : Module() {
                 event.scaledResolution.scaledHeight / 2 + 5F,
                 event.scaledResolution.scaledWidth / 2 + Fonts.font40.getStringWidth(info) + 2F,
                 event.scaledResolution.scaledHeight / 2 + 16F,
-                    3F, Color.BLACK.rgb, Color.BLACK.rgb
+                3F, Color.BLACK.rgb, Color.BLACK.rgb
             )
             GlStateManager.resetColor()
-            Fonts.font40.drawString(info, event.scaledResolution.scaledWidth / 2, event.scaledResolution.scaledHeight / 2 + 7,
-                    Color.WHITE.rgb)
+            Fonts.font40.drawString(
+                info, event.scaledResolution.scaledWidth / 2, event.scaledResolution.scaledHeight / 2 + 7,
+                Color.WHITE.rgb
+            )
         }
     }
 }

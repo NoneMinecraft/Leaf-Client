@@ -1,10 +1,10 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.aac
 
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.util.BlockPos
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
 import net.nonemc.leaf.utils.block.BlockUtils
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.util.BlockPos
 
 class AAC5014Nofall : NoFallMode("AAC5.0.14") {
     private var aac5Check = false
@@ -15,6 +15,7 @@ class AAC5014Nofall : NoFallMode("AAC5.0.14") {
         aac5Timer = 0
         aac5doFlag = false
     }
+
     override fun onNoFall(event: UpdateEvent) {
         var offsetYs = 0.0
         aac5Check = false
@@ -43,9 +44,23 @@ class AAC5014Nofall : NoFallMode("AAC5.0.14") {
         }
         if (aac5doFlag) {
             if (mc.thePlayer.onGround) {
-                mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.5, mc.thePlayer.posZ, true))
+                mc.netHandler.addToSendQueue(
+                    C03PacketPlayer.C04PacketPlayerPosition(
+                        mc.thePlayer.posX,
+                        mc.thePlayer.posY + 0.5,
+                        mc.thePlayer.posZ,
+                        true
+                    )
+                )
             } else {
-                mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.42, mc.thePlayer.posZ, true))
+                mc.netHandler.addToSendQueue(
+                    C03PacketPlayer.C04PacketPlayerPosition(
+                        mc.thePlayer.posX,
+                        mc.thePlayer.posY + 0.42,
+                        mc.thePlayer.posZ,
+                        true
+                    )
+                )
             }
         }
     }

@@ -1,6 +1,6 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.entity.EntityLivingBase
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render2DEvent
 import net.nonemc.leaf.event.Render3DEvent
@@ -15,7 +15,6 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.entity.EntityLivingBase
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import kotlin.math.*
@@ -31,9 +30,12 @@ class PointerESP : Module() {
     private val rainbowValue = BoolValue("Rainbow", false)
     private val damageColorValue = BoolValue("DamageColor", true)
     private val smoothDamageColorValue = BoolValue("SmoothDamageColor", false)
-    private val dmgRedValue = IntegerValue("DamageRed", 255, 0, 255).displayable { !dmgRainbowValue.get() && damageColorValue.get() }
-    private val dmgGreenValue = IntegerValue("DamageGreen", 0, 0, 255).displayable { !dmgRainbowValue.get() && damageColorValue.get() }
-    private val dmgBlueValue = IntegerValue("DamageBlue", 0, 0, 255).displayable { !dmgRainbowValue.get() && damageColorValue.get() }
+    private val dmgRedValue =
+        IntegerValue("DamageRed", 255, 0, 255).displayable { !dmgRainbowValue.get() && damageColorValue.get() }
+    private val dmgGreenValue =
+        IntegerValue("DamageGreen", 0, 0, 255).displayable { !dmgRainbowValue.get() && damageColorValue.get() }
+    private val dmgBlueValue =
+        IntegerValue("DamageBlue", 0, 0, 255).displayable { !dmgRainbowValue.get() && damageColorValue.get() }
     private val dmgRainbowValue = BoolValue("DamageRainbow", false).displayable { damageColorValue.get() }
     private val alphaValue = IntegerValue("Alpha", 255, 0, 255)
     private val distanceAlphaValue = BoolValue("DistanceAlpha", true)
@@ -45,7 +47,7 @@ class PointerESP : Module() {
 
     @EventTarget
     fun onRender2d(event: Render2DEvent) {
-        if(!dimensionValue.equals("2d"))
+        if (!dimensionValue.equals("2d"))
             return
 
         GL11.glPushMatrix()
@@ -58,7 +60,7 @@ class PointerESP : Module() {
 
     @EventTarget
     fun onRender3d(event: Render3DEvent) {
-        if(dimensionValue.equals("2d"))
+        if (dimensionValue.equals("2d"))
             return
 
         GL11.glDisable(GL11.GL_CULL_FACE)
@@ -81,11 +83,21 @@ class PointerESP : Module() {
         val halfAngle = angleValue.get() / 2
         val radius = -radiusValue.get()
         val size = sizeValue.get()
-        val playerPosX = mc.thePlayer.posX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * mc.timer.renderPartialTicks
-        val playerPosZ = mc.thePlayer.posZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * mc.timer.renderPartialTicks
-        val color = if(rainbowValue.get()) { ColorUtils.rainbow() } else { Color(redValue.get(), greenValue.get(), blueValue.get()) }
-        val damageColor = if(damageColorValue.get()) {
-            if(dmgRainbowValue.get()) { ColorUtils.reverseColor(ColorUtils.rainbow()) } else { Color(dmgRedValue.get(), dmgGreenValue.get(), dmgBlueValue.get()) }
+        val playerPosX =
+            mc.thePlayer.posX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * mc.timer.renderPartialTicks
+        val playerPosZ =
+            mc.thePlayer.posZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * mc.timer.renderPartialTicks
+        val color = if (rainbowValue.get()) {
+            ColorUtils.rainbow()
+        } else {
+            Color(redValue.get(), greenValue.get(), blueValue.get())
+        }
+        val damageColor = if (damageColorValue.get()) {
+            if (dmgRainbowValue.get()) {
+                ColorUtils.reverseColor(ColorUtils.rainbow())
+            } else {
+                Color(dmgRedValue.get(), dmgGreenValue.get(), dmgBlueValue.get())
+            }
         } else {
             color
         }
@@ -106,33 +118,62 @@ class PointerESP : Module() {
                 val rotY = -(pos2 * cos - pos1 * sin)
                 val rotX = -(pos1 * cos + pos2 * sin)
                 val angle = (atan2(rotY, rotX) * 180 / Math.PI).toFloat() + 90f
-                RenderUtils.glColor(if(entity.hurtTime > 0) { if(smoothDamageColorValue.get()) {
-                    val percent = entity.hurtPercent.let { if(it > 0.5) { it - 0.5f } else { 0.5f - it } } * 2
-                    ColorUtils.mixColors(damageColor, color, percent)
+                RenderUtils.glColor(
+                    if (entity.hurtTime > 0) {
+                    if (smoothDamageColorValue.get()) {
+                        val percent = entity.hurtPercent.let {
+                            if (it > 0.5) {
+                                it - 0.5f
+                            } else {
+                                0.5f - it
+                            }
+                        } * 2
+                        ColorUtils.mixColors(damageColor, color, percent)
+                    } else {
+                        damageColor
+                    }
                 } else {
-                    damageColor
-                } } else { color },
+                    color
+                },
                     if (distanceAlphaValue.get()) {
-                        (alphaValue.get() - (sqrt((playerPosX - entX).pow(2) + (playerPosZ - entZ).pow(2)) / distanceValue.get()).coerceAtMost(1.0) * (alphaValue.get() - alphaMinValue.get())).toInt()
+                        (alphaValue.get() - (sqrt((playerPosX - entX).pow(2) + (playerPosZ - entZ).pow(2)) / distanceValue.get()).coerceAtMost(
+                            1.0
+                        ) * (alphaValue.get() - alphaMinValue.get())).toInt()
                     } else {
                         alphaValue.get()
                     })
                 GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f)
-                when(modeValue.get().lowercase()) {
+                when (modeValue.get().lowercase()) {
                     "solid" -> {
                         GL11.glBegin(GL11.GL_TRIANGLES)
                         GL11.glVertex2f(0f, radius.toFloat())
-                        GL11.glVertex2d(sin(-halfAngle * Math.PI / 180) * size, radius + cos(-halfAngle * Math.PI / 180) * size)
-                        GL11.glVertex2d(sin(halfAngle * Math.PI / 180) * size, radius + cos(halfAngle * Math.PI / 180) * size)
+                        GL11.glVertex2d(
+                            sin(-halfAngle * Math.PI / 180) * size,
+                            radius + cos(-halfAngle * Math.PI / 180) * size
+                        )
+                        GL11.glVertex2d(
+                            sin(halfAngle * Math.PI / 180) * size,
+                            radius + cos(halfAngle * Math.PI / 180) * size
+                        )
                     }
-                    "line","loopline" -> {
+
+                    "line", "loopline" -> {
                         GL11.glLineWidth(lineWidthValue.get())
                         GL11.glBegin(GL11.GL_LINE_STRIP)
-                        GL11.glVertex2d(sin(-halfAngle * Math.PI / 180) * size, radius + cos(-halfAngle * Math.PI / 180) * size)
+                        GL11.glVertex2d(
+                            sin(-halfAngle * Math.PI / 180) * size,
+                            radius + cos(-halfAngle * Math.PI / 180) * size
+                        )
                         GL11.glVertex2f(0f, radius.toFloat())
-                        GL11.glVertex2d(sin(halfAngle * Math.PI / 180) * size, radius + cos(halfAngle * Math.PI / 180) * size)
-                        if(modeValue.equals("LoopLine")) {
-                            GL11.glVertex2d(sin(-halfAngle * Math.PI / 180) * size, radius + cos(-halfAngle * Math.PI / 180) * size)
+                        GL11.glVertex2d(
+                            sin(halfAngle * Math.PI / 180) * size,
+                            radius + cos(halfAngle * Math.PI / 180) * size
+                        )
+                        if (modeValue.equals("LoopLine")) {
+                            GL11.glVertex2d(
+                                sin(-halfAngle * Math.PI / 180) * size,
+                                radius + cos(-halfAngle * Math.PI / 180) * size
+                            )
                         }
                     }
                 }

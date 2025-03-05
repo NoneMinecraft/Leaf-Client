@@ -1,8 +1,8 @@
 package net.nonemc.leaf.injection.forge.mixins.client;
 
+import net.minecraft.client.multiplayer.WorldClient;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.features.module.modules.render.TrueSight;
-import net.minecraft.client.multiplayer.WorldClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;

@@ -4,6 +4,10 @@
  */
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.entity.item.EntityBoat
+import net.minecraft.network.play.client.C02PacketUseEntity
+import net.minecraft.network.play.client.C0CPacketInput
+import net.minecraft.util.Vec3
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
@@ -14,10 +18,6 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.entity.item.EntityBoat
-import net.minecraft.network.play.client.C02PacketUseEntity
-import net.minecraft.network.play.client.C0CPacketInput
-import net.minecraft.util.Vec3
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -26,8 +26,10 @@ class BoatJump : Module() {
     private val modeValue = ListValue("Mode", arrayOf("Boost", "Launch", "Matrix"), "Boost")
     private val hBoostValue = FloatValue("HBoost", 2f, 0f, 6f)
     private val vBoostValue = FloatValue("VBoost", 2f, 0f, 6f)
-    private val matrixTimerStartValue = FloatValue("MatrixTimerStart", 0.3f, 0.1f, 1f).displayable { modeValue.equals("Matrix") }
-    private val matrixTimerAirValue = FloatValue("MatrixTimerAir", 0.5f, 0.1f, 1.5f).displayable { modeValue.equals("Matrix") }
+    private val matrixTimerStartValue =
+        FloatValue("MatrixTimerStart", 0.3f, 0.1f, 1f).displayable { modeValue.equals("Matrix") }
+    private val matrixTimerAirValue =
+        FloatValue("MatrixTimerAir", 0.5f, 0.1f, 1.5f).displayable { modeValue.equals("Matrix") }
     private val launchRadiusValue = FloatValue("LaunchRadius", 4F, 3F, 10F).displayable { modeValue.equals("Launch") }
     private val delayValue = IntegerValue("Delay", 200, 100, 500)
     private val autoHitValue = BoolValue("AutoHit", true)
@@ -87,6 +89,7 @@ class BoatJump : Module() {
                             )
                         )
                     }
+
                     else -> {
                         mc.netHandler.addToSendQueue(
                             C0CPacketInput(
@@ -109,6 +112,7 @@ class BoatJump : Module() {
                     mc.thePlayer.motionY = vBoostValue.get().toDouble()
                     jumpState = 1
                 }
+
                 "launch" -> {
                     mc.thePlayer.motionX += (hBoostValue.get() * 0.1) * -sin(radiansYaw)
                     mc.thePlayer.motionZ += (hBoostValue.get() * 0.1) * cos(radiansYaw)
@@ -125,6 +129,7 @@ class BoatJump : Module() {
                         jumpState = 1
                     }
                 }
+
                 "matrix" -> {
                     hasStopped = true
                     mc.timer.timerSpeed = matrixTimerAirValue.get()

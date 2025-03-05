@@ -1,15 +1,5 @@
 package net.nonemc.leaf.injection.forge.mixins.entity;
 
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.event.JumpEvent;
-import net.nonemc.leaf.features.module.modules.client.Animations;
-import net.nonemc.leaf.features.module.modules.combat.Aura;
-import net.nonemc.leaf.features.module.modules.movement.Jesus;
-import net.nonemc.leaf.features.module.modules.movement.NoJumpDelay;
-import net.nonemc.leaf.features.module.modules.movement.Sprint;
-import net.nonemc.leaf.features.module.modules.render.AntiBlind;
-import net.nonemc.leaf.utils.MovementUtils;
-import net.nonemc.leaf.utils.RotationUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -20,6 +10,16 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.event.JumpEvent;
+import net.nonemc.leaf.features.module.modules.client.Animations;
+import net.nonemc.leaf.features.module.modules.combat.Aura;
+import net.nonemc.leaf.features.module.modules.movement.Jesus;
+import net.nonemc.leaf.features.module.modules.movement.NoJumpDelay;
+import net.nonemc.leaf.features.module.modules.movement.Sprint;
+import net.nonemc.leaf.features.module.modules.render.AntiBlind;
+import net.nonemc.leaf.utils.MovementUtils;
+import net.nonemc.leaf.utils.RotationUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -80,10 +80,10 @@ public abstract class MixinEntityLivingBase extends MixinEntity {
         if (this.isSprinting()) {
             final Sprint sprint = Leaf.moduleManager.getModule(Sprint.class);
             float fixedYaw = this.rotationYaw;
-            if(RotationUtils.serverRotation != null && Aura.INSTANCE.getStrictStrafeValue()) {
+            if (RotationUtils.serverRotation != null && Aura.INSTANCE.getStrictStrafeValue()) {
                 fixedYaw = RotationUtils.serverRotation.getYaw();
             }
-            if(sprint.getState() && sprint.getJumpDirectionsValue().get()) {
+            if (sprint.getState() && sprint.getJumpDirectionsValue().get()) {
                 fixedYaw += MovementUtils.INSTANCE.getMovingYaw() - this.rotationYaw;
             }
             this.motionX -= MathHelper.sin(fixedYaw / 180F * 3.1415927F) * 0.2F;

@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
 import net.nonemc.leaf.event.EventTarget
@@ -14,9 +13,9 @@ object Rotations : Module() {
 
     private val realistic = BoolValue("Realistic", true)
     private val body = BoolValue("Body", true)
-    
+
     val experimentalCurve = BoolValue("ExperimentalLinearCurveRotation", false)
-    
+
     var prevHeadPitch = 0f
     var headPitch = 0f
 

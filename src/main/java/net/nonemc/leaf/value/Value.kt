@@ -35,7 +35,6 @@ abstract class Value<T>(val name: String, var value: T) {
     }
 
 
-
     fun get() = value
 
     fun setDefault() {
@@ -60,6 +59,7 @@ abstract class Value<T>(val name: String, var value: T) {
         fun set(newValue: Number) {
             set(newValue.toInt())
         }
+
         override fun toJson() = JsonPrimitive(value)
         override fun fromJson(element: JsonElement) {
             if (element.isJsonPrimitive)
@@ -72,7 +72,7 @@ abstract class Value<T>(val name: String, var value: T) {
         if (value is String && other is String) {
             return (value as String).equals(other, true)
         }
-        return value?.equals(other) ?: false
+        return value?.equals(other) == true
     }
 
     fun contains(text: String/*, ignoreCase: Boolean*/): Boolean {

@@ -5,9 +5,6 @@
  */
 package net.nonemc.leaf.features.module.modules.movement.speeds.ncp
 
-import net.nonemc.leaf.event.MoveEvent
-import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.MovementUtils
 import net.minecraft.block.Block
 import net.minecraft.block.BlockAir
 import net.minecraft.block.material.Material
@@ -15,6 +12,9 @@ import net.minecraft.potion.Potion
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
+import net.nonemc.leaf.event.MoveEvent
+import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
+import net.nonemc.leaf.utils.MovementUtils
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.cos
@@ -29,11 +29,14 @@ class YPort : SpeedMode("YPort") {
     private var safeJump = false
 
     override fun onPreMotion() {
-        if (!safeJump && !mc.gameSettings.keyBindJump.isKeyDown && !mc.thePlayer.isOnLadder && !mc.thePlayer.isInsideOfMaterial(Material.water) &&
+        if (!safeJump && !mc.gameSettings.keyBindJump.isKeyDown && !mc.thePlayer.isOnLadder && !mc.thePlayer.isInsideOfMaterial(
+                Material.water
+            ) &&
             !mc.thePlayer.isInsideOfMaterial(Material.lava) && !mc.thePlayer.isInWater && (this.getBlock(-1.1) !is BlockAir &&
-            this.getBlock(-1.1) !is BlockAir || this.getBlock(-0.1) !is BlockAir && mc.thePlayer.motionX != 0.0 &&
-            mc.thePlayer.motionZ != 0.0 && !mc.thePlayer.onGround && mc.thePlayer.fallDistance < 3.0f && mc.thePlayer.fallDistance > 0.05) && level == 3) {
-                mc.thePlayer.motionY = -0.3994
+                    this.getBlock(-1.1) !is BlockAir || this.getBlock(-0.1) !is BlockAir && mc.thePlayer.motionX != 0.0 &&
+                    mc.thePlayer.motionZ != 0.0 && !mc.thePlayer.onGround && mc.thePlayer.fallDistance < 3.0f && mc.thePlayer.fallDistance > 0.05) && level == 3
+        ) {
+            mc.thePlayer.motionY = -0.3994
         }
 
         val xDist = mc.thePlayer.posX - mc.thePlayer.prevPosX

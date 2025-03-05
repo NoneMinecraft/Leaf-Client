@@ -1,11 +1,10 @@
-
 package net.nonemc.leaf.features.module.modules.movement.flys.ncp
 
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.flys.FlyMode
 import net.nonemc.leaf.utils.MovementUtils
 import net.nonemc.leaf.value.FloatValue
-import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -19,7 +18,21 @@ class NCPPacketFly : FlyMode("NCPPacket") {
         val z = cos(yaw) * speedValue.get()
         MovementUtils.resetMotion(true)
         mc.timer.timerSpeed = timerValue.get()
-        mc.netHandler.addToSendQueue(C04PacketPlayerPosition(mc.thePlayer.posX + x, mc.thePlayer.motionY , mc.thePlayer.motionZ + z, false))
-        mc.netHandler.addToSendQueue(C04PacketPlayerPosition(mc.thePlayer.posX + x, mc.thePlayer.motionY - 490, mc.thePlayer.motionZ + z, true))
+        mc.netHandler.addToSendQueue(
+            C04PacketPlayerPosition(
+                mc.thePlayer.posX + x,
+                mc.thePlayer.motionY,
+                mc.thePlayer.motionZ + z,
+                false
+            )
+        )
+        mc.netHandler.addToSendQueue(
+            C04PacketPlayerPosition(
+                mc.thePlayer.posX + x,
+                mc.thePlayer.motionY - 490,
+                mc.thePlayer.motionZ + z,
+                true
+            )
+        )
     }
 }

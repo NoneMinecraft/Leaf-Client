@@ -5,13 +5,13 @@
  */
 package net.nonemc.leaf.features.module.modules.client.button
 
-import net.nonemc.leaf.utils.render.EaseUtils
-import net.nonemc.leaf.utils.render.RenderUtils
-import net.nonemc.leaf.features.module.modules.client.HudShadows
-import net.nonemc.leaf.utils.render.shadowRenderUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.renderer.GlStateManager
+import net.nonemc.leaf.features.module.modules.client.HudShadows
+import net.nonemc.leaf.utils.render.EaseUtils
+import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.utils.render.shadowRenderUtils
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -40,7 +40,7 @@ class BetterButtonRenderer(button: GuiButton) : AbstractButtonRenderer(button) {
             //BlurUtil.blurAreaBoarder(button.xPosition, button.yPosition, button.width, button.height, 1f)
 
             val percent = EaseUtils.easeInOutQuad(animation)
-            val al=if(140 + ((percent*50).toInt()) in 1..254) 140 + ((percent*50).toInt()) else 140;
+            val al = if (140 + ((percent * 50).toInt()) in 1..254) 140 + ((percent * 50).toInt()) else 140
             RenderUtils.drawRoundedCornerRect(
                 button.xPosition.toFloat(),
                 button.yPosition.toFloat(),
@@ -53,19 +53,22 @@ class BetterButtonRenderer(button: GuiButton) : AbstractButtonRenderer(button) {
             lastUpdate = time
             if (!button.enabled) {
                 RenderUtils.drawRoundedCornerRect(
-                    button.xPosition.toFloat(), button.yPosition.toFloat(),
-                    button.xPosition.toFloat() + button.width.toFloat(), button.yPosition.toFloat() + button.height.toFloat(),
-                    2F, Color(100, 100, 100, 180).rgb
+                    button.xPosition.toFloat(),
+                    button.yPosition.toFloat(),
+                    button.xPosition.toFloat() + button.width.toFloat(),
+                    button.yPosition.toFloat() + button.height.toFloat(),
+                    2F,
+                    Color(100, 100, 100, 180).rgb
                 )
                 j = 10526880
             } else if (button.hovered) {
 
-                    if (animation < 1) {
-                        animation += pct
-                    }
-                    if (animation > 1) {
-                        animation = 1.0
-                    }
+                if (animation < 1) {
+                    animation += pct
+                }
+                if (animation > 1) {
+                    animation = 1.0
+                }
                 //System.out.println(aFade);
                 RenderUtils.drawGradientSidewaysV(
                     button.xPosition - 0.5, button.yPosition - 5.0, button.xPosition + button.width + 0.5,
@@ -143,10 +146,16 @@ class BetterButtonRenderer(button: GuiButton) : AbstractButtonRenderer(button) {
                 255
             )*/
             GL11.glPopMatrix()
-            if (HudShadows.buttonShadowValue.equals(true)){
-            shadowRenderUtils.drawShadowWithCustomAlpha(button.xPosition.toFloat(), button.yPosition.toFloat(), button.width.toFloat(), button.height.toFloat(), 240f)
+            if (HudShadows.buttonShadowValue.equals(true)) {
+                shadowRenderUtils.drawShadowWithCustomAlpha(
+                    button.xPosition.toFloat(),
+                    button.yPosition.toFloat(),
+                    button.width.toFloat(),
+                    button.height.toFloat(),
+                    240f
+                )
             }
-            
+
         }
     }
 }

@@ -10,7 +10,7 @@ import net.nonemc.leaf.utils.MovementUtils
 
 class NCPLatest : SpeedMode("NCPLatest") {
 
-  
+
     override fun onEnable() {
         super.onEnable()
     }
@@ -21,15 +21,15 @@ class NCPLatest : SpeedMode("NCPLatest") {
     }
 
     override fun onUpdate() {
-      
+
         mc.thePlayer.jumpMovementFactor = 0.02725f
-      
+
         if (mc.thePlayer.ticksExisted % 20 <= 9) {
             mc.timer.timerSpeed = 1.05f
         } else {
             mc.timer.timerSpeed = 0.98f
         }
-      
+
         if (MovementUtils.isMoving()) {
             if (mc.thePlayer.onGround) {
                 mc.thePlayer.jump()

@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.render.shader.shaders;
 
 import net.nonemc.leaf.utils.render.shader.FramebufferShader;

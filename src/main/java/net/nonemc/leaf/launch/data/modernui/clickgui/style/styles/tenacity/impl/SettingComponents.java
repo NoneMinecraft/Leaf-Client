@@ -1,24 +1,23 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.tenacity.impl;
 
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.nonemc.leaf.Leaf;
-
-import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
-import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.impl.Fonts;
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Main;
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.objects.PasswordField;
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.DrRenderUtils;
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.GuiEvents;
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.features.module.modules.client.HUD;
+import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
+import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.impl.Fonts;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.Animation;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.Direction;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.impl.DecelerateAnimation;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.impl.EaseInOutQuad;
+import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Main;
+import net.nonemc.leaf.launch.data.modernui.clickgui.utils.objects.PasswordField;
+import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.DrRenderUtils;
+import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.GuiEvents;
 import net.nonemc.leaf.utils.math.MathUtils;
 import net.nonemc.leaf.utils.render.RoundedUtil;
 import net.nonemc.leaf.value.*;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -29,7 +28,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class SettingComponents extends Component {
     public static float scale;
     private final Module module;
-    public Animation settingHeightScissor;
     private final HashMap<Module, Animation[]> keySettingAnimMap = new HashMap<>();
     private final HashMap<IntegerValue, Float> sliderintMap = new HashMap<>();
     private final HashMap<IntegerValue, Animation[]> sliderintAnimMap = new HashMap<>();
@@ -41,6 +39,7 @@ public class SettingComponents extends Component {
     private final HashMap<ListValue, Animation[]> modeSettingAnimMap = new HashMap<>();
     private final HashMap<ListValue, Boolean> modeSettingClick = new HashMap<>();
     private final HashMap<ListValue, HashMap<String, Animation>> modesHoverAnimation = new HashMap<>();
+    public Animation settingHeightScissor;
     public Module binding;
     public Value draggingNumber;
     public float x, y, width, rectHeight, panelLimitY;
@@ -52,7 +51,7 @@ public class SettingComponents extends Component {
 
     public SettingComponents(Module module) {
         this.module = module;
-        keySettingAnimMap.put( module, new Animation[]{new EaseInOutQuad(250, 1, Direction.BACKWARDS),
+        keySettingAnimMap.put(module, new Animation[]{new EaseInOutQuad(250, 1, Direction.BACKWARDS),
                 new DecelerateAnimation(225, 1, Direction.BACKWARDS)});
 
         for (Value setting : module.getValues()) {
@@ -73,8 +72,7 @@ public class SettingComponents extends Component {
                 toggleAnimation.put((BoolValue) setting, new Animation[]{new DecelerateAnimation(225, 1, Direction.BACKWARDS),
                         new DecelerateAnimation(200, 1, Direction.BACKWARDS)});
             }
-            if (setting instanceof ListValue) {
-                ListValue modeSetting = (ListValue) setting;
+            if (setting instanceof ListValue modeSetting) {
                 modeSettingClick.put(modeSetting, false);
                 modeSettingAnimMap.put(modeSetting, new Animation[]{new DecelerateAnimation(225, 1, Direction.BACKWARDS),
                         new EaseInOutQuad(250, 1, Direction.BACKWARDS)});
@@ -126,7 +124,7 @@ public class SettingComponents extends Component {
 
 
     public void handle(int mouseX, int mouseY, int button, GuiEvents type) {
-        HUD hud = (HUD) Leaf.moduleManager.getModule(HUD.class);
+        HUD hud = Leaf.moduleManager.getModule(HUD.class);
         //Setting up the colors
         Color textColor = new Color(255, 255, 255, alphaAnimation);
         Color darkRectColor = new Color(48, 50, 55, alphaAnimation);
@@ -139,7 +137,7 @@ public class SettingComponents extends Component {
         boolean accent = ClickGUIModule.colormode.get().equalsIgnoreCase("Color");
 
         Color color2 = new Color(ClickGUIModule.generateColor().getRGB());
-        colors = new Color[]{color2,color2};
+        colors = new Color[]{color2, color2};
 
         Color accentedColor = DrRenderUtils.applyOpacity(colors[0], alphaAnimation / 255f);
         Color accentedColor2 = DrRenderUtils.applyOpacity(colors[1], alphaAnimation / 255f);
@@ -148,14 +146,12 @@ public class SettingComponents extends Component {
         double count = 0;
 
 
-
         for (Value setting : module.getValues()) {
             if (!setting.getDisplayable())
                 continue;
 
             float settingY = (float) MathUtils.roundToHalf(y + (count * rectHeight));
-            if (setting instanceof FloatValue) {
-                FloatValue numberSetting = (FloatValue) setting;
+            if (setting instanceof FloatValue numberSetting) {
 
                 String value = Float.toString((float) MathUtils.round(numberSetting.getValue(), 0.01));
                 float regularFontWidth = (float) Fonts.SF.SF_18.SF_18.stringWidth(numberSetting.getName() + ": ");
@@ -216,8 +212,7 @@ public class SettingComponents extends Component {
                 DrRenderUtils.drawGoodCircle(x + 4 + Math.max(4, sliderfloatMap.get(numberSetting)), sliderY + 1.5f, 3.75f, accent ? accentedColor2.getRGB() : textColor.getRGB());
                 count += .5f;
             }
-            if (setting instanceof IntegerValue) {
-                IntegerValue numberSetting = (IntegerValue) setting;
+            if (setting instanceof IntegerValue numberSetting) {
 
                 String value = Float.toString((float) MathUtils.round(numberSetting.getValue(), 1));
                 float regularFontWidth = (float) Fonts.SF.SF_18.SF_18.stringWidth(numberSetting.getName() + ": ");
@@ -278,8 +273,7 @@ public class SettingComponents extends Component {
                 DrRenderUtils.drawGoodCircle(x + 4 + Math.max(4, sliderintMap.get(numberSetting)), sliderY + 1.5f, 3.75f, accent ? accentedColor2.getRGB() : textColor.getRGB());
                 count += .5f;
             }
-            if (setting instanceof NumberValue) {
-                NumberValue numberSetting = (NumberValue) setting;
+            if (setting instanceof NumberValue numberSetting) {
 
                 String value = Float.toString((float) MathUtils.round(numberSetting.getValue(), numberSetting.getInc()));
                 float regularFontWidth = (float) Fonts.SF.SF_18.SF_18.stringWidth(numberSetting.getName() + ": ");
@@ -340,8 +334,7 @@ public class SettingComponents extends Component {
                 DrRenderUtils.drawGoodCircle(x + 4 + Math.max(4, sliderMap.get(numberSetting)), sliderY + 1.5f, 3.75f, accent ? accentedColor2.getRGB() : textColor.getRGB());
                 count += .5f;
             }
-            if (setting instanceof BoolValue) {
-                BoolValue booleanSetting = (BoolValue) setting;
+            if (setting instanceof BoolValue booleanSetting) {
 
                 Animation toggleAnimation = this.toggleAnimation.get(booleanSetting)[0];
                 Animation hoverAnimation = this.toggleAnimation.get(booleanSetting)[1];
@@ -382,8 +375,7 @@ public class SettingComponents extends Component {
 
 
             }
-            if (setting instanceof ListValue) {
-                ListValue modeSetting = (ListValue) setting;
+            if (setting instanceof ListValue modeSetting) {
                 Animation hoverAnimation = modeSettingAnimMap.get(modeSetting)[0];
                 Animation openAnimation = modeSettingAnimMap.get(modeSetting)[1];
 
@@ -418,8 +410,6 @@ public class SettingComponents extends Component {
                     Animation modeHoverAnimation = modesHoverAnimation.get(modeSetting).get(mode);
 
 
-
-
                     modeHoverAnimation.setDirection(hoveringMode ? Direction.FORWARDS : Direction.BACKWARDS);
 
 
@@ -434,7 +424,7 @@ public class SettingComponents extends Component {
                     if (openAnimation.isDone() && openAnimation.getDirection().equals(Direction.FORWARDS) || !openAnimation.isDone()) {
                         //      RoundedUtil.drawRound(x + 5 + ((width - 10) / 2f - selectRectWidth / 2f), settingY + rectHeight + 10.5f,
                         //    Math.max(2, selectRectWidth), 1.5f, .5f, accent ? accentedColor2 : textColor);
-                        Fonts.SF.SF_18.SF_18.drawString(mode, x + 13, modeY,DrRenderUtils.applyOpacity(textColor, (float) openAnimation.getOutput()).getRGB());
+                        Fonts.SF.SF_18.SF_18.drawString(mode, x + 13, modeY, DrRenderUtils.applyOpacity(textColor, (float) openAnimation.getOutput()).getRGB());
                     }
                     //   Fonts.SF.SF_18.SF_18.drawString(mode, x + 13, modeY,DrRenderUtils.applyOpacity(textColor, (float) openAnimation.getOutput()).getRGB());
                     modeCount++;
@@ -448,7 +438,7 @@ public class SettingComponents extends Component {
 
                 RoundedUtil.drawRound(x + 5, settingY + 5, width - 10, rectHeight + 7, 3, DrRenderUtils.applyOpacity(darkRectHover, .45f));
 
-                if(!hoverAnimation.isDone() || hoverAnimation.finished(Direction.FORWARDS)) {
+                if (!hoverAnimation.isDone() || hoverAnimation.finished(Direction.FORWARDS)) {
                     RoundedUtil.drawRound(x + 5, settingY + 5, width - 10, rectHeight + 7, 3, DrRenderUtils.applyOpacity(textColor, (float) (.2f * hoverAnimation.getOutput())));
                 }
 
@@ -474,8 +464,7 @@ public class SettingComponents extends Component {
 
                 count += 1 + ((math / rectHeight) * openAnimation.getOutput());
             }
-            if (setting instanceof TextValue) {
-                TextValue stringSetting = (TextValue) setting;
+            if (setting instanceof TextValue stringSetting) {
 
                 DrRenderUtils.resetColor();
                 Fonts.SF.SF_16.SF_16.drawString(stringSetting.getName(), x + 5, settingY + 2, textColor.getRGB());

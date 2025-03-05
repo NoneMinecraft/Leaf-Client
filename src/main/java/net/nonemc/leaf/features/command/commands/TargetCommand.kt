@@ -54,6 +54,7 @@ class TargetCommand : Command("target", emptyArray()) {
         return when (args.size) {
             1 -> listOf("players", "mobs", "animals", "invisible")
                 .filter { it.startsWith(args[0], true) }
+
             else -> emptyList()
         }
     }

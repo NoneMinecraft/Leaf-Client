@@ -5,15 +5,15 @@
  */
 package net.nonemc.leaf.ui.client.hud.element.elements
 
+import net.minecraft.block.material.Material
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.RenderHelper
 import net.nonemc.leaf.ui.client.hud.element.Border
 import net.nonemc.leaf.ui.client.hud.element.Element
 import net.nonemc.leaf.ui.client.hud.element.ElementInfo
 import net.nonemc.leaf.ui.client.hud.element.Side
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.block.material.Material
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.renderer.RenderHelper
 
 /**
  * CustomHUD Armor element
@@ -21,8 +21,10 @@ import net.minecraft.client.renderer.RenderHelper
  * Shows a horizontal display of current armor
  */
 @ElementInfo(name = "Armor")
-class Armor(x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
-            side: Side = Side(Side.Horizontal.MIDDLE, Side.Vertical.DOWN)) : Element(x, y, scale, side) {
+class Armor(
+    x: Double = -8.0, y: Double = 57.0, scale: Float = 1F,
+    side: Side = Side(Side.Horizontal.MIDDLE, Side.Vertical.DOWN)
+) : Element(x, y, scale, side) {
 
     private val modeValue = ListValue("Mode", arrayOf("LiquidBounce", "Exhibition"), "Exhibition")
     private val alignment = ListValue("Alignment", arrayOf("Horizontal", "Vertical"), "Horizontal")

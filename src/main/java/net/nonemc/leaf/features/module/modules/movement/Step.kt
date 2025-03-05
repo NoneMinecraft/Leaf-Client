@@ -1,6 +1,7 @@
-
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.stats.StatList
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.Module
@@ -12,8 +13,6 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.stats.StatList
 
 @ModuleInfo(name = "Step", category = ModuleCategory.MOVEMENT)
 class Step : Module() {
@@ -45,7 +44,7 @@ class Step : Module() {
     fun onUpdate(event: UpdateEvent) {
         if (mc.thePlayer.isCollidedHorizontally && mc.thePlayer.onGround && lastOnGround) {
             canStep = true
-        }else {
+        } else {
             canStep = false
             mc.thePlayer.stepHeight = 0.6F
         }
@@ -75,7 +74,8 @@ class Step : Module() {
                 return
             }
             if (!mc.thePlayer.onGround || !timer.hasTimePassed(delayValue.get().toLong()) ||
-                mode.equals("Jump", ignoreCase = true)) {
+                mode.equals("Jump", ignoreCase = true)
+            ) {
                 mc.thePlayer.stepHeight = 0.6F
                 event.stepHeight = 0.6F
                 return
@@ -83,33 +83,42 @@ class Step : Module() {
             val height = heightValue.get()
             mc.thePlayer.stepHeight = height
             event.stepHeight = height
-            
+
             if (event.stepHeight > 0.6F) {
                 isStep = true
                 stepX = mc.thePlayer.posX
                 stepY = mc.thePlayer.posY
                 stepZ = mc.thePlayer.posZ
             }
-            
+
         } else {
             if (!isStep) {
                 return
             }
             if (mc.thePlayer.entityBoundingBox.minY - stepY > 0.6) {
-                if (timerValue.get()<1.0) {
+                if (timerValue.get() < 1.0) {
                     wasTimer = true
                     mc.timer.timerSpeed = timerValue.get()
                     if (timerDynValue.get()) {
-                        mc.timer.timerSpeed = (mc.timer.timerSpeed / Math.sqrt(mc.thePlayer.entityBoundingBox.minY - stepY)).toFloat()
+                        mc.timer.timerSpeed =
+                            (mc.timer.timerSpeed / Math.sqrt(mc.thePlayer.entityBoundingBox.minY - stepY)).toFloat()
                     }
                 }
                 when {
                     mode.equals("NCP", ignoreCase = true) -> {
                         fakeJump()
-                        mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                            stepY + 0.41999998688698, stepZ, false))
-                        mc.netHandler.addToSendQueue(C03PacketPlayer.C04PacketPlayerPosition(stepX,
-                            stepY + 0.7531999805212, stepZ, false))
+                        mc.netHandler.addToSendQueue(
+                            C03PacketPlayer.C04PacketPlayerPosition(
+                                stepX,
+                                stepY + 0.41999998688698, stepZ, false
+                            )
+                        )
+                        mc.netHandler.addToSendQueue(
+                            C03PacketPlayer.C04PacketPlayerPosition(
+                                stepX,
+                                stepY + 0.7531999805212, stepZ, false
+                            )
+                        )
                         timer.reset()
                     }
                 }
@@ -121,6 +130,7 @@ class Step : Module() {
             stepZ = 0.0
         }
     }
+
     private fun fakeJump() {
         mc.thePlayer.isAirBorne = true
         mc.thePlayer.triggerAchievement(StatList.jumpStat)

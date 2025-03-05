@@ -1,13 +1,5 @@
-
 package net.nonemc.leaf.utils.render
 
-import net.nonemc.leaf.utils.ClientUtils.mc
-import net.nonemc.leaf.utils.extensions.getBlock
-import net.nonemc.leaf.utils.extensions.renderBoundingBox
-import net.nonemc.leaf.utils.render.shader.shaders.BlurShader
-import net.nonemc.leaf.utils.render.shader.shaders.CircleShader
-import net.nonemc.leaf.utils.render.shader.shaders.RoundRectShader
-import net.nonemc.leaf.utils.render.shader.shaders.SRoundRectShader
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
@@ -15,6 +7,13 @@ import net.minecraft.entity.Entity
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ResourceLocation
+import net.nonemc.leaf.utils.ClientUtils.mc
+import net.nonemc.leaf.utils.extensions.getBlock
+import net.nonemc.leaf.utils.extensions.renderBoundingBox
+import net.nonemc.leaf.utils.render.shader.shaders.BlurShader
+import net.nonemc.leaf.utils.render.shader.shaders.CircleShader
+import net.nonemc.leaf.utils.render.shader.shaders.RoundRectShader
+import net.nonemc.leaf.utils.render.shader.shaders.SRoundRectShader
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL20
 import java.awt.Color
@@ -131,7 +130,13 @@ object GLUtils {
 
         RoundRectShader.startShader()
 
-        GL20.glUniform4f(RoundRectShader.getUniform("color"), color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+        GL20.glUniform4f(
+            RoundRectShader.getUniform("color"),
+            color.red / 255f,
+            color.green / 255f,
+            color.blue / 255f,
+            color.alpha / 255f
+        )
         GL20.glUniform2f(RoundRectShader.getUniform("size"), x2 - x, y2 - y)
         GL20.glUniform1f(RoundRectShader.getUniform("radius"), radius)
 
@@ -159,7 +164,17 @@ object GLUtils {
      */
     @Suppress("unused")
     // @TODO Use this in clickgui
-    fun drawSeparateRoundedRect(x: Float, y: Float, x2: Float, y2: Float, tr: Float, br: Float, tl: Float, bl: Float, color: Color) {
+    fun drawSeparateRoundedRect(
+        x: Float,
+        y: Float,
+        x2: Float,
+        y2: Float,
+        tr: Float,
+        br: Float,
+        tl: Float,
+        bl: Float,
+        color: Color
+    ) {
         require(tr in 0f..1f && br in 0f..1f && tl in 0f..1f && br in 0f..1f) { "Rectangle radii should be between 0 and 1" }
 
         glEnable(GL_BLEND)
@@ -167,7 +182,13 @@ object GLUtils {
 
         SRoundRectShader.startShader()
 
-        GL20.glUniform4f(SRoundRectShader.getUniform("color"), color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+        GL20.glUniform4f(
+            SRoundRectShader.getUniform("color"),
+            color.red / 255f,
+            color.green / 255f,
+            color.blue / 255f,
+            color.alpha / 255f
+        )
         GL20.glUniform2f(SRoundRectShader.getUniform("size"), x2 - x, y2 - y)
         GL20.glUniform4f(SRoundRectShader.getUniform("radius"), tr, br, tl, bl)
 
@@ -211,7 +232,13 @@ object GLUtils {
 
         CircleShader.startShader()
 
-        GL20.glUniform4f(CircleShader.getUniform("color"), color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+        GL20.glUniform4f(
+            CircleShader.getUniform("color"),
+            color.red / 255f,
+            color.green / 255f,
+            color.blue / 255f,
+            color.alpha / 255f
+        )
         GL20.glUniform2f(CircleShader.getUniform("size"), x2 - x, y2 - y)
 
         drawQuads(x, y, x2, y2)
@@ -313,7 +340,7 @@ object GLUtils {
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.minZ)
-        
+
         glEnd()
     }
 
@@ -331,7 +358,7 @@ object GLUtils {
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.minX, boundingBox.minY, boundingBox.maxZ)
         glVertex3d(boundingBox.minX, boundingBox.maxY, boundingBox.maxZ)
-        
+
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.minZ)
         glVertex3d(boundingBox.minX, boundingBox.maxY, boundingBox.minZ)
@@ -340,7 +367,7 @@ object GLUtils {
         glVertex3d(boundingBox.minX, boundingBox.minY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.maxZ)
-        
+
         glVertex3d(boundingBox.minX, boundingBox.maxY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ)
@@ -349,7 +376,7 @@ object GLUtils {
         glVertex3d(boundingBox.minX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ)
-        
+
         glVertex3d(boundingBox.minX, boundingBox.minY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.maxZ)
@@ -358,7 +385,7 @@ object GLUtils {
         glVertex3d(boundingBox.minX, boundingBox.minY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.minZ)
-        
+
         glVertex3d(boundingBox.minX, boundingBox.minY, boundingBox.minZ)
         glVertex3d(boundingBox.minX, boundingBox.maxY, boundingBox.minZ)
         glVertex3d(boundingBox.minX, boundingBox.minY, boundingBox.maxZ)
@@ -367,7 +394,7 @@ object GLUtils {
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.minZ)
-        
+
         glVertex3d(boundingBox.minX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.minX, boundingBox.minY, boundingBox.maxZ)
         glVertex3d(boundingBox.minX, boundingBox.maxY, boundingBox.minZ)
@@ -376,7 +403,7 @@ object GLUtils {
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.minZ)
         glVertex3d(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ)
         glVertex3d(boundingBox.maxX, boundingBox.minY, boundingBox.maxZ)
-        
+
         glEnd()
     }
 
@@ -420,7 +447,7 @@ object GLUtils {
         glDisable(GL_DEPTH_TEST)
         glDepthMask(false)
 
-        val bb = entity.renderBoundingBox
+        entity.renderBoundingBox
 
         GlStateManager.resetColor()
         glDisable(GL_BLEND)

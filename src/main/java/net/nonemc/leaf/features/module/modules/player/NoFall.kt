@@ -4,6 +4,8 @@
  */
 package net.nonemc.leaf.features.module.modules.player
 
+import net.minecraft.block.BlockLiquid
+import net.minecraft.util.AxisAlignedBB
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.EnumAutoDisableType
@@ -14,10 +16,8 @@ import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
 import net.nonemc.leaf.features.module.modules.render.FreeCam
 import net.nonemc.leaf.utils.ClassUtils
 import net.nonemc.leaf.utils.block.BlockUtils
-import net.nonemc.leaf.value.ListValue
 import net.nonemc.leaf.value.BoolValue
-import net.minecraft.block.BlockLiquid
-import net.minecraft.util.AxisAlignedBB
+import net.nonemc.leaf.value.ListValue
 
 @ModuleInfo(name = "NoFall", category = ModuleCategory.PLAYER, autoDisable = EnumAutoDisableType.FLAG)
 class NoFall : Module() {
@@ -37,7 +37,7 @@ class NoFall : Module() {
             if (state) onEnable()
         }
     }
-    
+
     private val noVoid = BoolValue("NoVoid", false)
 
     var launchX = 0.0
@@ -90,11 +90,18 @@ class NoFall : Module() {
         }
 
         if (BlockUtils.collideBlock(mc.thePlayer.entityBoundingBox) { it is BlockLiquid } || BlockUtils.collideBlock(
-                AxisAlignedBB(mc.thePlayer.entityBoundingBox.maxX, mc.thePlayer.entityBoundingBox.maxY, mc.thePlayer.entityBoundingBox.maxZ, mc.thePlayer.entityBoundingBox.minX, mc.thePlayer.entityBoundingBox.minY - 0.01, mc.thePlayer.entityBoundingBox.minZ)
+                AxisAlignedBB(
+                    mc.thePlayer.entityBoundingBox.maxX,
+                    mc.thePlayer.entityBoundingBox.maxY,
+                    mc.thePlayer.entityBoundingBox.maxZ,
+                    mc.thePlayer.entityBoundingBox.minX,
+                    mc.thePlayer.entityBoundingBox.minY - 0.01,
+                    mc.thePlayer.entityBoundingBox.minZ
+                )
             ) { it is BlockLiquid }) {
             return
         }
-        
+
         if (checkVoid() && noVoid.get()) return
 
         mode.onNoFall(event)
@@ -132,12 +139,18 @@ class NoFall : Module() {
 
     override val tag: String
         get() = modeValue.get()
-        
+
     private fun checkVoid(): Boolean {
-        var i = (-(mc.thePlayer.posY-1.4857625)).toInt()
+        var i = (-(mc.thePlayer.posY - 1.4857625)).toInt()
         var dangerous = true
         while (i <= 0) {
-            dangerous = mc.theWorld.getCollisionBoxes(mc.thePlayer.entityBoundingBox.offset(mc.thePlayer.motionX * 0.5, i.toDouble(), mc.thePlayer.motionZ * 0.5)).isEmpty()
+            dangerous = mc.theWorld.getCollisionBoxes(
+                mc.thePlayer.entityBoundingBox.offset(
+                    mc.thePlayer.motionX * 0.5,
+                    i.toDouble(),
+                    mc.thePlayer.motionZ * 0.5
+                )
+            ).isEmpty()
             i++
             if (!dangerous) break
         }
@@ -149,5 +162,6 @@ class NoFall : Module() {
      * 读取mode中的value并和本体中的value合并
      * 所有的value必须在这个之前初始化
      */
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList()
+        .also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
 }

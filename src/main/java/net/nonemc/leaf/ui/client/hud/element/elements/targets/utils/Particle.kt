@@ -1,10 +1,18 @@
 package net.nonemc.leaf.ui.client.hud.element.elements.targets.utils
 
+import net.nonemc.leaf.ui.client.hud.element.elements.targets.utils.ShapeType.values
 import net.nonemc.leaf.utils.render.EaseUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import org.lwjgl.opengl.GL11
 import java.awt.Color
-class Particle(var color: Color, var distX: Float, var distY: Float, var radius: Float, var drawType: ShapeType = ShapeType.SOLID_CIRCLE) {
+
+class Particle(
+    var color: Color,
+    var distX: Float,
+    var distY: Float,
+    var radius: Float,
+    var drawType: ShapeType = ShapeType.SOLID_CIRCLE
+) {
     var alpha = 1F
     var progress = 0.0
     var rotate = 0F
@@ -66,8 +74,9 @@ enum class ShapeType(val typeName: String) {
             RenderUtils.drawTriAngle(x, y, rad, 3F, col, false)
         }
     };
+
     abstract fun performRendering(x: Float, y: Float, rad: Float, col: Color)
-    
+
     companion object {
         fun getTypeFromName(name: String): ShapeType? {
             return values().find { it.typeName.equals(name, true) }

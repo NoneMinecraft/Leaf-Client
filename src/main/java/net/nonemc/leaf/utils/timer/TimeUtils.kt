@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.timer
 
 import net.nonemc.leaf.utils.misc.RandomUtils

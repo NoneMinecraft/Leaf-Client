@@ -1,5 +1,7 @@
 package net.nonemc.leaf
 
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.util.ResourceLocation
 import net.nonemc.leaf.event.EventManager
 import net.nonemc.leaf.features.command.CommandManager
 import net.nonemc.leaf.features.macro.MacroManager
@@ -21,9 +23,6 @@ import net.nonemc.leaf.ui.font.Fonts
 import net.nonemc.leaf.ui.font.FontsGC
 import net.nonemc.leaf.ui.sound.TipSoundManager
 import net.nonemc.leaf.utils.*
-import net.nonemc.leaf.utils.RotationUtils
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.util.ResourceLocation
 
 object Leaf {
     const val CLIENT_NAME = "Leaf Client"
@@ -32,6 +31,7 @@ object Leaf {
     const val CLIENT_CREATOR = "None"
     const val CLIENT_WEBSITE = "https://github.com/NoneMinecraft/Leaf-Client"
     const val VERSIONTYPE = ""
+
     @JvmField
     val CLIENT_VERSION = ""
     var isStarting = true

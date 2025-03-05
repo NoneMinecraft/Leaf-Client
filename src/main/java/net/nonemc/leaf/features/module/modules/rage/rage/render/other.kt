@@ -43,7 +43,8 @@ private fun drawProgressRing(centerX: Int, centerY: Int, radius: Float, progress
 
     GL11.glPopMatrix()
 }
- fun drawPanel(x: Double, y: Double, width: Double, height: Double, color: Color) {
+
+fun drawPanel(x: Double, y: Double, width: Double, height: Double, color: Color) {
     GL11.glPushMatrix()
     GL11.glDisable(GL11.GL_TEXTURE_2D)
     GL11.glEnable(GL11.GL_BLEND)

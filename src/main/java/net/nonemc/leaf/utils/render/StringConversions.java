@@ -1,26 +1,24 @@
-
 package net.nonemc.leaf.utils.render;
 
 public class StringConversions {
     public static Object castNumber(String newValueText, Object currentValue) {
-        if (newValueText.contains((CharSequence)".")) {
-            if (newValueText.toLowerCase().contains((CharSequence)"f")) {
-                return Float.valueOf((float)Float.parseFloat((String)newValueText));
+        if (newValueText.contains(".")) {
+            if (newValueText.toLowerCase().contains("f")) {
+                return Float.valueOf(Float.parseFloat(newValueText));
             }
-            return Double.parseDouble((String)newValueText);
+            return Double.parseDouble(newValueText);
         }
         if (StringConversions.isNumeric(newValueText)) {
-            return Integer.parseInt((String)newValueText);
+            return Integer.parseInt(newValueText);
         }
         return newValueText;
     }
 
     public static boolean isNumeric(String text) {
         try {
-            Integer.parseInt((String)text);
+            Integer.parseInt(text);
             return true;
-        }
-        catch (NumberFormatException numberFormatException) {
+        } catch (NumberFormatException numberFormatException) {
             return false;
         }
     }

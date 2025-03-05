@@ -1,5 +1,6 @@
 package net.nonemc.leaf.ui.client.hud.element.elements
 
+import net.minecraft.client.renderer.GlStateManager
 import net.nonemc.leaf.ui.client.hud.element.Border
 import net.nonemc.leaf.ui.client.hud.element.Element
 import net.nonemc.leaf.ui.client.hud.element.ElementInfo
@@ -8,7 +9,6 @@ import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.opengl.GL11
 import kotlin.math.sqrt
 

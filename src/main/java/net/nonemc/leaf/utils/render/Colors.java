@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.render;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -28,7 +27,7 @@ public enum Colors {
 
     public int c;
 
-    private Colors(int co) {
+    Colors(int co) {
         this.c = co;
     }
 
@@ -47,13 +46,15 @@ public enum Colors {
     public static int getColor(int red, int green, int blue) {
         return getColor(red, green, blue, 255);
     }
+
     public static Color getHealthColor(EntityLivingBase entityLivingBase) {
         float health = entityLivingBase.getHealth();
         float[] fractions = new float[]{0.0F, 0.15F, 0.55F, 0.7F, 0.9F};
         Color[] colors = new Color[]{new Color(133, 0, 0), Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN};
         float progress = health / entityLivingBase.getMaxHealth();
-        return health >= 0.0F?blendColors(fractions, colors, progress).brighter():colors[0];
+        return health >= 0.0F ? blendColors(fractions, colors, progress).brighter() : colors[0];
     }
+
     public static int[] getFractionIndicies(final float[] fractions, final float progress) {
         final int[] range = new int[2];
         int startPoint;
@@ -66,20 +67,22 @@ public enum Colors {
         range[1] = startPoint;
         return range;
     }
+
     public static Color blendColors(final float[] fractions, final Color[] colors, final float progress) {
         Color color;
         if (fractions.length == colors.length) {
             final int[] indicies = getFractionIndicies(fractions, progress);
-            final float[] range = { fractions[indicies[0]], fractions[indicies[1]] };
-            final Color[] colorRange = { colors[indicies[0]], colors[indicies[1]] };
+            final float[] range = {fractions[indicies[0]], fractions[indicies[1]]};
+            final Color[] colorRange = {colors[indicies[0]], colors[indicies[1]]};
             final float max = range[1] - range[0];
             final float value = progress - range[0];
             final float weight = value / max;
             color = blend(colorRange[0], colorRange[1], 1.0f - weight);
             return color;
         }
-        return new Color(255,255,255);
+        return new Color(255, 255, 255);
     }
+
     public static Color blend(final Color color1, final Color color2, final double ratio) {
         final float r = (float) ratio;
         final float ir = 1.0f - r;
@@ -114,6 +117,7 @@ public enum Colors {
         }
         return color3;
     }
+
     public static int getColor(int red, int green, int blue, int alpha) {
         int color = 0;
         color |= alpha << 24;

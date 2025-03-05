@@ -1,14 +1,14 @@
-
 package net.nonemc.leaf.utils.render;
 
 import net.minecraft.potion.Potion;
 
 public class PotionData {
     public final Potion potion;
-    public int maxTimer = 0;
-    public float animationX = 0;
     public final Translate translate;
     public final int level;
+    public int maxTimer = 0;
+    public float animationX = 0;
+
     public PotionData(Potion potion, Translate translate, int level) {
         this.potion = potion;
         this.translate = translate;

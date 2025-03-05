@@ -1,5 +1,6 @@
 package net.nonemc.leaf.features.module.modules.misc
 
+import net.minecraft.client.gui.GuiChat
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
@@ -9,7 +10,6 @@ import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.utils.timer.TimeUtils
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.TextValue
-import net.minecraft.client.gui.GuiChat
 
 @ModuleInfo(name = "AutoChat", category = ModuleCategory.MISC)
 class AutoChat : Module() {

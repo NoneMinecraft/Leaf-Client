@@ -1,10 +1,10 @@
 package net.nonemc.leaf.features.command
 
+import net.minecraft.client.audio.PositionedSoundRecord
+import net.minecraft.util.ResourceLocation
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.utils.ClientUtils
 import net.nonemc.leaf.utils.MinecraftInstance
-import net.minecraft.client.audio.PositionedSoundRecord
-import net.minecraft.util.ResourceLocation
 
 abstract class Command(val command: String, val alias: Array<String>) : MinecraftInstance() {
     /**
@@ -37,7 +37,8 @@ abstract class Command(val command: String, val alias: Array<String>) : Minecraf
     /**
      * Print [syntax] of command to chat
      */
-    protected fun chatSyntax(syntax: String) = ClientUtils.displayAlert("Syntax: §7${Leaf.commandManager.prefix}$syntax")
+    protected fun chatSyntax(syntax: String) =
+        ClientUtils.displayAlert("Syntax: §7${Leaf.commandManager.prefix}$syntax")
 
     /**
      * Print [syntaxes] of command to chat
@@ -57,5 +58,6 @@ abstract class Command(val command: String, val alias: Array<String>) : Minecraf
     /**
      * Play edit sound
      */
-    protected fun playEdit() = mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("random.anvil_use"), 1F))
+    protected fun playEdit() =
+        mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("random.anvil_use"), 1F))
 }

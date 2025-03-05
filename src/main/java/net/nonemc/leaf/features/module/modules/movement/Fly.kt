@@ -19,7 +19,12 @@ import net.nonemc.leaf.value.ListValue
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 
-@ModuleInfo(name = "Fly", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.FLAG, keyBind = Keyboard.KEY_F)
+@ModuleInfo(
+    name = "Fly",
+    category = ModuleCategory.MOVEMENT,
+    autoDisable = EnumAutoDisableType.FLAG,
+    keyBind = Keyboard.KEY_F
+)
 class Fly : Module() {
     private val modes = ClassUtils.resolvePackage("${this.javaClass.`package`.name}.flys", FlyMode::class.java)
         .map { it.newInstance() as FlyMode }
@@ -96,7 +101,8 @@ class Fly : Module() {
         RenderUtils.drawPlatform(
             if (markValue.equals("Up")) launchY + 2.0 else launchY,
             if (mc.thePlayer.entityBoundingBox.maxY < launchY + 2.0) Color(0, 255, 0, 90) else Color(255, 0, 0, 90),
-            1.0)
+            1.0
+        )
     }
 
     @EventTarget
@@ -106,7 +112,7 @@ class Fly : Module() {
 
     @EventTarget
     fun onMotion(event: MotionEvent) {
-        if(viewBobbingValue.get()) {
+        if (viewBobbingValue.get()) {
             mc.thePlayer.cameraYaw = viewBobbingYawValue.get()
             mc.thePlayer.prevCameraYaw = viewBobbingYawValue.get()
         }
@@ -150,5 +156,6 @@ class Fly : Module() {
      * 读取mode中的value并和本体中的value合并
      * 所有的value必须在这个之前初始化
      */
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList()
+        .also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
 }

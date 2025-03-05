@@ -1,12 +1,11 @@
-
 package net.nonemc.leaf.utils
 
-import net.nonemc.leaf.event.StrafeEvent
-import net.nonemc.leaf.features.module.modules.client.Rotations
-import net.nonemc.leaf.utils.block.PlaceInfo
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
+import net.nonemc.leaf.event.StrafeEvent
+import net.nonemc.leaf.features.module.modules.client.Rotations
+import net.nonemc.leaf.utils.block.PlaceInfo
 
 /**
  * Rotations
@@ -66,8 +65,10 @@ data class Rotation(var yaw: Float, var pitch: Float) {
      */
     fun applyStrafeToPlayer(event: StrafeEvent) {
         val player = MinecraftInstance.mc.thePlayer
-        val dif = ((MathHelper.wrapAngleTo180_float(player.rotationYaw - this.yaw -
-                23.5f - 135) +
+        val dif = ((MathHelper.wrapAngleTo180_float(
+            player.rotationYaw - this.yaw -
+                    23.5f - 135
+        ) +
                 180) / 45).toInt()
 
         val yaw = this.yaw
@@ -84,36 +85,43 @@ data class Rotation(var yaw: Float, var pitch: Float) {
                 calcForward = forward
                 calcStrafe = strafe
             }
+
             1 -> {
                 calcForward += forward
                 calcStrafe -= forward
                 calcForward += strafe
                 calcStrafe += strafe
             }
+
             2 -> {
                 calcForward = strafe
                 calcStrafe = -forward
             }
+
             3 -> {
                 calcForward -= forward
                 calcStrafe -= forward
                 calcForward += strafe
                 calcStrafe -= strafe
             }
+
             4 -> {
                 calcForward = -forward
                 calcStrafe = -strafe
             }
+
             5 -> {
                 calcForward -= forward
                 calcStrafe += forward
                 calcForward -= strafe
                 calcStrafe -= strafe
             }
+
             6 -> {
                 calcForward = -strafe
                 calcStrafe = forward
             }
+
             7 -> {
                 calcForward += forward
                 calcStrafe += forward

@@ -1,7 +1,5 @@
-
 package net.nonemc.leaf.utils.render
 
-import net.nonemc.leaf.utils.MinecraftInstance
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.OpenGlHelper
@@ -10,9 +8,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.client.shader.Framebuffer
 import net.minecraft.client.shader.ShaderGroup
 import net.minecraft.util.ResourceLocation
+import net.nonemc.leaf.utils.MinecraftInstance
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE
-
 import java.io.IOException
 
 object ShadowUtils : MinecraftInstance() {
@@ -34,7 +32,8 @@ object ShadowUtils : MinecraftInstance() {
         val height = sc.scaledHeight
         val factor = sc.scaleFactor
         if (lastWidth != width || lastHeight != height
-            || initFramebuffer == null || frameBuffer == null || shaderGroup == null) {
+            || initFramebuffer == null || frameBuffer == null || shaderGroup == null
+        ) {
             initFramebuffer = Framebuffer(width * factor, height * factor, true)
             initFramebuffer!!.setFramebufferColor(0F, 0F, 0F, 0F)
             initFramebuffer!!.setFramebufferFilter(GL_LINEAR)
@@ -42,7 +41,7 @@ object ShadowUtils : MinecraftInstance() {
             shaderGroup!!.createBindFramebuffers(width * factor, height * factor)
             frameBuffer = shaderGroup!!.mainFramebuffer
             resultBuffer = shaderGroup!!.getFramebufferRaw("braindead")
-    
+
             lastWidth = width
             lastHeight = height
             lastStrength = strength
@@ -105,14 +104,15 @@ object ShadowUtils : MinecraftInstance() {
 
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR)
         worldrenderer.pos(0.0, height.toDouble(), 0.0).tex(0.0, 0.0).color(255, 255, 255, 255).endVertex()
-        worldrenderer.pos(width.toDouble(), height.toDouble(), 0.0).tex(fr_width, 0.0).color(255, 255, 255, 255).endVertex()
+        worldrenderer.pos(width.toDouble(), height.toDouble(), 0.0).tex(fr_width, 0.0).color(255, 255, 255, 255)
+            .endVertex()
         worldrenderer.pos(width.toDouble(), 0.0, 0.0).tex(fr_width, fr_height).color(255, 255, 255, 255).endVertex()
         worldrenderer.pos(0.0, 0.0, 0.0).tex(0.0, fr_height).color(255, 255, 255, 255).endVertex()
 
         tessellator.draw()
         resultBuffer!!.unbindFramebufferTexture()
 
-        GlStateManager.disableBlend() 
+        GlStateManager.disableBlend()
         GlStateManager.enableAlpha()
         GlStateManager.enableDepth()
         GlStateManager.depthMask(true)

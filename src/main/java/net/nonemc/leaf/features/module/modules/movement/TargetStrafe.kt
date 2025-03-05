@@ -1,5 +1,6 @@
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.entity.EntityLivingBase
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.Module
@@ -12,25 +13,24 @@ import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.entity.EntityLivingBase
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import kotlin.math.cos
 import kotlin.math.sin
 
-@ModuleInfo(name = "TargetStrafe",  category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "TargetStrafe", category = ModuleCategory.MOVEMENT)
 class TargetStrafe : Module() {
     private val thirdPersonViewValue = BoolValue("ThirdPersonView", false)
     private val renderModeValue = ListValue("RenderMode", arrayOf("Circle", "Polygon", "None"), "Polygon")
-    private val lineWidthValue = FloatValue("LineWidth", 1f, 1f, 10f). displayable{!renderModeValue.equals("None")}
+    private val lineWidthValue = FloatValue("LineWidth", 1f, 1f, 10f).displayable { !renderModeValue.equals("None") }
     private val radiusModeValue = ListValue("RadiusMode", arrayOf("Normal", "Strict"/*, "Dynamic"*/), "Normal")
     private val radiusValue = FloatValue("Radius", 0.5f, 0.1f, 5.0f)
-    private val ongroundValue = BoolValue("OnlyOnGround",false)
+    private val ongroundValue = BoolValue("OnlyOnGround", false)
     private val holdSpaceValue = BoolValue("HoldSpace", false)
     private val onlySpeedValue = BoolValue("OnlySpeed", true)
     private var direction = -1.0
 
-    var targetEntity : EntityLivingBase?=null
+    var targetEntity: EntityLivingBase? = null
     var isEnabled = false
     var doStrafe = false
 
@@ -190,9 +190,9 @@ class TargetStrafe : Module() {
 
         @EventTarget
         fun onMove(event: MoveEvent) {
-            if(doStrafe && (!ongroundValue.get() || mc.thePlayer.onGround)) {
-                val _entity : EntityLivingBase = targetEntity?:return
-                if(!canStrafe(_entity)) {
+            if (doStrafe && (!ongroundValue.get() || mc.thePlayer.onGround)) {
+                val _entity: EntityLivingBase = targetEntity ?: return
+                if (!canStrafe(_entity)) {
                     isEnabled = false
                     return
                 }
@@ -212,7 +212,7 @@ class TargetStrafe : Module() {
                 if (!thirdPersonViewValue.get())
                     return
                 mc.gameSettings.thirdPersonView = if (canStrafe(target)) 3 else 0
-            }else {
+            } else {
                 isEnabled = false
                 if (!thirdPersonViewValue.get()) return
                 mc.gameSettings.thirdPersonView = 3
@@ -224,10 +224,10 @@ class TargetStrafe : Module() {
         return target != null && (!holdSpaceValue.get() || mc.thePlayer.movementInput.jump) && (!onlySpeedValue.get() || Leaf.moduleManager[Speed::class.java]!!.state)
     }
 
-    fun modifyStrafe(event: StrafeEvent):Boolean {
-        if(!isEnabled || event.isCancelled) {
+    fun modifyStrafe(event: StrafeEvent): Boolean {
+        if (!isEnabled || event.isCancelled) {
             return false
-        }else {
+        } else {
             MovementUtils.strafe()
             return true
         }
@@ -243,21 +243,21 @@ class TargetStrafe : Module() {
             direction = -direction
             if (direction >= 0) {
                 direction = 1.0
-            }else {
+            } else {
                 direction = -1.0
             }
         }
     }
 
-    fun doMove(event: MoveEvent):Boolean {
-        if(!state)
+    fun doMove(event: MoveEvent): Boolean {
+        if (!state)
             return false
-        if(doStrafe && (!ongroundValue.get() || mc.thePlayer.onGround)) {
-            val _entity : EntityLivingBase = targetEntity?:return false
+        if (doStrafe && (!ongroundValue.get() || mc.thePlayer.onGround)) {
+            val _entity: EntityLivingBase = targetEntity ?: return false
             MovementUtils.doTargetStrafe(_entity, direction.toFloat(), radiusValue.get(), event)
             callBackYaw = RotationUtils.getRotationsEntity(_entity).yaw.toDouble()
             isEnabled = true
-        }else {
+        } else {
             isEnabled = false
         }
         return true

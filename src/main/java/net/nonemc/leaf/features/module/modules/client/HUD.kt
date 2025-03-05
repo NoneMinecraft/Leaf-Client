@@ -1,6 +1,10 @@
-
 package net.nonemc.leaf.features.module.modules.client
 
+import net.minecraft.client.gui.GuiButton
+import net.minecraft.client.gui.GuiChat
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.util.MathHelper
+import net.minecraft.util.ResourceLocation
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.Module
@@ -17,18 +21,17 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.client.gui.GuiChat
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.util.MathHelper
-import net.minecraft.util.ResourceLocation
 import java.awt.Color
 import java.util.*
 
 @ModuleInfo(name = "HUD", category = ModuleCategory.CLIENT, array = false, defaultOn = true)
 object HUD : Module() {
     val shadowValue = ListValue("TextShadowMode", arrayOf("LiquidBounce", "Outline", "Default", "Autumn"), "Autumn")
-    val clolormode = ListValue("ColorMode", arrayOf("Rainbow", "Light Rainbow", "Static", "Double Color", "Default"), "Light Rainbow")
+    val clolormode = ListValue(
+        "ColorMode",
+        arrayOf("Rainbow", "Light Rainbow", "Static", "Double Color", "Default"),
+        "Light Rainbow"
+    )
     val hueInterpolation = BoolValue("hueInterpolation", false)
     val movingcolors = BoolValue("MovingColors", false)
     val inventoryParticle = BoolValue("InventoryParticle", false)
@@ -60,10 +63,13 @@ object HUD : Module() {
     fun onRender2D(event: Render2DEvent) {
         if (mc.currentScreen is GuiHudDesigner) return
         Leaf.hud.render(false, event.partialTicks)
-        if(waterMark.get()) renderWatermark()
+        if (waterMark.get()) renderWatermark()
         if (HealthValue.get()) mc.fontRendererObj.drawStringWithShadow(
             MathHelper.ceiling_float_int(mc.thePlayer.health).toString(),
-            (width / 2 - 4).toFloat(), (height / 2 - 13).toFloat(), if (mc.thePlayer.health <= 15) Color(255, 0, 0).rgb else Color(0, 255, 0).rgb)
+            (width / 2 - 4).toFloat(),
+            (height / 2 - 13).toFloat(),
+            if (mc.thePlayer.health <= 15) Color(255, 0, 0).rgb else Color(0, 255, 0).rgb
+        )
         GlStateManager.resetColor()
     }
 
@@ -114,6 +120,7 @@ object HUD : Module() {
     fun onKey(event: KeyEvent) {
         Leaf.hud.handleKey('a', event.key)
     }
+
     fun getClientColors(): Array<Color>? {
         val firstColor: Color
         val secondColor: Color
@@ -123,20 +130,24 @@ object HUD : Module() {
                 firstColor = ColorUtils.rainbowc(15, 1, .6f, 1F, 1F)!!
                 secondColor = ColorUtils.rainbowc(15, 40, .6f, 1F, 1F)!!
             }
+
             "rainbow" -> {
                 firstColor = ColorUtils.rainbowc(15, 1, 1F, 1F, 1F)!!
                 secondColor = ColorUtils.rainbowc(15, 40, 1F, 1F, 1F)!!
             }
+
             "double color" -> {
                 firstColor =
                     ColorUtils.interpolateColorsBackAndForth(15, 0, Color.PINK, Color.BLUE, hueInterpolation.get())!!
                 secondColor =
                     ColorUtils.interpolateColorsBackAndForth(15, 90, Color.PINK, Color.BLUE, hueInterpolation.get())!!
             }
+
             "static" -> {
                 firstColor = Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
                 secondColor = firstColor
             }
+
             else -> {
                 firstColor = Color(-1)
                 secondColor = Color(-1)

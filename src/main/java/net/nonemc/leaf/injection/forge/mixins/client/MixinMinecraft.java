@@ -1,16 +1,5 @@
 package net.nonemc.leaf.injection.forge.mixins.client;
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.event.*;
-import net.nonemc.leaf.features.module.modules.client.SoundModule;
-import net.nonemc.leaf.features.module.modules.client.Rotations;
-import net.nonemc.leaf.features.module.modules.combat.AutoClicker;
-import net.nonemc.leaf.features.module.modules.world.FastPlace;
-import net.nonemc.leaf.injection.access.StaticStorage;
-import net.nonemc.leaf.utils.CPSCounter;
-import net.nonemc.leaf.utils.ClientUtils;
-import net.nonemc.leaf.utils.RotationUtils;
-import net.nonemc.leaf.utils.render.ImageUtils;
-import net.nonemc.leaf.utils.render.RenderUtils;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.LoadingScreenRenderer;
 import net.minecraft.client.Minecraft;
@@ -26,6 +15,18 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Util;
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.event.*;
+import net.nonemc.leaf.features.module.modules.client.Rotations;
+import net.nonemc.leaf.features.module.modules.client.SoundModule;
+import net.nonemc.leaf.features.module.modules.combat.AutoClicker;
+import net.nonemc.leaf.features.module.modules.world.FastPlace;
+import net.nonemc.leaf.injection.access.StaticStorage;
+import net.nonemc.leaf.utils.CPSCounter;
+import net.nonemc.leaf.utils.ClientUtils;
+import net.nonemc.leaf.utils.RotationUtils;
+import net.nonemc.leaf.utils.render.ImageUtils;
+import net.nonemc.leaf.utils.render.RenderUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -53,54 +54,43 @@ public abstract class MixinMinecraft {
 
     @Shadow
     public boolean skipRenderWorld;
-
-    @Shadow
-    private int leftClickCounter;
-
     @Shadow
     public MovingObjectPosition objectMouseOver;
-
     @Shadow
     public WorldClient theWorld;
-
     @Shadow
     public EntityPlayerSP thePlayer;
-
     @Shadow
     public EffectRenderer effectRenderer;
-
     @Shadow
     public PlayerControllerMP playerController;
-
     @Shadow
     public int rightClickDelayTimer;
-
     @Shadow
     public GameSettings gameSettings;
-
     @Shadow
     @Final
     public File mcDataDir;
-
+    @Shadow
+    private int leftClickCounter;
     @Shadow
     private boolean fullscreen;
+    private long lastFrame = getTime();
 
     @Overwrite
     public int getLimitFramerate() {
         return this.gameSettings.limitFramerate;
     }
 
-
     @Inject(method = "startGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;checkGLError(Ljava/lang/String;)V", ordinal = 2, shift = At.Shift.AFTER))
-     private void startGame(CallbackInfo callbackInfo) {
-         Leaf.INSTANCE.initClient();
-     }
+    private void startGame(CallbackInfo callbackInfo) {
+        Leaf.INSTANCE.initClient();
+    }
 
     @Inject(method = "createDisplay", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/Display;setTitle(Ljava/lang/String;)V", shift = At.Shift.AFTER))
     private void createDisplay(CallbackInfo callbackInfo) {
         ClientUtils.INSTANCE.setTitle();
     }
-    
 
     @Inject(method = "displayGuiScreen", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;", shift = At.Shift.AFTER))
     private void displayGuiScreen(CallbackInfo callbackInfo) {
@@ -114,8 +104,6 @@ public abstract class MixinMinecraft {
 
         Leaf.eventManager.callEvent(new ScreenEvent(currentScreen));
     }
-
-    private long lastFrame = getTime();
 
     @Inject(method = "runGameLoop", at = @At("HEAD"))
     private void runGameLoop(final CallbackInfo callbackInfo) {

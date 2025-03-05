@@ -1,6 +1,9 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.entity.item.EntityItem
+import net.minecraft.entity.projectile.EntityArrow
+import net.minecraft.util.AxisAlignedBB
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render2DEvent
 import net.nonemc.leaf.event.Render3DEvent
@@ -16,10 +19,6 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.entity.item.EntityItem
-import net.minecraft.entity.projectile.EntityArrow
-import net.minecraft.util.AxisAlignedBB
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import kotlin.math.roundToInt
@@ -27,7 +26,11 @@ import kotlin.math.roundToInt
 @ModuleInfo(name = "ItemESP", category = ModuleCategory.RENDER)
 class ItemESP : Module() {
     private val entityConvertedPointsMap: MutableMap<EntityItem, DoubleArray> = HashMap()
-    private val modeValue = ListValue("Mode", arrayOf("Box", "OtherBox", "Outline", "Exhibition", "LightBox", "ShaderOutline", "ShaderGlow"), "Box")
+    private val modeValue = ListValue(
+        "Mode",
+        arrayOf("Box", "OtherBox", "Outline", "Exhibition", "LightBox", "ShaderOutline", "ShaderGlow"),
+        "Box"
+    )
     private val outlineWidth = FloatValue("Outline-Width", 3f, 0.5f, 5f).displayable { modeValue.equals("Outline") }
     private val colorRedValue = IntegerValue("R", 0, 0, 255).displayable { !colorRainbowValue.get() }
     private val colorGreenValue = IntegerValue("G", 255, 0, 255).displayable { !colorRainbowValue.get() }
@@ -35,7 +38,11 @@ class ItemESP : Module() {
     private val colorRainbowValue = BoolValue("Rainbow", true)
 
     private fun getColor(): Color {
-        return if (colorRainbowValue.get()) rainbow() else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get())
+        return if (colorRainbowValue.get()) rainbow() else Color(
+            colorRedValue.get(),
+            colorGreenValue.get(),
+            colorBlueValue.get()
+        )
     }
 
     @EventTarget
@@ -323,21 +330,22 @@ class ItemESP : Module() {
             )
         }
 
-    @EventTarget
-    fun onRender2D(event: Render2DEvent) {
-        val shader = (if (modeValue.equals("shaderoutline")) OutlineShader.OUTLINE_SHADER else if (modeValue.equals("shaderglow")) GlowShader.GLOW_SHADER else null)
-            ?: return
-        val partialTicks = event.partialTicks
+        @EventTarget
+        fun onRender2D(event: Render2DEvent) {
+            val shader =
+                (if (modeValue.equals("shaderoutline")) OutlineShader.OUTLINE_SHADER else if (modeValue.equals("shaderglow")) GlowShader.GLOW_SHADER else null)
+                    ?: return
+            val partialTicks = event.partialTicks
 
-        shader.startDraw(partialTicks)
+            shader.startDraw(partialTicks)
 
-        for (entity in mc.theWorld.loadedEntityList) {
-            if (!(entity is EntityItem || entity is EntityArrow)) continue
-            mc.renderManager.renderEntityStatic(entity, event.partialTicks, true)
+            for (entity in mc.theWorld.loadedEntityList) {
+                if (!(entity is EntityItem || entity is EntityArrow)) continue
+                mc.renderManager.renderEntityStatic(entity, event.partialTicks, true)
+            }
+
+            shader.stopDraw(getColor(), outlineWidth.get(), 1f)
         }
-
-        shader.stopDraw(getColor(), outlineWidth.get(), 1f)
-    }
     }
 
     fun getIncremental(`val`: Double, inc: Double): Double {

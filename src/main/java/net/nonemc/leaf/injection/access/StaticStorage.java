@@ -5,6 +5,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.EnumWorldBlockLayer;
+
 public class StaticStorage {
 
     private static final EnumFacing[] facings = EnumFacing.values();

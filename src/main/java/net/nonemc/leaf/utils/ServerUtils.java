@@ -1,17 +1,16 @@
-
 package net.nonemc.leaf.utils;
 
-import net.nonemc.leaf.Leaf;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.multiplayer.ServerData;
+import net.nonemc.leaf.Leaf;
 
 public final class ServerUtils extends MinecraftInstance {
 
     public static ServerData serverData;
 
     public static void connectToLastServer() {
-        if(serverData == null)
+        if (serverData == null)
             return;
 
         mc.displayGuiScreen(new GuiConnecting(new GuiMultiplayer(Leaf.mainMenu), mc, serverData));
@@ -24,7 +23,7 @@ public final class ServerUtils extends MinecraftInstance {
             serverIp = "SinglePlayer";
         } else if (mc.theWorld != null && mc.theWorld.isRemote) {
             final ServerData serverData = mc.getCurrentServerData();
-            if(serverData != null)
+            if (serverData != null)
                 serverIp = serverData.serverIP;
         }
 

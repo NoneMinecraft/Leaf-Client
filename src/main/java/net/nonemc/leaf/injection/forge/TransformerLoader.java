@@ -1,11 +1,10 @@
-
 package net.nonemc.leaf.injection.forge;
 
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.nonemc.leaf.injection.transformers.ForgeNetworkTransformer;
 import net.nonemc.leaf.injection.transformers.OptimizeTransformer;
 import net.nonemc.leaf.injection.transformers.ViaForgeSupportTransformer;
 import net.nonemc.leaf.script.remapper.injection.transformers.AbstractJavaLinkerTransformer;
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
@@ -28,7 +27,7 @@ public class TransformerLoader implements IFMLLoadingPlugin {
      */
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] {ForgeNetworkTransformer.class.getName(), AbstractJavaLinkerTransformer.class.getName(), ViaForgeSupportTransformer.class.getName(), OptimizeTransformer.class.getName()};
+        return new String[]{ForgeNetworkTransformer.class.getName(), AbstractJavaLinkerTransformer.class.getName(), ViaForgeSupportTransformer.class.getName(), OptimizeTransformer.class.getName()};
     }
 
     /**

@@ -2,6 +2,7 @@ package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.novoline;
 
 
 import com.google.common.collect.Lists;
+import net.minecraft.client.gui.Gui;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.features.module.ModuleCategory;
@@ -9,7 +10,6 @@ import net.nonemc.leaf.ui.font.Fonts;
 import net.nonemc.leaf.ui.font.GameFontRenderer;
 import net.nonemc.leaf.utils.Translate;
 import net.nonemc.leaf.utils.render.RenderUtils;
-import net.minecraft.client.gui.Gui;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -19,6 +19,8 @@ import java.util.ArrayList;
 public class Window {
     public final ModuleCategory category;
     public final ArrayList<Button> buttons = Lists.newArrayList();
+    public final int max;
+    final Translate translate = new Translate(0F, 0F);
     public boolean drag;
     public boolean extended;
     public int x;
@@ -26,12 +28,12 @@ public class Window {
     public float expand;
     public int dragX;
     public int dragY;
-    public final int max;
     public int scroll;
     public int scrollTo;
+    public float totalY;
     int allX;
-    final Translate translate = new Translate(0F, 0F);
-
+    int wheely;
+    boolean buttonanim;
     public Window(ModuleCategory category, int x, int y) {
         this.category = category;
         this.x = x;
@@ -48,9 +50,6 @@ public class Window {
             b2.setParent(this);
         }
     }
-    int wheely;
-    public float totalY;
-    boolean buttonanim;
 
     public void render(int mouseX, int mouseY) {
         boolean isOnPanel;

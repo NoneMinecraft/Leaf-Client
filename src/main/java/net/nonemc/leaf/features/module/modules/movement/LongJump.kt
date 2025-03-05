@@ -17,9 +17,10 @@ import net.nonemc.leaf.value.ListValue
 
 @ModuleInfo(name = "LongJump", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.FLAG)
 class LongJump : Module() {
-    private val modes = ClassUtils.resolvePackage("${this.javaClass.`package`.name}.longjumps", LongJumpMode::class.java)
-        .map { it.newInstance() as LongJumpMode }
-        .sortedBy { it.modeName }
+    private val modes =
+        ClassUtils.resolvePackage("${this.javaClass.`package`.name}.longjumps", LongJumpMode::class.java)
+            .map { it.newInstance() as LongJumpMode }
+            .sortedBy { it.modeName }
 
     private val mode: LongJumpMode
         get() = modes.find { modeValue.equals(it.modeName) } ?: throw NullPointerException() // this should not happen
@@ -58,7 +59,7 @@ class LongJump : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        if(!state) return
+        if (!state) return
         mode.onUpdate(event)
         if (!no && autoJumpValue.get() && mc.thePlayer.onGround && MovementUtils.isMoving()) {
             jumped = true
@@ -73,40 +74,40 @@ class LongJump : Module() {
 
     @EventTarget
     fun onMotion(event: MotionEvent) {
-        if(!state) return
+        if (!state) return
         mode.onMotion(event)
-        if(event.eventState != EventState.PRE) return
+        if (event.eventState != EventState.PRE) return
         mode.onPreMotion(event)
     }
 
     @EventTarget
     fun onPacket(event: PacketEvent) {
-        if(!state) return
+        if (!state) return
         mode.onPacket(event)
     }
 
     @EventTarget
     fun onMove(event: MoveEvent) {
-        if(!state) return
+        if (!state) return
         mode.onMove(event)
     }
 
     @EventTarget
     fun onBlockBB(event: BlockBBEvent) {
-        if(!state) return
+        if (!state) return
         mode.onBlockBB(event)
     }
 
     @EventTarget
     fun onJump(event: JumpEvent) {
-        if(!state) return
+        if (!state) return
         mode.onJump(event)
         jumped = true
     }
 
     @EventTarget
     fun onStep(event: StepEvent) {
-        if(!state) return
+        if (!state) return
         mode.onStep(event)
     }
 
@@ -117,5 +118,6 @@ class LongJump : Module() {
      * 读取mode中的value并和本体中的value合并
      * 所有的value必须在这个之前初始化
      */
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList()
+        .also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
 }

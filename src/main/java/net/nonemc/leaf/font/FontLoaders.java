@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 import java.util.ArrayList;
+
 public abstract class FontLoaders {
     public static CFontRenderer F14 = new CFontRenderer(getFont(14), true, true);
     public static CFontRenderer F16 = new CFontRenderer(getFont(16), true, true);
@@ -71,7 +72,7 @@ public abstract class FontLoaders {
         return font;
     }
 
-        public static Font getMojangles(int size) {
+    public static Font getMojangles(int size) {
         Font font;
         try {
             font = Font.createFont(0, Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("leaf/font/mojangles.ttf")).getInputStream()).deriveFont(0, (float) size);

@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.item
 
 import net.minecraft.item.ItemArmor

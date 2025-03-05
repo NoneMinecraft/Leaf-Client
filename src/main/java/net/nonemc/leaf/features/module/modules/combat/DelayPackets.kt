@@ -1,5 +1,6 @@
 ﻿package net.nonemc.leaf.features.module.modules.combat
 
+import net.minecraft.network.play.client.*
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -8,7 +9,6 @@ import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.utils.PacketUtils
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.network.play.client.*
 import java.util.*
 
 @ModuleInfo(name = "DelayPackets", category = ModuleCategory.COMBAT)
