@@ -1,6 +1,7 @@
 package net.nonemc.leaf.utils;
 
 import net.nonemc.leaf.utils.render.RenderUtils;
+
 public final class AnimationUtils {
     public static double animate(double target, double current, double speed) {
         if (current == target) return current;
@@ -39,17 +40,17 @@ public final class AnimationUtils {
             speed = 1.0F;
         }
 
-        double dif = Math.max(target, (double)current) - Math.min(target, (double)current);
-        double factor = dif * (double)speed;
+        double dif = Math.max(target, (double) current) - Math.min(target, (double) current);
+        double factor = dif * (double) speed;
         if (factor < 0.1D) {
             factor = 0.1D;
         }
 
         if (larger) {
-            current += (float)factor;
+            current += (float) factor;
             if (current >= target) current = target;
         } else if (target < current) {
-            current -= (float)factor;
+            current -= (float) factor;
             if (current <= target) current = target;
         }
 
@@ -69,7 +70,7 @@ public final class AnimationUtils {
         } else
             x = desired;
 
-        if(Math.abs(desired - x) < 10.0E-3 && x != desired)
+        if (Math.abs(desired - x) < 10.0E-3 && x != desired)
             x = desired;
 
         return x;

@@ -15,7 +15,7 @@ public class ImageUtils {
             byteBuffer.putInt(rgb << 8 | rgb >> 24 & 255);
         }
 
-        Buffer buffer = (Buffer) byteBuffer;
+        Buffer buffer = byteBuffer;
         buffer.flip();
 
         return byteBuffer;

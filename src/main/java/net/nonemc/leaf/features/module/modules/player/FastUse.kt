@@ -1,6 +1,9 @@
-
 package net.nonemc.leaf.features.module.modules.player
 
+import net.minecraft.item.ItemBucketMilk
+import net.minecraft.item.ItemFood
+import net.minecraft.item.ItemPotion
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
@@ -10,15 +13,13 @@ import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.item.ItemBucketMilk
-import net.minecraft.item.ItemFood
-import net.minecraft.item.ItemPotion
-import net.minecraft.network.play.client.C03PacketPlayer
 
 @ModuleInfo(name = "FastUse", category = ModuleCategory.PLAYER)
 class FastUse : Module() {
-    private val modeValue = ListValue("Mode", arrayOf("NCP","Instant", "CustomDelay", "DelayedInstant","Intave"), "Intave")
-    private val durationValue = IntegerValue("InstantDelay", 14, 0, 35).displayable { modeValue.equals("DelayedInstant") }
+    private val modeValue =
+        ListValue("Mode", arrayOf("NCP", "Instant", "CustomDelay", "DelayedInstant", "Intave"), "Intave")
+    private val durationValue =
+        IntegerValue("InstantDelay", 14, 0, 35).displayable { modeValue.equals("DelayedInstant") }
     private val delayValue = IntegerValue("CustomDelay", 0, 0, 300).displayable { modeValue.equals("CustomDelay") }
     private val LowTimer = FloatValue("LowTimer", 0.3F, 0.01F, 10F).displayable { modeValue.equals("Intave") }
     private val MaxTimer = FloatValue("MaxTimer", 0.3F, 0.01F, 10F).displayable { modeValue.equals("Intave") }
@@ -42,18 +43,18 @@ class FastUse : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         when (modeValue.get()) {
-            "Intave"->{
-                if(mc.thePlayer.isEating && (mc.thePlayer.heldItem.item is ItemFood || mc.thePlayer.heldItem.item is ItemPotion)){
+            "Intave" -> {
+                if (mc.thePlayer.isEating && (mc.thePlayer.heldItem.item is ItemFood || mc.thePlayer.heldItem.item is ItemPotion)) {
                     reset = false
-                    if (iseating>=1){
+                    if (iseating >= 1) {
                         iseating--
                         mc.timer.timerSpeed = LowTimer.get()
 
-                    }else{
-                        iseating=10
+                    } else {
+                        iseating = 10
                         mc.timer.timerSpeed = MaxTimer.get()
                     }
-                }else{
+                } else {
                     iseating = Ticks.get().toInt()
                     if (!reset) {
                         mc.timer.timerSpeed = 1F
@@ -81,16 +82,19 @@ class FastUse : Module() {
 
                     mc.playerController.onStoppedUsingItem(mc.thePlayer)
                 }
+
                 "ncp" -> if (mc.thePlayer.itemInUseDuration > 14) {
                     send(20)
 
-                    mc.playerController.onStoppedUsingItem(mc.thePlayer)}
+                    mc.playerController.onStoppedUsingItem(mc.thePlayer)
+                }
 
                 "instant" -> {
                     send(35)
 
                     mc.playerController.onStoppedUsingItem(mc.thePlayer)
                 }
+
                 "customdelay" -> {
                     if (!msTimer.hasTimePassed(delayValue.get().toLong())) {
                         return
@@ -102,16 +106,18 @@ class FastUse : Module() {
             }
         }
     }
+
     override fun onDisable() {
         if (usedTimer) {
             mc.timer.timerSpeed = 1F
             usedTimer = false
-                iseating = Ticks.get().toInt()
-                mc.timer.timerSpeed = 1F
+            iseating = Ticks.get().toInt()
+            mc.timer.timerSpeed = 1F
             reset = false
 
         }
     }
+
     override val tag: String
         get() = modeValue.get()
 }

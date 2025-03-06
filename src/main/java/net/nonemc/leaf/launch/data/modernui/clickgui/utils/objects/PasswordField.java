@@ -6,8 +6,6 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.utils.objects;
 
 import com.google.common.base.Predicate;
-
-import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.api.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,6 +15,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.MathHelper;
+import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.api.FontRenderer;
 
 public class PasswordField extends Gui {
 
@@ -503,7 +502,7 @@ public class PasswordField extends Gui {
             }
 
             if (k != j) {
-                int l1 = (int) (l + fontRenderer.stringWidth(s.substring(0, k)));
+                int l1 = l + fontRenderer.stringWidth(s.substring(0, k));
                 this.drawCursorVertical(k1, i1 - 1, l1 - 1, i1 + 1 + fontRenderer.getHeight());
             }
 

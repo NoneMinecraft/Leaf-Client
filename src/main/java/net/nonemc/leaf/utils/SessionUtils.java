@@ -1,10 +1,10 @@
 package net.nonemc.leaf.utils;
 
-import net.nonemc.leaf.event.*;
-import net.nonemc.leaf.utils.timer.MSTimer;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.GuiConnecting;
+import net.nonemc.leaf.event.*;
+import net.nonemc.leaf.utils.timer.MSTimer;
 
 public class SessionUtils extends MinecraftInstance implements Listenable {
 
@@ -18,6 +18,51 @@ public class SessionUtils extends MinecraftInstance implements Listenable {
     private static boolean requireDelay = false;
 
     private static GuiScreen lastScreen = null;
+
+    public static void handleConnection() {
+        backupSessionTime = 0L;
+        requireDelay = true;
+        lastSessionTime = System.currentTimeMillis() - sessionTimer.getTime();
+        if (lastSessionTime < 0L) lastSessionTime = 0L;
+        sessionTimer.reset();
+    }
+
+    public static void handleReconnection() {
+        if (requireDelay) sessionTimer.setTime(System.currentTimeMillis() - backupSessionTime);
+    }
+
+    public static String getFormatSessionTime() {
+        if (System.currentTimeMillis() - sessionTimer.getTime() < 0L) sessionTimer.reset();
+
+        int realTime = (int) (System.currentTimeMillis() - sessionTimer.getTime()) / 1000;
+        int hours = realTime / 3600;
+        int seconds = (realTime % 3600) % 60;
+        int minutes = (realTime % 3600) / 60;
+
+        return hours + "h " + minutes + "m " + seconds + "s";
+    }
+
+    public static String getFormatLastSessionTime() {
+        if (lastSessionTime < 0L) lastSessionTime = 0L;
+
+        int realTime = (int) lastSessionTime / 1000;
+        int hours = realTime / 3600;
+        int seconds = (realTime % 3600) % 60;
+        int minutes = (realTime % 3600) / 60;
+
+        return hours + "h " + minutes + "m " + seconds + "s";
+    }
+
+    public static String getFormatWorldTime() {
+        if (System.currentTimeMillis() - worldTimer.getTime() < 0L) worldTimer.reset();
+
+        int realTime = (int) (System.currentTimeMillis() - worldTimer.getTime()) / 1000;
+        int hours = realTime / 3600;
+        int seconds = (realTime % 3600) % 60;
+        int minutes = (realTime % 3600) / 60;
+
+        return hours + "h " + minutes + "m " + seconds + "s";
+    }
 
     @EventTarget
     public void onWorld(WorldEvent event) {
@@ -43,51 +88,6 @@ public class SessionUtils extends MinecraftInstance implements Listenable {
             handleReconnection();
 
         lastScreen = event.getGuiScreen();
-    }
-
-    public static void handleConnection() {
-        backupSessionTime = 0L;
-        requireDelay = true;
-        lastSessionTime = System.currentTimeMillis() - sessionTimer.getTime();
-        if (lastSessionTime < 0L) lastSessionTime = 0L;
-        sessionTimer.reset();
-    }
-
-    public static void handleReconnection() {
-        if (requireDelay) sessionTimer.setTime(System.currentTimeMillis() - backupSessionTime);
-    }
-
-    public static String getFormatSessionTime() {
-        if (System.currentTimeMillis() - sessionTimer.getTime() < 0L) sessionTimer.reset();
-
-        int realTime = (int) (System.currentTimeMillis() - sessionTimer.getTime()) / 1000;
-        int hours = (int) realTime / 3600;
-        int seconds = (realTime % 3600) % 60;
-        int minutes = (int) (realTime % 3600) / 60;
-
-        return hours + "h " + minutes + "m " + seconds + "s";
-    }
-
-    public static String getFormatLastSessionTime() {
-        if (lastSessionTime < 0L) lastSessionTime = 0L;
-
-        int realTime = (int) lastSessionTime / 1000;
-        int hours = (int) realTime / 3600;
-        int seconds = (realTime % 3600) % 60;
-        int minutes = (int) (realTime % 3600) / 60;
-
-        return hours + "h " + minutes + "m " + seconds + "s";
-    }
-
-    public static String getFormatWorldTime() {
-        if (System.currentTimeMillis() - worldTimer.getTime() < 0L) worldTimer.reset();
-
-        int realTime = (int) (System.currentTimeMillis() - worldTimer.getTime()) / 1000;
-        int hours = (int) realTime / 3600;
-        int seconds = (realTime % 3600) % 60;
-        int minutes = (int) (realTime % 3600) / 60;
-
-        return hours + "h " + minutes + "m " + seconds + "s";
     }
 
     @Override

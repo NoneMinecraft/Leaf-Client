@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.render;
 
 import net.minecraftforge.fml.relauncher.Side;

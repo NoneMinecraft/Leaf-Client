@@ -42,10 +42,8 @@ public class ClickGuiConfig extends FileConfig {
                 panel.setY(panelObject.get("posY").getAsInt());
 
                 for (final Element element : panel.getElements()) {
-                    if (!(element instanceof ModuleElement))
+                    if (!(element instanceof ModuleElement moduleElement))
                         continue;
-
-                    final ModuleElement moduleElement = (ModuleElement) element;
 
                     if (!panelObject.has(moduleElement.getModule().getName()))
                         continue;
@@ -77,10 +75,8 @@ public class ClickGuiConfig extends FileConfig {
             panelObject.addProperty("posY", panel.getY());
 
             for (final Element element : panel.getElements()) {
-                if (!(element instanceof ModuleElement))
+                if (!(element instanceof ModuleElement moduleElement))
                     continue;
-
-                final ModuleElement moduleElement = (ModuleElement) element;
 
                 final JsonObject elementObject = new JsonObject();
 

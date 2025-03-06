@@ -5,12 +5,12 @@
  */
 package net.nonemc.leaf.features.module.modules.client.button
 
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiButton
+import net.nonemc.leaf.features.module.modules.client.HudShadows
 import net.nonemc.leaf.utils.render.EaseUtils.easeInOutQuad
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.utils.render.shadowRenderUtils
-import net.nonemc.leaf.features.module.modules.client.HudShadows
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiButton
 import java.awt.Color
 
 class FLineButtonRenderer(button: GuiButton) : AbstractButtonRenderer(button) {
@@ -39,17 +39,35 @@ class FLineButtonRenderer(button: GuiButton) : AbstractButtonRenderer(button) {
         }
 
         val percent = easeInOutQuad(animation)
-        RenderUtils.drawRect(button.xPosition.toFloat(), button.yPosition.toFloat(), (button.xPosition + button.width).toFloat(), (button.yPosition + button.height).toFloat(), Color(31, 31, 31, 150).rgb)
+        RenderUtils.drawRect(
+            button.xPosition.toFloat(),
+            button.yPosition.toFloat(),
+            (button.xPosition + button.width).toFloat(),
+            (button.yPosition + button.height).toFloat(),
+            Color(31, 31, 31, 150).rgb
+        )
         if (button.enabled) {
             val half = button.width / 2.0
             val center = button.xPosition + half
-            RenderUtils.drawRect(center - percent * half, (button.yPosition + button.height - 1).toDouble(), center + percent * half, (button.yPosition + button.height).toDouble(), Color.WHITE.rgb)
+            RenderUtils.drawRect(
+                center - percent * half,
+                (button.yPosition + button.height - 1).toDouble(),
+                center + percent * half,
+                (button.yPosition + button.height).toDouble(),
+                Color.WHITE.rgb
+            )
         }
 
         lastUpdate = time
 
-            if (HudShadows.buttonShadowValue.equals(true)){
-            shadowRenderUtils.drawShadowWithCustomAlpha(button.xPosition.toFloat(), button.yPosition.toFloat(), button.width.toFloat(), button.height.toFloat(), 240f)
-            }
+        if (HudShadows.buttonShadowValue.equals(true)) {
+            shadowRenderUtils.drawShadowWithCustomAlpha(
+                button.xPosition.toFloat(),
+                button.yPosition.toFloat(),
+                button.width.toFloat(),
+                button.height.toFloat(),
+                240f
+            )
+        }
     }
 }

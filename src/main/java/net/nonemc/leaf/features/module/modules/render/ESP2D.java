@@ -1,22 +1,5 @@
-
 package net.nonemc.leaf.features.module.modules.render;
 
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.event.EventTarget;
-import net.nonemc.leaf.event.Render2DEvent;
-import net.nonemc.leaf.features.module.Module;
-import net.nonemc.leaf.features.module.ModuleCategory;
-import net.nonemc.leaf.features.module.ModuleInfo;
-import net.nonemc.leaf.ui.font.GameFontRenderer;
-import net.nonemc.leaf.utils.MobsUtils;
-import net.nonemc.leaf.utils.item.ItemUtils;
-import net.nonemc.leaf.utils.render.BlendUtils;
-import net.nonemc.leaf.utils.render.ColorUtils;
-import net.nonemc.leaf.utils.render.RenderUtils;
-import net.nonemc.leaf.value.BoolValue;
-import net.nonemc.leaf.value.FloatValue;
-import net.nonemc.leaf.value.IntegerValue;
-import net.nonemc.leaf.value.ListValue;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -33,6 +16,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.event.EventTarget;
+import net.nonemc.leaf.event.Render2DEvent;
+import net.nonemc.leaf.features.module.Module;
+import net.nonemc.leaf.features.module.ModuleCategory;
+import net.nonemc.leaf.features.module.ModuleInfo;
+import net.nonemc.leaf.ui.font.GameFontRenderer;
+import net.nonemc.leaf.utils.MobsUtils;
+import net.nonemc.leaf.utils.item.ItemUtils;
+import net.nonemc.leaf.utils.render.BlendUtils;
+import net.nonemc.leaf.utils.render.ColorUtils;
+import net.nonemc.leaf.utils.render.RenderUtils;
+import net.nonemc.leaf.value.BoolValue;
+import net.nonemc.leaf.value.FloatValue;
+import net.nonemc.leaf.value.IntegerValue;
+import net.nonemc.leaf.value.ListValue;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -50,14 +49,15 @@ import java.util.List;
 
 @ModuleInfo(name = "ESP2D", category = ModuleCategory.RENDER)
 public final class ESP2D extends Module {
-    
+
+    public static List collectedEntities = new ArrayList();
     public final BoolValue outline = new BoolValue("Outline", true);
     public final ListValue boxMode = new ListValue("Mode", new String[]{"Box", "Corners"}, "Box");
     public final BoolValue healthBar = new BoolValue("Health-bar", true);
     public final ListValue hpBarMode = new ListValue("HBar-Mode", new String[]{"Dot", "Line"}, "Dot");
     public final BoolValue absorption = new BoolValue("Render-Absorption", true);
     public final BoolValue armorBar = new BoolValue("Armor-bar", true);
-    public final ListValue armorBarMode = new ListValue("ABar-Mode", new String[] {"Total", "Items"}, "Total");
+    public final ListValue armorBarMode = new ListValue("ABar-Mode", new String[]{"Total", "Items"}, "Total");
     public final BoolValue healthNumber = new BoolValue("HealthNumber", true);
     public final ListValue hpMode = new ListValue("HP-Mode", new String[]{"Health", "Percent"}, "Health");
     public final BoolValue armorNumber = new BoolValue("ItemArmorNumber", true);
@@ -70,7 +70,7 @@ public final class ESP2D extends Module {
     public final BoolValue clearNameValue = new BoolValue("Use-Clear-Name", false);
     public final BoolValue localPlayer = new BoolValue("Local-Player", true);
     public final BoolValue droppedItems = new BoolValue("Dropped-Items", false);
-    private final ListValue colorModeValue = new ListValue("Color", new String[] {"Custom", "Slowly", "AnotherRainbow"}, "Custom");
+    private final ListValue colorModeValue = new ListValue("Color", new String[]{"Custom", "Slowly", "AnotherRainbow"}, "Custom");
     private final IntegerValue colorRedValue = new IntegerValue("Red", 255, 0, 255);
     private final IntegerValue colorGreenValue = new IntegerValue("Green", 255, 0, 255);
     private final IntegerValue colorBlueValue = new IntegerValue("Blue", 255, 0, 255);
@@ -78,7 +78,6 @@ public final class ESP2D extends Module {
     private final FloatValue brightnessValue = new FloatValue("Brightness", 1F, 0F, 1F);
     private final FloatValue fontScaleValue = new FloatValue("Font-Scale", 0.5F, 0F, 1F);
     private final BoolValue colorTeam = new BoolValue("Team", false);
-    public static List collectedEntities = new ArrayList();
     private final IntBuffer viewport;
     private final FloatBuffer modelview;
     private final FloatBuffer projection;
@@ -97,9 +96,12 @@ public final class ESP2D extends Module {
         this.black = Color.BLACK.getRGB();
     }
 
-    public final Color getColor(final Entity entity) {
-        if (entity instanceof EntityLivingBase) {
-            final EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
+    public static boolean shouldCancelNameTag(EntityLivingBase entity) {
+        return Leaf.moduleManager.getModule(ESP2D.class) != null && Leaf.moduleManager.getModule(ESP2D.class).getState() && Leaf.moduleManager.getModule(ESP2D.class).tagsValue.get() && collectedEntities.contains(entity);
+    }
+
+    public Color getColor(final Entity entity) {
+        if (entity instanceof EntityLivingBase entityLivingBase) {
 
             if (entityLivingBase.hurtTime > 0)
                 return Color.RED;
@@ -138,10 +140,6 @@ public final class ESP2D extends Module {
         }
     }
 
-    public static boolean shouldCancelNameTag(EntityLivingBase entity) {
-        return Leaf.moduleManager.getModule(ESP2D.class) != null && Leaf.moduleManager.getModule(ESP2D.class).getState() && Leaf.moduleManager.getModule(ESP2D.class).tagsValue.get() && collectedEntities.contains(entity);
-    }
-
     @Override
     public void onDisable() {
         collectedEntities.clear();
@@ -154,7 +152,7 @@ public final class ESP2D extends Module {
         float partialTicks = event.getPartialTicks();
         ScaledResolution scaledResolution = new ScaledResolution(mc);
         int scaleFactor = scaledResolution.getScaleFactor();
-        double scaling = (double)scaleFactor / Math.pow((double)scaleFactor, 2.0D);
+        double scaling = (double) scaleFactor / Math.pow(scaleFactor, 2.0D);
         GL11.glScaled(scaling, scaling, scaling);
         int black = this.black;
         int background = this.backgroundColor;
@@ -168,23 +166,23 @@ public final class ESP2D extends Module {
         boolean armor = this.armorBar.get();
         int i = 0;
 
-        for(int collectedEntitiesSize = collectedEntities.size(); i < collectedEntitiesSize; ++i) {
-            Entity entity = (Entity)collectedEntities.get(i);
+        for (int collectedEntitiesSize = collectedEntities.size(); i < collectedEntitiesSize; ++i) {
+            Entity entity = (Entity) collectedEntities.get(i);
             int color = getColor(entity).getRGB();
             if (RenderUtils.isInViewFrustrum(entity)) {
-                double x = RenderUtils.interpolate(entity.posX, entity.lastTickPosX, (double)partialTicks);
-                double y = RenderUtils.interpolate(entity.posY, entity.lastTickPosY, (double)partialTicks);
-                double z = RenderUtils.interpolate(entity.posZ, entity.lastTickPosZ, (double)partialTicks);
-                double width = (double)entity.width / 1.5D;
-                double height = (double)entity.height + (entity.isSneaking() ? -0.3D : 0.2D);
+                double x = RenderUtils.interpolate(entity.posX, entity.lastTickPosX, (double) partialTicks);
+                double y = RenderUtils.interpolate(entity.posY, entity.lastTickPosY, (double) partialTicks);
+                double z = RenderUtils.interpolate(entity.posZ, entity.lastTickPosZ, (double) partialTicks);
+                double width = (double) entity.width / 1.5D;
+                double height = (double) entity.height + (entity.isSneaking() ? -0.3D : 0.2D);
                 AxisAlignedBB aabb = new AxisAlignedBB(x - width, y, z - width, x + width, y + height, z + width);
                 List vectors = Arrays.asList(new Vector3d(aabb.minX, aabb.minY, aabb.minZ), new Vector3d(aabb.minX, aabb.maxY, aabb.minZ), new Vector3d(aabb.maxX, aabb.minY, aabb.minZ), new Vector3d(aabb.maxX, aabb.maxY, aabb.minZ), new Vector3d(aabb.minX, aabb.minY, aabb.maxZ), new Vector3d(aabb.minX, aabb.maxY, aabb.maxZ), new Vector3d(aabb.maxX, aabb.minY, aabb.maxZ), new Vector3d(aabb.maxX, aabb.maxY, aabb.maxZ));
                 entityRenderer.setupCameraTransform(partialTicks, 0);
                 Vector4d position = null;
                 Iterator var38 = vectors.iterator();
 
-                while(var38.hasNext()) {
-                    Vector3d vector = (Vector3d)var38.next();
+                while (var38.hasNext()) {
+                    Vector3d vector = (Vector3d) var38.next();
                     vector = this.project2D(scaleFactor, vector.x - renderMng.viewerPosX, vector.y - renderMng.viewerPosY, vector.z - renderMng.viewerPosZ);
                     if (vector != null && vector.z >= 0.0D && vector.z < 1.0D) {
                         if (position == null) {
@@ -243,14 +241,14 @@ public final class ESP2D extends Module {
                     double textWidth;
                     float tagY;
                     if (living) {
-                        entityLivingBase = (EntityLivingBase)entity;
+                        entityLivingBase = (EntityLivingBase) entity;
                         if (health) {
                             armorValue = entityLivingBase.getHealth();
                             itemDurability = entityLivingBase.getMaxHealth();
                             if (armorValue > itemDurability)
                                 armorValue = itemDurability;
 
-                            durabilityWidth = (double)(armorValue / itemDurability);
+                            durabilityWidth = armorValue / itemDurability;
                             textWidth = (endPosY - posY) * durabilityWidth;
                             String healthDisplay = dFormat.format(entityLivingBase.getHealth()) + " §c❤";
                             String healthPercent = ((int) ((entityLivingBase.getHealth() / itemDurability) * 100F)) + "%";
@@ -270,7 +268,7 @@ public final class ESP2D extends Module {
                                     RenderUtils.newDrawRect(posX - 3.0D, endPosY, posX - 2.0D, endPosY - textWidth, healthColor);
                                     tagY = entityLivingBase.getAbsorptionAmount();
                                     if (absorption.get() && tagY > 0.0F)
-                                        RenderUtils.newDrawRect(posX - 3.0D, endPosY, posX - 2.0D, endPosY - (endPosY - posY) / 6.0D * (double)tagY / 2.0D, (new Color(Potion.absorption.getLiquidColor())).getRGB());
+                                        RenderUtils.newDrawRect(posX - 3.0D, endPosY, posX - 2.0D, endPosY - (endPosY - posY) / 6.0D * (double) tagY / 2.0D, (new Color(Potion.absorption.getLiquidColor())).getRGB());
                                 }
                             }
                         }
@@ -278,7 +276,7 @@ public final class ESP2D extends Module {
 
                     if (armor) {
                         if (living) {
-                            entityLivingBase = (EntityLivingBase)entity;
+                            entityLivingBase = (EntityLivingBase) entity;
                             if (armorBarMode.get().equalsIgnoreCase("items")) {
                                 final double constHeight = (endPosY - posY) / 4.0;
                                 for (int m = 4; m > 0; m--) {
@@ -289,22 +287,22 @@ public final class ESP2D extends Module {
                                         RenderUtils.newDrawRect(endPosX + 2.0D,
                                                 endPosY + 0.5D - theHeight * (m - 1) - 0.25D,
                                                 endPosX + 3.0D,
-                                                endPosY + 0.5D - theHeight * (m - 1) - 0.25D - (constHeight - 0.25D) * MathHelper.clamp_double((double)ItemUtils.getItemDurability(armorStack) / (double) armorStack.getMaxDamage(), 0D, 1D), new Color(0, 255, 255).getRGB());
+                                                endPosY + 0.5D - theHeight * (m - 1) - 0.25D - (constHeight - 0.25D) * MathHelper.clamp_double((double) ItemUtils.getItemDurability(armorStack) / (double) armorStack.getMaxDamage(), 0D, 1D), new Color(0, 255, 255).getRGB());
                                     }
                                 }
                             } else {
-                                armorValue = (float)entityLivingBase.getTotalArmorValue();
-                                double armorWidth = (endPosY - posY) * (double)armorValue / 20.0D;
+                                armorValue = (float) entityLivingBase.getTotalArmorValue();
+                                double armorWidth = (endPosY - posY) * (double) armorValue / 20.0D;
                                 RenderUtils.newDrawRect(endPosX + 1.5D, posY - 0.5D, endPosX + 3.5D, endPosY + 0.5D, background);
                                 if (armorValue > 0.0F)
                                     RenderUtils.newDrawRect(endPosX + 2.0D, endPosY, endPosX + 3.0D, endPosY - armorWidth, new Color(0, 255, 255).getRGB());
                             }
                         } else if (entity instanceof EntityItem) {
-                            ItemStack itemStack = ((EntityItem)entity).getEntityItem();
+                            ItemStack itemStack = ((EntityItem) entity).getEntityItem();
                             if (itemStack.isItemStackDamageable()) {
                                 int maxDamage = itemStack.getMaxDamage();
-                                itemDurability = (float)(maxDamage - itemStack.getItemDamage());
-                                durabilityWidth = (endPosY - posY) * (double)itemDurability / (double)maxDamage;
+                                itemDurability = (float) (maxDamage - itemStack.getItemDamage());
+                                durabilityWidth = (endPosY - posY) * (double) itemDurability / (double) maxDamage;
                                 if (armorNumber.get() && (!hoverValue.get() || entity == mc.thePlayer || isHovering(posX, endPosX, posY, endPosY, scaledResolution)))
                                     drawScaledString(((int) itemDurability) + "", endPosX + 4.0, (endPosY - durabilityWidth) - mc.fontRendererObj.FONT_HEIGHT / 2F * fontScaleValue.get(), fontScaleValue.get(), -1);
                                 RenderUtils.newDrawRect(endPosX + 1.5D, posY - 0.5D, endPosX + 3.5D, endPosY + 0.5D, background);
@@ -315,7 +313,7 @@ public final class ESP2D extends Module {
 
                     if (living && armorItems.get() && (!hoverValue.get() || entity == mc.thePlayer || isHovering(posX, endPosX, posY, endPosY, scaledResolution))) {
                         entityLivingBase = (EntityLivingBase) entity;
-                        double yDist = (double)(endPosY - posY) / 4.0D;
+                        double yDist = (endPosY - posY) / 4.0D;
                         for (int j = 4; j > 0; j--) {
                             ItemStack armorStack = entityLivingBase.getEquipmentInSlot(j);
                             if (armorStack != null && armorStack.getItem() != null) {
@@ -397,8 +395,8 @@ public final class ESP2D extends Module {
         List playerEntities = mc.theWorld.loadedEntityList;
         int i = 0;
 
-        for(int playerEntitiesSize = playerEntities.size(); i < playerEntitiesSize; ++i) {
-            Entity entity = (Entity)playerEntities.get(i);
+        for (int playerEntitiesSize = playerEntities.size(); i < playerEntitiesSize; ++i) {
+            Entity entity = (Entity) playerEntities.get(i);
             if (MobsUtils.isSelected(entity, false) || (localPlayer.get() && entity instanceof EntityPlayerSP && mc.gameSettings.thirdPersonView != 0) || (droppedItems.get() && entity instanceof EntityItem)) {
                 collectedEntities.add(entity);
             }
@@ -410,6 +408,6 @@ public final class ESP2D extends Module {
         GL11.glGetFloat(2982, this.modelview);
         GL11.glGetFloat(2983, this.projection);
         GL11.glGetInteger(2978, this.viewport);
-        return GLU.gluProject((float)x, (float)y, (float)z, this.modelview, this.projection, this.viewport, this.vector) ? new Vector3d((double)(this.vector.get(0) / (float)scaleFactor), (double)(((float)Display.getHeight() - this.vector.get(1)) / (float)scaleFactor), (double)this.vector.get(2)) : null;
+        return GLU.gluProject((float) x, (float) y, (float) z, this.modelview, this.projection, this.viewport, this.vector) ? new Vector3d((double) (this.vector.get(0) / (float) scaleFactor), (double) (((float) Display.getHeight() - this.vector.get(1)) / (float) scaleFactor), (double) this.vector.get(2)) : null;
     }
 }

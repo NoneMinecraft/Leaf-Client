@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.render;
 
 import net.minecraft.client.Minecraft;
@@ -23,23 +22,23 @@ import java.io.InputStreamReader;
 
 public enum SmoothRenderUtils {
     INSTANCE;
-    
+
     public static Minecraft mc;
     public static float delta;
-    
+
     public static boolean isHovering(final int n, final int n2, final float n3, final float n4, final float n5, final float n6) {
         final boolean b = n > n3 && n < n5 && n2 > n4 && n2 < n6;
         return b;
     }
-    
+
     public static int width() {
         return new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth();
     }
-    
+
     public static int height() {
         return new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight();
     }
-    
+
     public static void enableGL3D(final float lineWidth) {
         GL11.glDisable(3008);
         GL11.glEnable(3042);
@@ -53,7 +52,7 @@ public enum SmoothRenderUtils {
         GL11.glHint(3155, 4354);
         GL11.glLineWidth(lineWidth);
     }
-    
+
     public static void drawArc(float n, float n2, double n3, final int n4, final int n5, final double n6, final int n7) {
         n3 *= 2.0;
         n *= 2.0f;
@@ -71,7 +70,7 @@ public enum SmoothRenderUtils {
         GL11.glHint(3154, 4354);
         GL11.glHint(3155, 4354);
         GL11.glScalef(0.5f, 0.5f, 0.5f);
-        GL11.glLineWidth((float)n7);
+        GL11.glLineWidth((float) n7);
         GL11.glEnable(2848);
         GL11.glColor4f(n9, n10, n11, n8);
         GL11.glBegin(3);
@@ -88,17 +87,17 @@ public enum SmoothRenderUtils {
         GL11.glHint(3154, 4352);
         GL11.glHint(3155, 4352);
     }
-    
+
     public static int rainbow(final int delay) {
         double rainbow = Math.ceil((System.currentTimeMillis() + delay) / 10.0);
-        return Color.getHSBColor((float)((rainbow %= 360.0) / 360.0), 0.5f, 1.0f).getRGB();
+        return Color.getHSBColor((float) ((rainbow %= 360.0) / 360.0), 0.5f, 1.0f).getRGB();
     }
-    
+
     public static int rainbow(final int delay, final float slowspeed) {
-        double rainbow = Math.ceil((System.currentTimeMillis() + delay) / (double)slowspeed);
-        return Color.getHSBColor((float)((rainbow %= 360.0) / 360.0), 0.5f, 1.0f).getRGB();
+        double rainbow = Math.ceil((System.currentTimeMillis() + delay) / (double) slowspeed);
+        return Color.getHSBColor((float) ((rainbow %= 360.0) / 360.0), 0.5f, 1.0f).getRGB();
     }
-    
+
     public static void disableGL3D() {
         GL11.glEnable(3553);
         GL11.glEnable(2929);
@@ -110,7 +109,7 @@ public enum SmoothRenderUtils {
         GL11.glHint(3154, 4352);
         GL11.glHint(3155, 4352);
     }
-    
+
     public static void drawBorderedRect(final float x, final float y, final float x1, final float y1, final float width, final int borderColor) {
         r2DUtils.enableGL2D();
         glColor(borderColor);
@@ -120,7 +119,7 @@ public enum SmoothRenderUtils {
         r2DUtils.drawRect(x + width, y1 - width, x1 - width, y1);
         r2DUtils.disableGL2D();
     }
-    
+
     public static void drawCircle(final double x, final double y, final double radius, final int c) {
         final float alpha = (c >> 24 & 0xFF) / 255.0f;
         final float red = (c >> 16 & 0xFF) / 255.0f;
@@ -155,7 +154,7 @@ public enum SmoothRenderUtils {
             GL11.glDisable(3042);
         }
     }
-    
+
     public static void drawCircle2(final double x, final double y, final double radius, final int c) {
         final float f2 = (c >> 24 & 0xFF) / 255.0f;
         final float f3 = (c >> 16 & 0xFF) / 255.0f;
@@ -178,7 +177,7 @@ public enum SmoothRenderUtils {
         GlStateManager.enableTexture2D();
         GlStateManager.alphaFunc(516, 0.1f);
     }
-    
+
     public static void drawFilledCircle(final double x, final double y, final double r, final int c, final int id) {
         final float f = (c >> 24 & 0xFF) / 255.0f;
         final float f2 = (c >> 16 & 0xFF) / 255.0f;
@@ -195,43 +194,39 @@ public enum SmoothRenderUtils {
                 final double y2 = Math.cos(i * 3.141526 / 180.0) * r;
                 GL11.glVertex2d(x - x2, y - y2);
             }
-        }
-        else if (id == 2) {
+        } else if (id == 2) {
             GL11.glVertex2d(x, y);
             for (int i = 90; i <= 180; ++i) {
                 final double x2 = Math.sin(i * 3.141526 / 180.0) * r;
                 final double y2 = Math.cos(i * 3.141526 / 180.0) * r;
                 GL11.glVertex2d(x - x2, y - y2);
             }
-        }
-        else if (id == 3) {
+        } else if (id == 3) {
             GL11.glVertex2d(x, y);
             for (int i = 270; i <= 360; ++i) {
                 final double x2 = Math.sin(i * 3.141526 / 180.0) * r;
                 final double y2 = Math.cos(i * 3.141526 / 180.0) * r;
                 GL11.glVertex2d(x - x2, y - y2);
             }
-        }
-        else if (id == 4) {
+        } else if (id == 4) {
             GL11.glVertex2d(x, y);
             for (int i = 180; i <= 270; ++i) {
                 final double x2 = Math.sin(i * 3.141526 / 180.0) * r;
                 final double y2 = Math.cos(i * 3.141526 / 180.0) * r;
                 GL11.glVertex2d(x - x2, y - y2);
             }
-        }
-        else {
+        } else {
             for (int i = 0; i <= 360; ++i) {
                 final double x2 = Math.sin(i * 3.141526 / 180.0) * r;
                 final double y2 = Math.cos(i * 3.141526 / 180.0) * r;
-                GL11.glVertex2f((float)(x - x2), (float)(y - y2));
+                GL11.glVertex2f((float) (x - x2), (float) (y - y2));
             }
         }
         GL11.glEnd();
         GL11.glEnable(3553);
         GL11.glDisable(3042);
     }
-    
+
     public static void drawFullCircle(int cx, int cy, double r, final int segments, final float lineWidth, final int part, final int c) {
         GL11.glScalef(0.5f, 0.5f, 0.5f);
         r *= 2.0;
@@ -260,7 +255,7 @@ public enum SmoothRenderUtils {
         GL11.glScalef(2.0f, 2.0f, 2.0f);
     }
 
-    
+
     public static void glColor(final int hex) {
         final float alpha = (hex >> 24 & 0xFF) / 255.0f;
         final float red = (hex >> 16 & 0xFF) / 255.0f;
@@ -268,13 +263,13 @@ public enum SmoothRenderUtils {
         final float blue = (hex & 0xFF) / 255.0f;
         GL11.glColor4f(red, green, blue, alpha);
     }
-    
+
     public static Color rainbowEffect(final int delay) {
         final float hue = (System.nanoTime() + delay) / 2.0E10f % 1.0f;
-        final Color color = new Color((int)Long.parseLong(Integer.toHexString(Color.HSBtoRGB(hue, 1.0f, 1.0f)), 16));
+        final Color color = new Color((int) Long.parseLong(Integer.toHexString(Color.HSBtoRGB(hue, 1.0f, 1.0f)), 16));
         return new Color(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
     }
-    
+
     public static void drawFullscreenImage(final ResourceLocation image) {
         final ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         GL11.glDisable(2929);
@@ -283,53 +278,49 @@ public enum SmoothRenderUtils {
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         GL11.glDisable(3008);
         Minecraft.getMinecraft().getTextureManager().bindTexture(image);
-        Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0f, 0.0f, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), (float)scaledResolution.getScaledWidth(), (float)scaledResolution.getScaledHeight());
+        Gui.drawModalRectWithCustomSizedTexture(0, 0, 0.0f, 0.0f, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), (float) scaledResolution.getScaledWidth(), (float) scaledResolution.getScaledHeight());
         GL11.glDepthMask(true);
         GL11.glEnable(2929);
         GL11.glEnable(3008);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
-    
+
     public static double getAnimationState(double animation, final double finalState, final double speed) {
-        final float add = (float)(0.01 * speed);
+        final float add = (float) (0.01 * speed);
         if (animation < finalState) {
             if (animation + add < finalState) {
                 animation += add;
-            }
-            else {
+            } else {
                 animation = finalState;
             }
-        }
-        else if (animation - add > finalState) {
+        } else if (animation - add > finalState) {
             animation -= add;
-        }
-        else {
+        } else {
             animation = finalState;
         }
         return animation;
     }
-    
+
     public static String getShaderCode(final InputStreamReader file) {
         String shaderSource = "";
         try {
             final BufferedReader reader = new BufferedReader(file);
             String line;
             while ((line = reader.readLine()) != null) {
-                shaderSource = String.valueOf(shaderSource) + line + "\n";
+                shaderSource = shaderSource + line + "\n";
             }
             reader.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
         }
-        return shaderSource.toString();
+        return shaderSource;
     }
-    
+
     public static void drawImage(final ResourceLocation image, final int x, final int y, final int width, final int height) {
         drawImage(image, x, y, width, height, 1.0f);
     }
-    
+
     public static void drawImage(final ResourceLocation image, final int x, final int y, final int width, final int height, final float alpha) {
         final ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         GL11.glDisable(2929);
@@ -338,20 +329,20 @@ public enum SmoothRenderUtils {
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, alpha);
         Minecraft.getMinecraft().getTextureManager().bindTexture(image);
-        Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float)width, (float)height);
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
         GL11.glDepthMask(true);
         GL11.glDisable(3042);
         GL11.glEnable(2929);
     }
-    
+
     public static void drawOutlinedRect(final int x, final int y, final int width, final int height, final int lineSize, final Color lineColor, final Color backgroundColor) {
-        drawRect((float)x, (float)y, (float)width, (float)height, backgroundColor.getRGB());
-        drawRect((float)x, (float)y, (float)width, (float)(y + lineSize), lineColor.getRGB());
-        drawRect((float)x, (float)(height - lineSize), (float)width, (float)height, lineColor.getRGB());
-        drawRect((float)x, (float)(y + lineSize), (float)(x + lineSize), (float)(height - lineSize), lineColor.getRGB());
-        drawRect((float)(width - lineSize), (float)(y + lineSize), (float)width, (float)(height - lineSize), lineColor.getRGB());
+        drawRect((float) x, (float) y, (float) width, (float) height, backgroundColor.getRGB());
+        drawRect((float) x, (float) y, (float) width, (float) (y + lineSize), lineColor.getRGB());
+        drawRect((float) x, (float) (height - lineSize), (float) width, (float) height, lineColor.getRGB());
+        drawRect((float) x, (float) (y + lineSize), (float) (x + lineSize), (float) (height - lineSize), lineColor.getRGB());
+        drawRect((float) (width - lineSize), (float) (y + lineSize), (float) width, (float) (height - lineSize), lineColor.getRGB());
     }
-    
+
     public static void drawImage(final ResourceLocation image, final int x, final int y, final int width, final int height, final Color color) {
         final ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         GL11.glDisable(2929);
@@ -360,12 +351,12 @@ public enum SmoothRenderUtils {
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glColor4f(color.getRed() / 255.0f, color.getBlue() / 255.0f, color.getRed() / 255.0f, 1.0f);
         Minecraft.getMinecraft().getTextureManager().bindTexture(image);
-        Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float)width, (float)height);
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
         GL11.glDepthMask(true);
         GL11.glDisable(3042);
         GL11.glEnable(2929);
     }
-    
+
     public static void doGlScissor(final int x, final int y, final int width, final int height) {
         final Minecraft mc = Minecraft.getMinecraft();
         int scaleFactor = 1;
@@ -378,7 +369,7 @@ public enum SmoothRenderUtils {
         }
         GL11.glScissor(x * scaleFactor, mc.displayHeight - (y + height) * scaleFactor, width * scaleFactor, height * scaleFactor);
     }
-    
+
     public static void drawblock(final double a, final double a2, final double a3, final int a4, final int a5, final float a6) {
         final float a7 = (a4 >> 24 & 0xFF) / 255.0f;
         final float a8 = (a4 >> 16 & 0xFF) / 255.0f;
@@ -407,7 +398,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     public static void drawRect(float left, float top, float right, float bottom, final int color) {
         if (left < right) {
             final float f3 = left;
@@ -438,7 +429,7 @@ public enum SmoothRenderUtils {
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
     }
-    
+
     public static void color(final int color) {
         final float f = (color >> 24 & 0xFF) / 255.0f;
         final float f2 = (color >> 16 & 0xFF) / 255.0f;
@@ -446,7 +437,7 @@ public enum SmoothRenderUtils {
         final float f4 = (color & 0xFF) / 255.0f;
         GL11.glColor4f(f2, f3, f4, f);
     }
-    
+
     public static int createShader(final String shaderCode, final int shaderType) throws Exception {
         int shader = 0;
         try {
@@ -454,26 +445,25 @@ public enum SmoothRenderUtils {
             if (shader == 0) {
                 return 0;
             }
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             ARBShaderObjects.glDeleteObjectARB(shader);
             throw exc;
         }
-        ARBShaderObjects.glShaderSourceARB(shader, (CharSequence)shaderCode);
+        ARBShaderObjects.glShaderSourceARB(shader, (CharSequence) shaderCode);
         ARBShaderObjects.glCompileShaderARB(shader);
         if (ARBShaderObjects.glGetObjectParameteriARB(shader, 35713) == 0) {
             throw new RuntimeException("Error creating shader:");
         }
         return shader;
     }
-    
+
     public static void drawBorderRect(final double x, final double y, final double x1, final double y1, final int color, final double lwidth) {
-        drawHLine(x, y, x1, y, (float)lwidth, color);
-        drawHLine(x1, y, x1, y1, (float)lwidth, color);
-        drawHLine(x, y1, x1, y1, (float)lwidth, color);
-        drawHLine(x, y1, x, y, (float)lwidth, color);
+        drawHLine(x, y, x1, y, (float) lwidth, color);
+        drawHLine(x1, y, x1, y1, (float) lwidth, color);
+        drawHLine(x, y1, x1, y1, (float) lwidth, color);
+        drawHLine(x, y1, x, y, (float) lwidth, color);
     }
-    
+
     public static void drawHLine(final double x, final double y, final double x1, final double y1, final float width, final int color) {
         final float var11 = (color >> 24 & 0xFF) / 255.0f;
         final float var12 = (color >> 16 & 0xFF) / 255.0f;
@@ -495,42 +485,7 @@ public enum SmoothRenderUtils {
         GlStateManager.disableBlend();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
     }
-    
-    public void drawCircle(final int x, final int y, final float radius, final int color) {
-        final float alpha = (color >> 24 & 0xFF) / 255.0f;
-        final float red = (color >> 16 & 0xFF) / 255.0f;
-        final float green = (color >> 8 & 0xFF) / 255.0f;
-        final float blue = (color & 0xFF) / 255.0f;
-        final boolean blend = GL11.glIsEnabled(3042);
-        final boolean line = GL11.glIsEnabled(2848);
-        final boolean texture = GL11.glIsEnabled(3553);
-        if (!blend) {
-            GL11.glEnable(3042);
-        }
-        if (!line) {
-            GL11.glEnable(2848);
-        }
-        if (texture) {
-            GL11.glDisable(3553);
-        }
-        GL11.glBlendFunc(770, 771);
-        GL11.glColor4f(red, green, blue, alpha);
-        GL11.glBegin(9);
-        for (int i = 0; i <= 360; ++i) {
-            GL11.glVertex2d(x + Math.sin(i * 3.141526 / 180.0) * radius, y + Math.cos(i * 3.141526 / 180.0) * radius);
-        }
-        GL11.glEnd();
-        if (texture) {
-            GL11.glEnable(3553);
-        }
-        if (!line) {
-            GL11.glDisable(2848);
-        }
-        if (!blend) {
-            GL11.glDisable(3042);
-        }
-    }
-    
+
     public static void renderOne(final float width) {
         checkSetupFBO();
         GL11.glPushAttrib(1048575);
@@ -548,19 +503,19 @@ public enum SmoothRenderUtils {
         GL11.glStencilOp(7681, 7681, 7681);
         GL11.glPolygonMode(1032, 6913);
     }
-    
+
     public static void renderTwo() {
         GL11.glStencilFunc(512, 0, 15);
         GL11.glStencilOp(7681, 7681, 7681);
         GL11.glPolygonMode(1032, 6914);
     }
-    
+
     public static void renderThree() {
         GL11.glStencilFunc(514, 1, 15);
         GL11.glStencilOp(7680, 7680, 7680);
         GL11.glPolygonMode(1032, 6913);
     }
-    
+
     public static void renderFour() {
         setColor(new Color(255, 255, 255));
         GL11.glDepthMask(false);
@@ -569,7 +524,7 @@ public enum SmoothRenderUtils {
         GL11.glPolygonOffset(1.0f, -2000000.0f);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
     }
-    
+
     public static void renderFive() {
         GL11.glPolygonOffset(1.0f, 2000000.0f);
         GL11.glDisable(10754);
@@ -584,11 +539,11 @@ public enum SmoothRenderUtils {
         GL11.glEnable(3008);
         GL11.glPopAttrib();
     }
-    
+
     public static void setColor(final Color c) {
-        GL11.glColor4d((double)(c.getRed() / 255.0f), (double)(c.getGreen() / 255.0f), (double)(c.getBlue() / 255.0f), (double)(c.getAlpha() / 255.0f));
+        GL11.glColor4d((double) (c.getRed() / 255.0f), (double) (c.getGreen() / 255.0f), (double) (c.getBlue() / 255.0f), (double) (c.getAlpha() / 255.0f));
     }
-    
+
     public static void checkSetupFBO() {
         final Framebuffer fbo = Minecraft.getMinecraft().getFramebuffer();
         if (fbo != null && fbo.depthBuffer > -1) {
@@ -596,7 +551,7 @@ public enum SmoothRenderUtils {
             fbo.depthBuffer = -1;
         }
     }
-    
+
     public static void setupFBO(final Framebuffer fbo) {
         EXTFramebufferObject.glDeleteRenderbuffersEXT(fbo.depthBuffer);
         final int stencil_depth_buffer_ID = EXTFramebufferObject.glGenRenderbuffersEXT();
@@ -605,7 +560,7 @@ public enum SmoothRenderUtils {
         EXTFramebufferObject.glFramebufferRenderbufferEXT(36160, 36128, 36161, stencil_depth_buffer_ID);
         EXTFramebufferObject.glFramebufferRenderbufferEXT(36160, 36096, 36161, stencil_depth_buffer_ID);
     }
-    
+
     public static void drawOutlinedBoundingBox(final AxisAlignedBB aa) {
         final Tessellator tessellator = Tessellator.getInstance();
         final WorldRenderer worldRenderer = tessellator.getWorldRenderer();
@@ -634,7 +589,7 @@ public enum SmoothRenderUtils {
         worldRenderer.pos(aa.minX, aa.maxY, aa.maxZ).endVertex();
         tessellator.draw();
     }
-    
+
     public static void drawBox(final AxisAlignedBB box) {
         if (box == null) {
             return;
@@ -712,7 +667,7 @@ public enum SmoothRenderUtils {
         GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
         GL11.glEnd();
     }
-    
+
     public static void drawCompleteBox(final AxisAlignedBB axisalignedbb, final float width, final int insideColor, final int borderColor) {
         GL11.glLineWidth(width);
         GL11.glEnable(2848);
@@ -727,7 +682,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(2848);
         GL11.glDisable(2881);
     }
-    
+
     public static void drawCrosses(final AxisAlignedBB axisalignedbb, final float width, final int color) {
         GL11.glLineWidth(width);
         GL11.glEnable(2848);
@@ -739,7 +694,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(2848);
         GL11.glDisable(2881);
     }
-    
+
     public static void drawOutlineBox(final AxisAlignedBB axisalignedbb, final float width, final int color) {
         GL11.glLineWidth(width);
         GL11.glEnable(2848);
@@ -751,7 +706,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(2848);
         GL11.glDisable(2881);
     }
-    
+
     public static void drawOutlinedBox(final AxisAlignedBB box) {
         if (box == null) {
             return;
@@ -781,7 +736,7 @@ public enum SmoothRenderUtils {
         GL11.glVertex3d(box.minX, box.maxY, box.maxZ);
         GL11.glEnd();
     }
-    
+
     public static void drawCrosses(final AxisAlignedBB box) {
         if (box == null) {
             return;
@@ -801,7 +756,7 @@ public enum SmoothRenderUtils {
         GL11.glVertex3d(box.maxX, box.minY, box.maxZ);
         GL11.glEnd();
     }
-    
+
     public static void drawBoundingBox(final AxisAlignedBB aa) {
         final Tessellator tessellator = Tessellator.getInstance();
         final WorldRenderer worldRenderer = tessellator.getWorldRenderer();
@@ -866,7 +821,7 @@ public enum SmoothRenderUtils {
         worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).endVertex();
         tessellator.draw();
     }
-    
+
     public static void drawOutlinedBlockESP(final double x, final double y, final double z, final float red, final float green, final float blue, final float alpha, final float lineWidth) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -885,7 +840,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     public static void drawBlockESP(final double x, final double y, final double z, final float red, final float green, final float blue, final float alpha, final float lineRed, final float lineGreen, final float lineBlue, final float lineAlpha, final float lineWidth) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -908,7 +863,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     public static void drawSolidBlockESP(final double x, final double y, final double z, final float red, final float green, final float blue, final float alpha) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -927,7 +882,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     public static void drawOutlinedEntityESP(final double x, final double y, final double z, final double width, final double height, final float red, final float green, final float blue, final float alpha) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -945,7 +900,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     public static void drawSolidEntityESP(final double x, final double y, final double z, final double width, final double height, final float red, final float green, final float blue, final float alpha) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -963,7 +918,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     public static void drawEntityESP(final double x, final double y, final double z, final double width, final double height, final float red, final float green, final float blue, final float alpha, final float lineRed, final float lineGreen, final float lineBlue, final float lineAlpha, final float lineWdith) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -984,7 +939,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     public static void drawEntityESP(final double x, final double y, final double z, final double width, final double height, final float red, final float green, final float blue, final float alpha) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
@@ -1002,11 +957,11 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glPopMatrix();
     }
-    
+
     private static void glColor(final Color color) {
         GL11.glColor4f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
     }
-    
+
     public static void drawFilledBox(final AxisAlignedBB mask) {
         final Tessellator tessellator = Tessellator.getInstance();
         final WorldRenderer worldRenderer = tessellator.getWorldRenderer();
@@ -1071,29 +1026,29 @@ public enum SmoothRenderUtils {
         worldRenderer.pos(mask.maxX, mask.minY, mask.maxZ);
         tessellator.draw();
     }
-    
+
     public static void drawRoundedRect(final float x, final float y, final float x1, final float y1, final int borderC, final int insideC) {
         drawRect(x + 0.5f, y, x1 - 0.5f, y + 0.5f, insideC);
         drawRect(x + 0.5f, y1 - 0.5f, x1 - 0.5f, y1, insideC);
         drawRect(x, y + 0.5f, x1, y1 - 0.5f, insideC);
     }
-    
+
     public static void circle(final float x, final float y, final float radius, final int fill) {
         arc(x, y, 0.0f, 360.0f, radius, fill);
     }
-    
+
     public static void circle(final float x, final float y, final float radius, final Color fill) {
         arc(x, y, 0.0f, 360.0f, radius, fill);
     }
-    
+
     public static void arc(final float x, final float y, final float start, final float end, final float radius, final int color) {
         arcEllipse(x, y, start, end, radius, radius, color);
     }
-    
+
     public static void arc(final float x, final float y, final float start, final float end, final float radius, final Color color) {
         arcEllipse(x, y, start, end, radius, radius, color);
     }
-    
+
     public static void arcEllipse(final float x, final float y, float start, float end, final float w, final float h, final int color) {
         GlStateManager.color(0.0f, 0.0f, 0.0f);
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
@@ -1118,8 +1073,8 @@ public enum SmoothRenderUtils {
             GL11.glLineWidth(2.0f);
             GL11.glBegin(3);
             for (float i = end; i >= start; i -= 4.0f) {
-                final float ldx = (float)Math.cos(i * 3.141592653589793 / 180.0) * w * 1.001f;
-                final float ldy = (float)Math.sin(i * 3.141592653589793 / 180.0) * h * 1.001f;
+                final float ldx = (float) Math.cos(i * 3.141592653589793 / 180.0) * w * 1.001f;
+                final float ldy = (float) Math.sin(i * 3.141592653589793 / 180.0) * h * 1.001f;
                 GL11.glVertex2f(x + ldx, y + ldy);
             }
             GL11.glEnd();
@@ -1127,15 +1082,15 @@ public enum SmoothRenderUtils {
         }
         GL11.glBegin(6);
         for (float i = end; i >= start; i -= 4.0f) {
-            final float ldx = (float)Math.cos(i * 3.141592653589793 / 180.0) * w;
-            final float ldy = (float)Math.sin(i * 3.141592653589793 / 180.0) * h;
+            final float ldx = (float) Math.cos(i * 3.141592653589793 / 180.0) * w;
+            final float ldy = (float) Math.sin(i * 3.141592653589793 / 180.0) * h;
             GL11.glVertex2f(x + ldx, y + ldy);
         }
         GL11.glEnd();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
     }
-    
+
     public static void arcEllipse(final float x, final float y, float start, float end, final float w, final float h, final Color color) {
         GlStateManager.color(0.0f, 0.0f, 0.0f);
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
@@ -1156,8 +1111,8 @@ public enum SmoothRenderUtils {
             GL11.glLineWidth(2.0f);
             GL11.glBegin(3);
             for (float i = end; i >= start; i -= 4.0f) {
-                final float ldx = (float)Math.cos(i * 3.141592653589793 / 180.0) * w * 1.001f;
-                final float ldy = (float)Math.sin(i * 3.141592653589793 / 180.0) * h * 1.001f;
+                final float ldx = (float) Math.cos(i * 3.141592653589793 / 180.0) * w * 1.001f;
+                final float ldy = (float) Math.sin(i * 3.141592653589793 / 180.0) * h * 1.001f;
                 GL11.glVertex2f(x + ldx, y + ldy);
             }
             GL11.glEnd();
@@ -1165,15 +1120,15 @@ public enum SmoothRenderUtils {
         }
         GL11.glBegin(6);
         for (float i = end; i >= start; i -= 4.0f) {
-            final float ldx = (float)Math.cos(i * 3.141592653589793 / 180.0) * w;
-            final float ldy = (float)Math.sin(i * 3.141592653589793 / 180.0) * h;
+            final float ldx = (float) Math.cos(i * 3.141592653589793 / 180.0) * w;
+            final float ldy = (float) Math.sin(i * 3.141592653589793 / 180.0) * h;
             GL11.glVertex2f(x + ldx, y + ldy);
         }
         GL11.glEnd();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
     }
-    
+
     public static void drawGradientSideways(final double left, final double top, final double right, final double bottom, final int col1, final int col2) {
         final float f = (col1 >> 24 & 0xFF) / 255.0f;
         final float f2 = (col1 >> 16 & 0xFF) / 255.0f;
@@ -1203,7 +1158,7 @@ public enum SmoothRenderUtils {
         GL11.glDisable(2848);
         GL11.glShadeModel(7424);
     }
-    
+
     public static void rectangleBordered(final double x, final double y, final double x1, final double y1, final double width, final int internalColor, final int borderColor) {
         rectangle(x + width, y + width, x1 - width, y1 - width, internalColor);
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -1216,7 +1171,7 @@ public enum SmoothRenderUtils {
         rectangle(x + width, y1 - width, x1 - width, y1, borderColor);
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
     }
-    
+
     public static void rectangle(double left, double top, double right, double bottom, final int color) {
         if (left < right) {
             final double var5 = left;
@@ -1248,7 +1203,7 @@ public enum SmoothRenderUtils {
         GlStateManager.disableBlend();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
     }
-    
+
     public static void drawBorderedRect(final double x2, final double d2, final double x22, final double e2, final float l1, final int col1, final int col2) {
         drawRect(x2, d2, x22, e2, col2);
         final float f2 = (col1 >> 24 & 0xFF) / 255.0f;
@@ -1277,15 +1232,15 @@ public enum SmoothRenderUtils {
         GL11.glDisable(3042);
         GL11.glDisable(2848);
     }
-    
+
     public static void drawRect(double d, double e, double g, double h, final int color) {
         if (d < g) {
-            final int i = (int)d;
+            final int i = (int) d;
             d = g;
             g = i;
         }
         if (e < h) {
-            final int j = (int)e;
+            final int j = (int) e;
             e = h;
             h = j;
         }
@@ -1308,9 +1263,9 @@ public enum SmoothRenderUtils {
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
     }
-    
+
     public static Color blend(final Color color1, final Color color2, final double ratio) {
-        final float r = (float)ratio;
+        final float r = (float) ratio;
         final float ir = 1.0f - r;
         final float[] rgb1 = new float[3];
         final float[] rgb2 = new float[3];
@@ -1319,12 +1274,12 @@ public enum SmoothRenderUtils {
         final Color color3 = new Color(rgb1[0] * r + rgb2[0] * ir, rgb1[1] * r + rgb2[1] * ir, rgb1[2] * r + rgb2[2] * ir);
         return color3;
     }
-    
+
     public static void drawEntityOnScreen(final int p_147046_0_, final int p_147046_1_, final int p_147046_2_, final float p_147046_3_, final float p_147046_4_, final EntityLivingBase p_147046_5_) {
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float)p_147046_0_, (float)p_147046_1_, 40.0f);
-        GlStateManager.scale((float)(-p_147046_2_), (float)p_147046_2_, (float)p_147046_2_);
+        GlStateManager.translate((float) p_147046_0_, (float) p_147046_1_, 40.0f);
+        GlStateManager.scale((float) (-p_147046_2_), (float) p_147046_2_, (float) p_147046_2_);
         GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
         final float var6 = p_147046_5_.renderYawOffset;
         final float var7 = p_147046_5_.rotationYaw;
@@ -1334,10 +1289,10 @@ public enum SmoothRenderUtils {
         GlStateManager.rotate(135.0f, 0.0f, 1.0f, 0.0f);
         RenderHelper.enableStandardItemLighting();
         GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
-        GlStateManager.rotate(-(float)Math.atan(p_147046_4_ / 40.0f) * 20.0f, 1.0f, 0.0f, 0.0f);
-        p_147046_5_.renderYawOffset = (float)Math.atan(p_147046_3_ / 40.0f) * -14.0f;
-        p_147046_5_.rotationYaw = (float)Math.atan(p_147046_3_ / 40.0f) * -14.0f;
-        p_147046_5_.rotationPitch = -(float)Math.atan(p_147046_4_ / 40.0f) * 15.0f;
+        GlStateManager.rotate(-(float) Math.atan(p_147046_4_ / 40.0f) * 20.0f, 1.0f, 0.0f, 0.0f);
+        p_147046_5_.renderYawOffset = (float) Math.atan(p_147046_3_ / 40.0f) * -14.0f;
+        p_147046_5_.rotationYaw = (float) Math.atan(p_147046_3_ / 40.0f) * -14.0f;
+        p_147046_5_.rotationPitch = -(float) Math.atan(p_147046_4_ / 40.0f) * 15.0f;
         p_147046_5_.rotationYawHead = p_147046_5_.rotationYaw;
         p_147046_5_.prevRotationYawHead = p_147046_5_.rotationYaw;
         GlStateManager.translate(0.0f, 0.0f, 0.0f);
@@ -1359,12 +1314,12 @@ public enum SmoothRenderUtils {
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
-    public static void drawRoundRect(float x, float y, float x2, float y2,float round,int color) {
-        round=round/1.2f;
-        x += (float)(round / 2.0f + 0.5);
-        y += (float)(round / 2.0f + 0.5);
-        x2 -= (float)(round / 2.0f + 0.5);
-        y2 -= (float)(round / 2.0f + 0.5);
+    public static void drawRoundRect(float x, float y, float x2, float y2, float round, int color) {
+        round = round / 1.2f;
+        x += (float) (round / 2.0f + 0.5);
+        y += (float) (round / 2.0f + 0.5);
+        x2 -= (float) (round / 2.0f + 0.5);
+        y2 -= (float) (round / 2.0f + 0.5);
         r2DUtils.drawRect(x, y, x2, y2, color);
         r2DUtils.enableGL2D();
         circle(x2 - round / 2.0f, y + round / 2.0f, round, color);
@@ -1385,14 +1340,49 @@ public enum SmoothRenderUtils {
         GL11.glEnable(3042);
         GL11.glBlendFunc(770, 771);
     }
-    
+
     public static void post() {
         GL11.glDisable(3042);
         GL11.glEnable(3553);
         GL11.glEnable(2929);
         GL11.glColor3d(1.0, 1.0, 1.0);
     }
-    
+
+    public void drawCircle(final int x, final int y, final float radius, final int color) {
+        final float alpha = (color >> 24 & 0xFF) / 255.0f;
+        final float red = (color >> 16 & 0xFF) / 255.0f;
+        final float green = (color >> 8 & 0xFF) / 255.0f;
+        final float blue = (color & 0xFF) / 255.0f;
+        final boolean blend = GL11.glIsEnabled(3042);
+        final boolean line = GL11.glIsEnabled(2848);
+        final boolean texture = GL11.glIsEnabled(3553);
+        if (!blend) {
+            GL11.glEnable(3042);
+        }
+        if (!line) {
+            GL11.glEnable(2848);
+        }
+        if (texture) {
+            GL11.glDisable(3553);
+        }
+        GL11.glBlendFunc(770, 771);
+        GL11.glColor4f(red, green, blue, alpha);
+        GL11.glBegin(9);
+        for (int i = 0; i <= 360; ++i) {
+            GL11.glVertex2d(x + Math.sin(i * 3.141526 / 180.0) * radius, y + Math.cos(i * 3.141526 / 180.0) * radius);
+        }
+        GL11.glEnd();
+        if (texture) {
+            GL11.glEnable(3553);
+        }
+        if (!line) {
+            GL11.glDisable(2848);
+        }
+        if (!blend) {
+            GL11.glDisable(3042);
+        }
+    }
+
     public static class r2DUtils {
         public static void enableGL2D() {
             GL11.glDisable((int) 2929);

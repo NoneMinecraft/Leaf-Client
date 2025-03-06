@@ -5,8 +5,8 @@
  */
 package net.nonemc.leaf.features.command.commands
 
-import net.nonemc.leaf.features.command.Command
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
+import net.nonemc.leaf.features.command.Command
 
 class DamageCommand : Command("damage", arrayOf("hurt")) {
     /**

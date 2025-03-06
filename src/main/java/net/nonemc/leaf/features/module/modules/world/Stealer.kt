@@ -1,6 +1,13 @@
-
 package net.nonemc.leaf.features.module.modules.world
 
+import net.minecraft.client.gui.inventory.GuiChest
+import net.minecraft.inventory.Slot
+import net.minecraft.item.Item
+import net.minecraft.item.ItemBlock
+import net.minecraft.item.ItemStack
+import net.minecraft.network.play.server.S2DPacketOpenWindow
+import net.minecraft.network.play.server.S30PacketWindowItems
+import net.minecraft.util.ResourceLocation
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
@@ -13,14 +20,6 @@ import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.utils.timer.TimeUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.client.gui.inventory.GuiChest
-import net.minecraft.inventory.Slot
-import net.minecraft.item.Item
-import net.minecraft.item.ItemBlock
-import net.minecraft.item.ItemStack
-import net.minecraft.network.play.server.S2DPacketOpenWindow
-import net.minecraft.network.play.server.S30PacketWindowItems
-import net.minecraft.util.ResourceLocation
 import kotlin.random.Random
 
 @ModuleInfo(name = "Stealer", category = ModuleCategory.WORLD)
@@ -56,10 +55,10 @@ class Stealer : Module() {
     private val onlyItemsValue = BoolValue("OnlyItems", false)
     private val noCompassValue = BoolValue("NoCompass", false)
     private val autoCloseValue = BoolValue("AutoClose", true)
-    public val silentValue = BoolValue("Silent", true)
-    public val showStringValue = BoolValue("Silent-ShowString", false).displayable { silentValue.get() }
-    public val stillDisplayValue = BoolValue("Silent-StillDisplay", false).displayable { silentValue.get() }
-    public val silentTitleValue = BoolValue("SilentTitle", true)
+    val silentValue = BoolValue("Silent", true)
+    val showStringValue = BoolValue("Silent-ShowString", false).displayable { silentValue.get() }
+    val stillDisplayValue = BoolValue("Silent-StillDisplay", false).displayable { silentValue.get() }
+    val silentTitleValue = BoolValue("SilentTitle", true)
 
     private val autoCloseMaxDelayValue: IntegerValue = object : IntegerValue("AutoCloseMaxDelay", 0, 0, 400) {
         override fun onChanged(oldValue: Int, newValue: Int) {
@@ -90,9 +89,9 @@ class Stealer : Module() {
     private val autoCloseTimer = MSTimer()
     private var nextCloseDelay = TimeUtils.randomDelay(autoCloseMinDelayValue.get(), autoCloseMaxDelayValue.get())
 
-    public var contentReceived = 0
+    var contentReceived = 0
 
-    public var once = false
+    var once = false
 
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
@@ -113,7 +112,10 @@ class Stealer : Module() {
         }
 
         // Chest title
-        if (chestTitleValue.get() && (screen.lowerChestInventory == null || !screen.lowerChestInventory.name.contains(ItemStack(Item.itemRegistry.getObject(ResourceLocation("minecraft:chest"))).displayName))) {
+        if (chestTitleValue.get() && (screen.lowerChestInventory == null || !screen.lowerChestInventory.name.contains(
+                ItemStack(Item.itemRegistry.getObject(ResourceLocation("minecraft:chest"))).displayName
+            ))
+        ) {
             return
         }
 
@@ -132,7 +134,11 @@ class Stealer : Module() {
                     for (slotIndex in 0 until screen.inventoryRows * 9) {
                         val slot = screen.inventorySlots.inventorySlots[slotIndex]
 
-                        if (slot.stack != null && (!onlyItemsValue.get() || slot.stack.item !is ItemBlock) && (!invManager.state || invManager.isUseful(slot.stack, -1))) {
+                        if (slot.stack != null && (!onlyItemsValue.get() || slot.stack.item !is ItemBlock) && (!invManager.state || invManager.isUseful(
+                                slot.stack,
+                                -1
+                            ))
+                        ) {
                             items.add(slot)
                         }
                     }
@@ -150,11 +156,18 @@ class Stealer : Module() {
                 val slot = screen.inventorySlots.inventorySlots[slotIndex]
 
                 if (delayTimer.hasTimePassed(nextDelay) && slot.stack != null &&
-                    (!onlyItemsValue.get() || slot.stack.item !is ItemBlock) && (!invManager.state || invManager.isUseful(slot.stack, -1))) {
+                    (!onlyItemsValue.get() || slot.stack.item !is ItemBlock) && (!invManager.state || invManager.isUseful(
+                        slot.stack,
+                        -1
+                    ))
+                ) {
                     move(screen, slot)
                 }
             }
-        } else if (autoCloseValue.get() && screen.inventorySlots.windowId == contentReceived && autoCloseTimer.hasTimePassed(nextCloseDelay)) {
+        } else if (autoCloseValue.get() && screen.inventorySlots.windowId == contentReceived && autoCloseTimer.hasTimePassed(
+                nextCloseDelay
+            )
+        ) {
             mc.thePlayer.closeScreen()
             nextCloseDelay = TimeUtils.randomDelay(autoCloseMinDelayValue.get(), autoCloseMaxDelayValue.get())
         }
@@ -185,7 +198,11 @@ class Stealer : Module() {
         for (i in 0 until chest.inventoryRows * 9) {
             val slot = chest.inventorySlots.inventorySlots[i]
 
-            if (slot.stack != null && (!onlyItemsValue.get() || slot.stack.item !is ItemBlock) && (!invManager.state || invManager.isUseful(slot.stack, -1))) {
+            if (slot.stack != null && (!onlyItemsValue.get() || slot.stack.item !is ItemBlock) && (!invManager.state || invManager.isUseful(
+                    slot.stack,
+                    -1
+                ))
+            ) {
                 return false
             }
         }

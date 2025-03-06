@@ -1,7 +1,7 @@
-
 package net.nonemc.leaf.utils.math;
 
 import java.math.BigDecimal;
+
 public final class MathUtils {
     public static double round(final double value, final double inc) {
         if (inc == 0.0) return value;
@@ -18,21 +18,25 @@ public final class MathUtils {
         }
     }
 
-    public static float interpolateFloat(float oldValue, float newValue, double interpolationValue){
+    public static float interpolateFloat(float oldValue, float newValue, double interpolationValue) {
         return interpolate(oldValue, newValue, (float) interpolationValue).floatValue();
     }
+
     public static double roundToHalf(double d) {
         return Math.round(d * 2) / 2.0;
     }
+
     public static float clampValue(final float value, final float floor, final float cap) {
         if (value < floor) {
             return floor;
         }
         return Math.min(value, cap);
     }
-    public static Double interpolate(double oldValue, double newValue, double interpolationValue){
+
+    public static Double interpolate(double oldValue, double newValue, double interpolationValue) {
         return (oldValue + (newValue - oldValue) * interpolationValue);
     }
+
     public static float calculateGaussianValue(float x, float sigma) {
         double PI = 3.141592653;
         double output = 1.0 / Math.sqrt(2.0 * PI * (sigma * sigma));

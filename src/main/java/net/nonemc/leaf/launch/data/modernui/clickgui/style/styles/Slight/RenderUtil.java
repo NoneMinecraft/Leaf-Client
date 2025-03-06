@@ -285,13 +285,13 @@ public enum RenderUtil {
         if (d < g) {
             f3 = (int) d;
             d = g;
-            g = (double) f3;
+            g = f3;
         }
 
         if (e < h) {
             f3 = (int) e;
             e = h;
-            h = (double) f3;
+            h = f3;
         }
 
         float f31 = (float) (color >> 24 & 255) / 255.0F;

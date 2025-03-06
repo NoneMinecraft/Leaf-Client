@@ -1,9 +1,9 @@
 package net.nonemc.leaf.utils
 
 import com.google.gson.JsonObject
-import net.nonemc.leaf.Leaf
 import net.minecraft.client.Minecraft
 import net.minecraft.util.IChatComponent
+import net.nonemc.leaf.Leaf
 import org.apache.logging.log4j.LogManager
 import org.lwjgl.opengl.Display
 
@@ -36,7 +36,8 @@ ClientUtils : MinecraftInstance() {
     fun setTitle() {
         Display.setTitle("Leaf Client")
     }
-    fun setTitle(stats:String) {
+
+    fun setTitle(stats: String) {
         Display.setTitle("Leaf Client")
     }
 

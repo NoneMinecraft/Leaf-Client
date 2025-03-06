@@ -1,12 +1,12 @@
 package net.nonemc.leaf.features.module.modules.movement.flys.vanilla
 
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.flys.FlyMode
 import net.nonemc.leaf.utils.MovementUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
-import net.minecraft.network.play.client.C03PacketPlayer
 
 class SmoothVanillaFly : FlyMode("SmoothVanilla") {
     private val speedValue = FloatValue("${valuePrefix}Speed", 2f, 0f, 5f)

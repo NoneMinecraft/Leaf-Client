@@ -1,10 +1,5 @@
-
 package net.nonemc.leaf.utils
 
-import net.nonemc.leaf.event.EventTarget
-import net.nonemc.leaf.event.Listenable
-import net.nonemc.leaf.event.PacketEvent
-import net.nonemc.leaf.utils.timer.MSTimer
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.item.Item
@@ -16,14 +11,37 @@ import net.minecraft.network.play.client.C0DPacketCloseWindow
 import net.minecraft.network.play.client.C0EPacketClickWindow
 import net.minecraft.network.play.client.C16PacketClientStatus
 import net.minecraft.potion.Potion
+import net.nonemc.leaf.event.EventTarget
+import net.nonemc.leaf.event.Listenable
+import net.nonemc.leaf.event.PacketEvent
+import net.nonemc.leaf.utils.timer.MSTimer
 
 object InventoryUtils : MinecraftInstance(), Listenable {
     val CLICK_TIMER = MSTimer()
     val INV_TIMER = MSTimer()
-    val BLOCK_BLACKLIST = listOf(Blocks.enchanting_table, Blocks.chest, Blocks.ender_chest, Blocks.trapped_chest,
-        Blocks.anvil, Blocks.sand, Blocks.web, Blocks.torch, Blocks.crafting_table, Blocks.furnace, Blocks.waterlily,
-        Blocks.dispenser, Blocks.stone_pressure_plate, Blocks.wooden_pressure_plate, Blocks.red_flower, Blocks.flower_pot, Blocks.yellow_flower,
-        Blocks.noteblock, Blocks.dropper, Blocks.standing_banner, Blocks.wall_banner)
+    val BLOCK_BLACKLIST = listOf(
+        Blocks.enchanting_table,
+        Blocks.chest,
+        Blocks.ender_chest,
+        Blocks.trapped_chest,
+        Blocks.anvil,
+        Blocks.sand,
+        Blocks.web,
+        Blocks.torch,
+        Blocks.crafting_table,
+        Blocks.furnace,
+        Blocks.waterlily,
+        Blocks.dispenser,
+        Blocks.stone_pressure_plate,
+        Blocks.wooden_pressure_plate,
+        Blocks.red_flower,
+        Blocks.flower_pot,
+        Blocks.yellow_flower,
+        Blocks.noteblock,
+        Blocks.dropper,
+        Blocks.standing_banner,
+        Blocks.wall_banner
+    )
 
     fun findItem(startSlot: Int, endSlot: Int, item: Item): Int {
         for (i in startSlot until endSlot) {
@@ -87,16 +105,13 @@ object InventoryUtils : MinecraftInstance(), Listenable {
     }
 
     fun isPositivePotionEffect(id: Int): Boolean {
-        if (id == Potion.regeneration.id || id == Potion.moveSpeed.id ||
-            id == Potion.heal.id || id == Potion.nightVision.id ||
-            id == Potion.jump.id || id == Potion.invisibility.id ||
-            id == Potion.resistance.id || id == Potion.waterBreathing.id ||
-            id == Potion.absorption.id || id == Potion.digSpeed.id ||
-            id == Potion.damageBoost.id || id == Potion.healthBoost.id ||
-            id == Potion.fireResistance.id) {
-            return true
-        }
-        return false
+        return id == Potion.regeneration.id || id == Potion.moveSpeed.id ||
+                id == Potion.heal.id || id == Potion.nightVision.id ||
+                id == Potion.jump.id || id == Potion.invisibility.id ||
+                id == Potion.resistance.id || id == Potion.waterBreathing.id ||
+                id == Potion.absorption.id || id == Potion.digSpeed.id ||
+                id == Potion.damageBoost.id || id == Potion.healthBoost.id ||
+                id == Potion.fireResistance.id
     }
 
     fun isPositivePotion(item: ItemPotion, stack: ItemStack): Boolean {
@@ -110,7 +125,7 @@ object InventoryUtils : MinecraftInstance(), Listenable {
     }
 
     fun getItemDurability(stack: ItemStack): Float {
-        if (stack.isItemStackDamageable && stack.maxDamage> 0) {
+        if (stack.isItemStackDamageable && stack.maxDamage > 0) {
             return (stack.maxDamage - stack.itemDamage) / stack.maxDamage.toFloat()
         }
         return 1f

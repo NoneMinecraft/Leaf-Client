@@ -1,5 +1,9 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.tenacity;
 
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import net.nonemc.leaf.features.module.ModuleCategory;
 import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.logo.info;
 import net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.tenacity.impl.SettingComponents;
@@ -11,20 +15,16 @@ import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Main;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.DrRenderUtils;
 import net.nonemc.leaf.ui.client.hud.designer.GuiHudDesigner;
 import net.nonemc.leaf.utils.render.RenderUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TenacityClickGUI extends GuiScreen {
+    private final ResourceLocation hudIcon = new ResourceLocation("leaf/ui/clickgui/hud.png");
     private Animation openingAnimation;
     private EaseBackIn fadeAnimation;
     private DecelerateAnimation configHover;
-    private final ResourceLocation hudIcon = new ResourceLocation("leaf/ui/clickgui/hud.png");
     private List<MainScreen> categoryPanels;
 
     @Override

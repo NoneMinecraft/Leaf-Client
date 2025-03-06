@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.misc
 
 import java.util.*

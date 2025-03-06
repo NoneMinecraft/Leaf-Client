@@ -20,7 +20,8 @@ object MathUtils {
     // TODO: Solve the coordinates of the intersection of two circles (there will be time at the end of the month)（TargetStrafe）
     // 2 + 2 is 4 - 1  thats 3 quick maffs
 
-    fun lerp(a: Array<Double>, b: Array<Double>, t: Double) = arrayOf(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+    fun lerp(a: Array<Double>, b: Array<Double>, t: Double) =
+        arrayOf(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
 
     fun distanceSq(a: Array<Double>, b: Array<Double>): Double = (a[0] - b[0]).pow(2) + (a[1] - b[1]).pow(2)
 
@@ -29,7 +30,15 @@ object MathUtils {
         if (l2 == 0.0) {
             return distanceSq(p, v)
         }
-        return distanceSq(p, lerp(v, w, (((p[0] - v[0]) * (w[0] - v[0]) + (p[1] - v[1]) * (w[1] - v[1])) / l2).coerceAtMost(1.0).coerceAtLeast(0.0)))
+        return distanceSq(
+            p,
+            lerp(
+                v,
+                w,
+                (((p[0] - v[0]) * (w[0] - v[0]) + (p[1] - v[1]) * (w[1] - v[1])) / l2).coerceAtMost(1.0)
+                    .coerceAtLeast(0.0)
+            )
+        )
     }
 
     fun Float.inRange(base: Float, range: Float): Boolean {

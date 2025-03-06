@@ -12,7 +12,7 @@ import net.nonemc.leaf.features.module.ModuleManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Main{
+public class Main {
 
     public static int categoryCount;
 

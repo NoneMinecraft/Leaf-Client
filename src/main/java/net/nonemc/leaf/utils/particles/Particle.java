@@ -1,17 +1,15 @@
-
 package net.nonemc.leaf.utils.particles;
 
-import net.nonemc.leaf.utils.timer.ParticleTimer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockLiquid;
+import net.nonemc.leaf.utils.timer.ParticleTimer;
 
 public class Particle {
 
-    private final ParticleTimer removeTimer = new ParticleTimer();
-
     public final Vec3 position;
+    private final ParticleTimer removeTimer = new ParticleTimer();
     private final Vec3 delta;
 
     public Particle(final Vec3 position) {

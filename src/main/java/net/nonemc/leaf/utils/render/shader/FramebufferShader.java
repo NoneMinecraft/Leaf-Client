@@ -1,10 +1,10 @@
 package net.nonemc.leaf.utils.render.shader;
 
-import net.nonemc.leaf.injection.access.StaticStorage;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.shader.Framebuffer;
+import net.nonemc.leaf.injection.access.StaticStorage;
 
 import java.awt.*;
 
@@ -75,7 +75,7 @@ public abstract class FramebufferShader extends Shader {
      * @author TheSlowly
      */
     public Framebuffer setupFrameBuffer(Framebuffer frameBuffer) {
-        if(frameBuffer != null)
+        if (frameBuffer != null)
             frameBuffer.deleteFramebuffer();
 
         frameBuffer = new Framebuffer(mc.displayWidth, mc.displayHeight, true);

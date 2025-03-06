@@ -4,15 +4,15 @@
  */
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.util.MathHelper
+import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.StrafeEvent
 import net.nonemc.leaf.event.UpdateEvent
-import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.utils.RotationUtils
-import net.minecraft.util.MathHelper
+import net.nonemc.leaf.value.BoolValue
 
 @ModuleInfo(name = "StrafeFix", category = ModuleCategory.MOVEMENT)
 object StrafeFix : Module() {
@@ -45,7 +45,7 @@ object StrafeFix : Module() {
         silentFix = isSilent
         doFix = runStrafeFix
         isOverwrited = true
-}
+    }
 
     fun updateOverwrite() {
         isOverwrited = false
@@ -63,8 +63,11 @@ object StrafeFix : Module() {
         var friction = event.friction
         var factor = strafe * strafe + forward * forward
 
-        var angleDiff = ((MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw - yaw - 22.5f - 135.0f) + 180.0).toDouble() / (45.0).toDouble()).toInt()
-        var calcYaw = if(isSilent) { yaw + 45.0f * angleDiff.toFloat() } else yaw
+        var angleDiff =
+            ((MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw - yaw - 22.5f - 135.0f) + 180.0).toDouble() / (45.0).toDouble()).toInt()
+        var calcYaw = if (isSilent) {
+            yaw + 45.0f * angleDiff.toFloat()
+        } else yaw
 
         var calcMoveDir = Math.max(Math.abs(strafe), Math.abs(forward)).toFloat()
         calcMoveDir = calcMoveDir * calcMoveDir
@@ -73,7 +76,10 @@ object StrafeFix : Module() {
         if (isSilent) {
             when (angleDiff) {
                 1, 3, 5, 7, 9 -> {
-                    if ((Math.abs(forward) > 0.005 || Math.abs(strafe) > 0.005) && !(Math.abs(forward) > 0.005 && Math.abs(strafe) > 0.005)) {
+                    if ((Math.abs(forward) > 0.005 || Math.abs(strafe) > 0.005) && !(Math.abs(forward) > 0.005 && Math.abs(
+                            strafe
+                        ) > 0.005)
+                    ) {
                         friction = friction / calcMultiplier
                     } else if (Math.abs(forward) > 0.005 && Math.abs(strafe) > 0.005) {
                         friction = friction * calcMultiplier

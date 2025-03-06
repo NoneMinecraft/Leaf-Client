@@ -1,6 +1,8 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.client.entity.EntityOtherPlayerMP
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -12,9 +14,6 @@ import net.nonemc.leaf.utils.MovementUtils
 import net.nonemc.leaf.utils.PacketUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
-import net.minecraft.client.entity.EntityOtherPlayerMP
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 
 @ModuleInfo(name = "FreeCam", category = ModuleCategory.RENDER, autoDisable = EnumAutoDisableType.RESPAWN)
 class FreeCam : Module() {
@@ -54,7 +53,13 @@ class FreeCam : Module() {
 
     override fun onDisable() {
         if (mc.thePlayer == null || fakePlayer == null) return
-        mc.thePlayer.setPositionAndRotation(fakePlayer!!.posX, fakePlayer!!.posY, fakePlayer!!.posZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)
+        mc.thePlayer.setPositionAndRotation(
+            fakePlayer!!.posX,
+            fakePlayer!!.posY,
+            fakePlayer!!.posZ,
+            mc.thePlayer.rotationYaw,
+            mc.thePlayer.rotationPitch
+        )
         mc.theWorld.removeEntityFromWorld(fakePlayer!!.entityId)
         fakePlayer = null
         mc.thePlayer.motionX = motionX
@@ -84,7 +89,16 @@ class FreeCam : Module() {
             if (packet is C03PacketPlayer.C04PacketPlayerPosition || packet is C03PacketPlayer.C05PacketPlayerLook || packet is C03PacketPlayer.C06PacketPlayerPosLook) {
                 if (packetCount >= 20) {
                     packetCount = 0
-                    PacketUtils.sendPacketNoEvent(C03PacketPlayer.C06PacketPlayerPosLook(fakePlayer!!.posX, fakePlayer!!.posY, fakePlayer!!.posZ, fakePlayer!!.rotationYaw, fakePlayer!!.rotationPitch, fakePlayer!!.onGround))
+                    PacketUtils.sendPacketNoEvent(
+                        C03PacketPlayer.C06PacketPlayerPosLook(
+                            fakePlayer!!.posX,
+                            fakePlayer!!.posY,
+                            fakePlayer!!.posZ,
+                            fakePlayer!!.rotationYaw,
+                            fakePlayer!!.rotationPitch,
+                            fakePlayer!!.onGround
+                        )
+                    )
                 } else {
                     packetCount++
                     PacketUtils.sendPacketNoEvent(C03PacketPlayer(fakePlayer!!.onGround))
@@ -102,7 +116,16 @@ class FreeCam : Module() {
             motionY = 0.0
             motionZ = 0.0
             // apply the flag to bypass some anticheat
-            PacketUtils.sendPacketNoEvent(C03PacketPlayer.C06PacketPlayerPosLook(fakePlayer!!.posX, fakePlayer!!.posY, fakePlayer!!.posZ, fakePlayer!!.rotationYaw, fakePlayer!!.rotationPitch, fakePlayer!!.onGround))
+            PacketUtils.sendPacketNoEvent(
+                C03PacketPlayer.C06PacketPlayerPosLook(
+                    fakePlayer!!.posX,
+                    fakePlayer!!.posY,
+                    fakePlayer!!.posZ,
+                    fakePlayer!!.rotationYaw,
+                    fakePlayer!!.rotationPitch,
+                    fakePlayer!!.onGround
+                )
+            )
 
             event.cancelEvent()
         }

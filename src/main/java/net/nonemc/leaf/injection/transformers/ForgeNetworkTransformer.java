@@ -1,10 +1,9 @@
-
 package net.nonemc.leaf.injection.transformers;
 
-import net.nonemc.leaf.features.special.AntiForge;
-import net.nonemc.leaf.utils.ASMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.nonemc.leaf.features.special.AntiForge;
+import net.nonemc.leaf.utils.ASMUtils;
 import org.objectweb.asm.tree.*;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -13,6 +12,10 @@ import static org.objectweb.asm.Opcodes.*;
  * Transform bytecode of classes
  */
 public class ForgeNetworkTransformer implements IClassTransformer {
+
+    public static boolean returnMethod() {
+        return AntiForge.INSTANCE.getEnabled() && AntiForge.INSTANCE.getBlockFML() && !Minecraft.getMinecraft().isIntegratedServerRunning();
+    }
 
     /**
      * Transform a class
@@ -24,10 +27,10 @@ public class ForgeNetworkTransformer implements IClassTransformer {
      */
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if(System.getProperty("dev-mode")!=null)
+        if (System.getProperty("dev-mode") != null)
             return basicClass;
 
-        if(name.equals("net.minecraftforge.fml.common.network.handshake.NetworkDispatcher")) {
+        if (name.equals("net.minecraftforge.fml.common.network.handshake.NetworkDispatcher")) {
             try {
                 final ClassNode classNode = ASMUtils.INSTANCE.toClassNode(basicClass);
 
@@ -44,12 +47,12 @@ public class ForgeNetworkTransformer implements IClassTransformer {
                 });
 
                 return ASMUtils.INSTANCE.toBytes(classNode);
-            }catch(final Throwable throwable) {
+            } catch (final Throwable throwable) {
                 throwable.printStackTrace();
             }
         }
 
-        if(name.equals("net.minecraftforge.fml.common.network.handshake.HandshakeMessageHandler")) {
+        if (name.equals("net.minecraftforge.fml.common.network.handshake.HandshakeMessageHandler")) {
             try {
                 final ClassNode classNode = ASMUtils.INSTANCE.toClassNode(basicClass);
 
@@ -68,15 +71,11 @@ public class ForgeNetworkTransformer implements IClassTransformer {
                 });
 
                 return ASMUtils.INSTANCE.toBytes(classNode);
-            }catch(final Throwable throwable) {
+            } catch (final Throwable throwable) {
                 throwable.printStackTrace();
             }
         }
 
         return basicClass;
-    }
-
-    public static boolean returnMethod() {
-        return AntiForge.INSTANCE.getEnabled() && AntiForge.INSTANCE.getBlockFML() && !Minecraft.getMinecraft().isIntegratedServerRunning();
     }
 }

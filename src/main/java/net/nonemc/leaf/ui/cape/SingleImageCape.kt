@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.ui.cape
 
 import net.minecraft.client.Minecraft
@@ -7,7 +6,7 @@ import net.minecraft.util.ResourceLocation
 import java.awt.image.BufferedImage
 
 class SingleImageCape(override val name: String, val image: BufferedImage) : ICape {
-    override val cape = ResourceLocation("leaf/cape/${name.lowercase().replace(" ","_")}")
+    override val cape = ResourceLocation("leaf/cape/${name.lowercase().replace(" ", "_")}")
 
     init {
         Minecraft.getMinecraft().textureManager.loadTexture(cape, DynamicTexture(image))

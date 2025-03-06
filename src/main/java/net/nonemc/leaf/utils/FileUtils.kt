@@ -15,10 +15,12 @@ object FileUtils {
         IOUtils.copy(FileUtils::class.java.classLoader.getResourceAsStream(name), fos)
         fos.close()
     }
-    fun writeFile(str:String,path: String){
-        val file=File(path)
+
+    fun writeFile(str: String, path: String) {
+        val file = File(path)
         file.writeText(str, Charsets.UTF_8)
     }
+
     fun extractZip(zipStream: InputStream, folder: File) {
         if (!folder.exists()) {
             folder.mkdir()

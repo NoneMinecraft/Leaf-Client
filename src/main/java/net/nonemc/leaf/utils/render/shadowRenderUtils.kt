@@ -1,16 +1,15 @@
-
 package net.nonemc.leaf.utils.render
 
-import net.nonemc.leaf.features.module.modules.client.HudShadows
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.*
+import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.util.*
+import net.nonemc.leaf.features.module.modules.client.HudShadows
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL11.GL_BLEND
 import org.lwjgl.opengl.GL11.glDisable
 import org.lwjgl.opengl.GL11.glEnable
-import net.minecraft.client.renderer.GlStateManager
 
 object shadowRenderUtils {
     @JvmStatic
@@ -21,9 +20,9 @@ object shadowRenderUtils {
 
     @JvmStatic
     private val DISPLAY_LISTS_2D = IntArray(4)
-    
+
     @JvmStatic
-    fun drawGlowWithCustomAlpha (x: Float, y: Float, width: Float, height: Float, alpha: Float) {
+    fun drawGlowWithCustomAlpha(x: Float, y: Float, width: Float, height: Float, alpha: Float) {
         drawTexturedRectWithCustomAlpha(x - 9, y - 9, 9f, 9f, "glowpaneltopleft", alpha)
         drawTexturedRectWithCustomAlpha(x - 9, y + height, 9f, 9f, "glowpanelbottomleft", alpha)
         drawTexturedRectWithCustomAlpha(x + width, y + height, 9f, 9f, "glowpanelbottomright", alpha)
@@ -82,6 +81,7 @@ object shadowRenderUtils {
         GlStateManager.resetColor()
         glPopMatrix()
     }
+
     @JvmStatic
     fun drawTexturedRect(x: Float, y: Float, width: Float, height: Float, image: String) {
         glPushMatrix()
@@ -105,6 +105,7 @@ object shadowRenderUtils {
         if (!disableAlpha) glEnable(GL_ALPHA_TEST)
         glPopMatrix()
     }
+
     @JvmStatic
     fun drawModalRectWithCustomSizedTexture(
         x: Float,

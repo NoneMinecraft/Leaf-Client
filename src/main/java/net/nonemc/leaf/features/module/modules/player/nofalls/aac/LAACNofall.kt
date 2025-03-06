@@ -10,6 +10,7 @@ class LAACNofall : NoFallMode("LAAC") {
     override fun onEnable() {
         jumped = false
     }
+
     override fun onNoFall(event: UpdateEvent) {
         if (!jumped && mc.thePlayer.onGround && !mc.thePlayer.isOnLadder && !mc.thePlayer.isInWater && !mc.thePlayer.isInWeb) {
             mc.thePlayer.motionY = -6.0

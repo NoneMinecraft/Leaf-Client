@@ -48,6 +48,7 @@ public abstract class MixinServerListEntryNormal {
 
     @Shadow
     public abstract void prepareServerIcon();
+
     @Shadow
     public abstract boolean func_178013_b();
 
@@ -121,7 +122,7 @@ public abstract class MixinServerListEntryNormal {
             }
         } else {
             k = 1;
-            l = (int) (Minecraft.getSystemTime() / 100L + (long) (p_drawEntry_1_ * 2) & 7L);
+            l = (int) (Minecraft.getSystemTime() / 100L + (long) (p_drawEntry_1_ * 2L) & 7L);
             if (l > 4) {
                 l = 8 - l;
             }

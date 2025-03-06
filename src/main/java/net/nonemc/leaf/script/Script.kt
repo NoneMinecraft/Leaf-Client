@@ -38,11 +38,11 @@ class Script(private val scriptFile: File) : MinecraftInstance() {
     private val registeredModules = mutableListOf<Module>()
     private val registeredCommands = mutableListOf<Command>()
     fun getState(): Boolean {
-        return isEnable;
+        return isEnable
     }
 
     fun getRegisteredModules(): MutableList<Module> {
-        return registeredModules;
+        return registeredModules
     }
 
     init {
@@ -177,8 +177,8 @@ class Script(private val scriptFile: File) : MinecraftInstance() {
      * Calls the handler of a registered event.
      * @param eventName Name of the event to be called.
      */
-    public fun callEvent(eventName: String) {
-        when(eventName) {
+    fun callEvent(eventName: String) {
+        when (eventName) {
             "enable" -> isEnable = true
             "disable" -> isEnable = false
         }

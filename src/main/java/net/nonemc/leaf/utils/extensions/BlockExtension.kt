@@ -1,12 +1,12 @@
 package net.nonemc.leaf.utils.extensions
 
-import net.nonemc.leaf.utils.ClientUtils.mc
-import net.nonemc.leaf.utils.block.BlockUtils
 import net.minecraft.block.Block
 import net.minecraft.util.AxisAlignedBB
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
+import net.nonemc.leaf.utils.ClientUtils.mc
+import net.nonemc.leaf.utils.block.BlockUtils
 
 /**
  * Get block by position
@@ -52,7 +52,11 @@ fun searchBlocks(radius: Int): Map<BlockPos, Block> {
     for (x in radius downTo -radius + 1)
         for (y in radius downTo -radius + 1)
             for (z in radius downTo -radius + 1) {
-                val blockPos = BlockPos(mc.thePlayer.posX.toInt() + x, mc.thePlayer.posY.toInt() + y, mc.thePlayer.posZ.toInt() + z)
+                val blockPos = BlockPos(
+                    mc.thePlayer.posX.toInt() + x,
+                    mc.thePlayer.posY.toInt() + y,
+                    mc.thePlayer.posZ.toInt() + z
+                )
                 val block = blockPos.getBlock() ?: continue
 
                 blocks[blockPos] = block

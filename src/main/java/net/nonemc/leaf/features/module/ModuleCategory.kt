@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.features.module
 
 import lombok.Getter

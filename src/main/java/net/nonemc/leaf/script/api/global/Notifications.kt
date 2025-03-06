@@ -10,7 +10,7 @@ object Notifications {
     @JvmStatic
     fun create(name: String, content: String, notify: String, time: Int) {
         var notifytype = NotifyType.INFO
-        when(notify.lowercase()) {
+        when (notify.lowercase()) {
             "success" -> notifytype = NotifyType.SUCCESS
 
             "info" -> notifytype = NotifyType.INFO
@@ -19,6 +19,13 @@ object Notifications {
 
             "warning" -> notifytype = NotifyType.WARNING
         }
-        Leaf.hud.addNotification(Notification(name ?: "Invalid String", content ?: "Invalid String", notifytype?: NotifyType.WARNING, time?: 1000))
+        Leaf.hud.addNotification(
+            Notification(
+                name ?: "Invalid String",
+                content ?: "Invalid String",
+                notifytype ?: NotifyType.WARNING,
+                time ?: 1000
+            )
+        )
     }
 }

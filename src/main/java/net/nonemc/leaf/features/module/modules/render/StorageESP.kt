@@ -1,6 +1,7 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
+import net.minecraft.tileentity.*
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render2DEvent
 import net.nonemc.leaf.event.Render3DEvent
@@ -13,15 +14,18 @@ import net.nonemc.leaf.utils.render.shader.shaders.OutlineShader
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
-import net.minecraft.tileentity.*
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
 @ModuleInfo(name = "StorageESP", category = ModuleCategory.RENDER)
 class StorageESP : Module() {
-    private val modeValue = ListValue("Mode", arrayOf("Box", "OtherBox", "Outline", "ShaderOutline", "ShaderGlow", "2D", "WireFrame"), "Outline")
-    private val outlineWidthValue = FloatValue("Outline-Width", 3f, 0.5f, 5f).displayable { modeValue.equals("Outline") }
+    private val modeValue = ListValue(
+        "Mode",
+        arrayOf("Box", "OtherBox", "Outline", "ShaderOutline", "ShaderGlow", "2D", "WireFrame"),
+        "Outline"
+    )
+    private val outlineWidthValue =
+        FloatValue("Outline-Width", 3f, 0.5f, 5f).displayable { modeValue.equals("Outline") }
     private val chestValue = BoolValue("Chest", true)
     private val enderChestValue = BoolValue("EnderChest", true)
     private val furnaceValue = BoolValue("Furnace", true)
@@ -46,7 +50,13 @@ class StorageESP : Module() {
             for (tileEntity in mc.theWorld.loadedTileEntityList) {
                 val color = getColor(tileEntity) ?: continue
                 when (mode.lowercase()) {
-                    "otherbox", "box" -> RenderUtils.drawBlockBox(tileEntity.pos, color, !mode.equals("otherbox", ignoreCase = true), true, outlineWidthValue.get())
+                    "otherbox", "box" -> RenderUtils.drawBlockBox(
+                        tileEntity.pos,
+                        color,
+                        !mode.equals("otherbox", ignoreCase = true),
+                        true,
+                        outlineWidthValue.get()
+                    )
 
                     "2d" -> RenderUtils.draw2D(tileEntity.pos, color.rgb, Color.BLACK.rgb)
 
@@ -104,7 +114,13 @@ class StorageESP : Module() {
         for ((key, value) in entityMap) {
             shader.startDraw(partialTicks)
             for (tileEntity in value) {
-                TileEntityRendererDispatcher.instance.renderTileEntityAt(tileEntity, tileEntity.pos.x - renderManager.renderPosX, tileEntity.pos.y - renderManager.renderPosY, tileEntity.pos.z - renderManager.renderPosZ, partialTicks)
+                TileEntityRendererDispatcher.instance.renderTileEntityAt(
+                    tileEntity,
+                    tileEntity.pos.x - renderManager.renderPosX,
+                    tileEntity.pos.y - renderManager.renderPosY,
+                    tileEntity.pos.z - renderManager.renderPosZ,
+                    partialTicks
+                )
             }
             shader.stopDraw(key, if (mode.equals("shaderglow", ignoreCase = true)) 2.5f else 1.5f, 1f)
         }

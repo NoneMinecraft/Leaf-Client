@@ -1,5 +1,5 @@
-
 package net.nonemc.leaf.utils.render
+
 class Animation(
     val type: EaseUtils.EnumEasingType,
     val order: EaseUtils.EnumEasingOrder,
@@ -24,18 +24,19 @@ class Animation(
 
     val value: Double
         get() = when (state) {
-                EnumAnimationState.NOT_STARTED -> from
-                EnumAnimationState.DURING -> {
-                    val percent = (System.currentTimeMillis() - startTime) / duration.toDouble()
-                    if (percent> 1) {
-                        state = EnumAnimationState.STOPPED
-                        to
-                    } else {
-                        from + ((to - from) * EaseUtils.apply(type, order, percent))
-                    }
+            EnumAnimationState.NOT_STARTED -> from
+            EnumAnimationState.DURING -> {
+                val percent = (System.currentTimeMillis() - startTime) / duration.toDouble()
+                if (percent > 1) {
+                    state = EnumAnimationState.STOPPED
+                    to
+                } else {
+                    from + ((to - from) * EaseUtils.apply(type, order, percent))
                 }
-                EnumAnimationState.STOPPED -> to
             }
+
+            EnumAnimationState.STOPPED -> to
+        }
 
     enum class EnumAnimationState {
         NOT_STARTED,

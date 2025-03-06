@@ -32,16 +32,17 @@ class JumpEvent(var motion: Float) : CancellableEvent()
 class KeyEvent(val key: Int) : Event()
 
 class MotionEvent(val eventState: EventState) : Event() {
-    fun isPre() : Boolean {
-    return eventState == EventState.PRE
+    fun isPre(): Boolean {
+        return eventState == EventState.PRE
     }
 }
+
 class GameLoopEvent : Event()
 data class EntityMovementEvent(val movedEntity: Entity) : Event()
 
 class UpdateModelEvent(val player: EntityPlayer, val model: ModelPlayer) : Event()
 
-class EntityDamageEvent(val damagedEntity: Entity): Event()
+class EntityDamageEvent(val damagedEntity: Entity) : Event()
 
 class SlowDownEvent(var strafe: Float, var forward: Float) : Event()
 
@@ -91,4 +92,5 @@ class UpdateEvent : Event()
 
 class WorldEvent(val worldClient: WorldClient?) : Event()
 
-class ClickWindowEvent(val windowId: Int, val slotId: Int, val mouseButtonClicked: Int, val mode: Int) : CancellableEvent()
+class ClickWindowEvent(val windowId: Int, val slotId: Int, val mouseButtonClicked: Int, val mode: Int) :
+    CancellableEvent()

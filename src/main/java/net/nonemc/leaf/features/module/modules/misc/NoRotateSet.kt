@@ -1,6 +1,8 @@
-
 package net.nonemc.leaf.features.module.modules.misc
 
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook
+import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.features.module.Module
@@ -9,9 +11,6 @@ import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.utils.Rotation
 import net.nonemc.leaf.utils.RotationUtils
 import net.nonemc.leaf.value.BoolValue
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.network.play.client.C03PacketPlayer.C05PacketPlayerLook
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 
 @ModuleInfo(name = "NoRotateSet", category = ModuleCategory.MISC)
 class NoRotateSet : Module() {
@@ -30,20 +29,28 @@ class NoRotateSet : Module() {
 
         if (packet is S08PacketPlayerPosLook) {
             if ((noZeroValue.get() && packet.getYaw() == 0F && packet.getPitch() == 0F) ||
-                (noLoadingValue.get() && mc.netHandler?.doneLoadingTerrain == false)) {
+                (noLoadingValue.get() && mc.netHandler?.doneLoadingTerrain == false)
+            ) {
                 return
             }
 
             if (illegalRotationValue.get() || packet.getPitch() <= 90 && packet.getPitch() >= -90 &&
-                    RotationUtils.serverRotation != null && packet.getYaw() != RotationUtils.serverRotation.yaw &&
-                    packet.getPitch() != RotationUtils.serverRotation.pitch) {
+                RotationUtils.serverRotation != null && packet.getYaw() != RotationUtils.serverRotation.yaw &&
+                packet.getPitch() != RotationUtils.serverRotation.pitch
+            ) {
 
                 if (confirmValue.get()) {
-                    mc.netHandler.addToSendQueue(C05PacketPlayerLook(packet.getYaw(), packet.getPitch(), mc.thePlayer.onGround))
+                    mc.netHandler.addToSendQueue(
+                        C05PacketPlayerLook(
+                            packet.getYaw(),
+                            packet.getPitch(),
+                            mc.thePlayer.onGround
+                        )
+                    )
                 }
             }
 
-            if(!overwriteTeleportValue.get()) {
+            if (!overwriteTeleportValue.get()) {
                 lastRotation = Rotation(packet.getYaw(), packet.getPitch())
             }
             packet.yaw = mc.thePlayer.rotationYaw

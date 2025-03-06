@@ -1,9 +1,9 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.packet
 
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
-import net.minecraft.network.play.client.C03PacketPlayer
 
 class Packet1Nofall : NoFallMode("Packet1") {
     private var packet1Count = 0
@@ -12,6 +12,7 @@ class Packet1Nofall : NoFallMode("Packet1") {
         packet1Count = 0
         packetModify = false
     }
+
     override fun onNoFall(event: UpdateEvent) {
         if (mc.thePlayer.fallDistance.toInt() / 3 > packet1Count) {
             packet1Count = mc.thePlayer.fallDistance.toInt() / 3
@@ -23,8 +24,8 @@ class Packet1Nofall : NoFallMode("Packet1") {
     }
 
     override fun onPacket(event: PacketEvent) {
-        if(event.packet is C03PacketPlayer) {
-            if(packetModify) {
+        if (event.packet is C03PacketPlayer) {
+            if (packetModify) {
                 event.packet.onGround = true
                 packetModify = false
             }

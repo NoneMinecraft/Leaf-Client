@@ -5,9 +5,9 @@
  */
 package net.nonemc.leaf.ui.client.hud.designer
 
+import net.minecraft.client.gui.GuiScreen
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.ui.client.hud.element.Element
-import net.minecraft.client.gui.GuiScreen
 import org.lwjgl.input.Keyboard
 import org.lwjgl.input.Mouse
 import kotlin.math.min
@@ -39,8 +39,11 @@ class GuiHudDesigner : GuiScreen() {
 
         if (wheel != 0) {
             for (element in Leaf.hud.elements) {
-                if (element.isInBorder(mouseX / element.scale - element.renderX,
-                                mouseY / element.scale - element.renderY)) {
+                if (element.isInBorder(
+                        mouseX / element.scale - element.renderX,
+                        mouseY / element.scale - element.renderY
+                    )
+                ) {
                     element.scale = element.scale + if (wheel > 0) 0.05f else -0.05f
                     break
                 }
@@ -60,14 +63,19 @@ class GuiHudDesigner : GuiScreen() {
         Leaf.hud.handleMouseClick(mouseX, mouseY, mouseButton)
 
         if (!(mouseX >= editorPanel.x && mouseX <= editorPanel.x + editorPanel.width && mouseY >= editorPanel.y &&
-                        mouseY <= editorPanel.y + min(editorPanel.realHeight, 200))) {
+                    mouseY <= editorPanel.y + min(editorPanel.realHeight, 200))
+        ) {
             selectedElement = null
             editorPanel.create = false
         }
 
         if (mouseButton == 0) {
             for (element in Leaf.hud.elements) {
-                if (element.isInBorder(mouseX / element.scale - element.renderX, mouseY / element.scale - element.renderY)) {
+                if (element.isInBorder(
+                        mouseX / element.scale - element.renderX,
+                        mouseY / element.scale - element.renderY
+                    )
+                ) {
                     selectedElement = element
                     break
                 }

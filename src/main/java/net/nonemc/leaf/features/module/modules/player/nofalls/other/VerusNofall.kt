@@ -1,9 +1,9 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.other
 
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
-import net.minecraft.network.play.client.C03PacketPlayer
 
 class VerusNofall : NoFallMode("Verus") {
     private var needSpoof = false
@@ -16,11 +16,12 @@ class VerusNofall : NoFallMode("Verus") {
     }
 
     override fun onPacket(event: PacketEvent) {
-        if(event.packet is C03PacketPlayer && needSpoof) {
+        if (event.packet is C03PacketPlayer && needSpoof) {
             event.packet.onGround = true
             needSpoof = false
         }
     }
+
     override fun onNoFall(event: UpdateEvent) {
         if (mc.thePlayer.fallDistance - mc.thePlayer.motionY > 3) {
             mc.thePlayer.motionY = 0.0

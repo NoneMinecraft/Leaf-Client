@@ -1,6 +1,6 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.client.renderer.GlStateManager
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render2DEvent
@@ -14,7 +14,6 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -46,10 +45,42 @@ class Crosshair : Module() {
         val gap = gapValue.get()
         val isMoving = dynamicValue.get() && MovementUtils.isMoving()
         GL11.glPushMatrix()
-        RenderUtils.drawBorderedRect(sr.scaledWidth / 2f - width, sr.scaledHeight / 2f - gap - size - if (isMoving) 2 else 0, sr.scaledWidth / 2f + 1.0f + width, sr.scaledHeight / 2f - gap - if (isMoving) 2 else 0, 0.5f, Color(0, 0, 0).rgb, crosshairColor.rgb)
-        RenderUtils.drawBorderedRect(sr.scaledWidth / 2f - width, sr.scaledHeight / 2f + gap + 1 + (if (isMoving) 2 else 0) - 0.15f, sr.scaledWidth / 2f + 1.0f + width, sr.scaledHeight / 2f + 1 + gap + size + (if (isMoving) 2 else 0) - 0.15f, 0.5f, Color(0, 0, 0).rgb, crosshairColor.rgb)
-        RenderUtils.drawBorderedRect(sr.scaledWidth / 2f - gap - size - (if (isMoving) 2 else 0) + 0.15f, sr.scaledHeight / 2f - width, sr.scaledWidth / 2f - gap - (if (isMoving) 2 else 0) + 0.15f, sr.scaledHeight / 2 + 1.0f + width, 0.5f, Color(0, 0, 0).rgb, crosshairColor.rgb)
-        RenderUtils.drawBorderedRect(sr.scaledWidth / 2f + 1 + gap + if (isMoving) 2 else 0, sr.scaledHeight / 2f - width, sr.scaledWidth / 2f + size + gap + 1.0f + if (isMoving) 2 else 0, sr.scaledHeight / 2 + 1.0f + width, 0.5f, Color(0, 0, 0).rgb, crosshairColor.rgb)
+        RenderUtils.drawBorderedRect(
+            sr.scaledWidth / 2f - width,
+            sr.scaledHeight / 2f - gap - size - if (isMoving) 2 else 0,
+            sr.scaledWidth / 2f + 1.0f + width,
+            sr.scaledHeight / 2f - gap - if (isMoving) 2 else 0,
+            0.5f,
+            Color(0, 0, 0).rgb,
+            crosshairColor.rgb
+        )
+        RenderUtils.drawBorderedRect(
+            sr.scaledWidth / 2f - width,
+            sr.scaledHeight / 2f + gap + 1 + (if (isMoving) 2 else 0) - 0.15f,
+            sr.scaledWidth / 2f + 1.0f + width,
+            sr.scaledHeight / 2f + 1 + gap + size + (if (isMoving) 2 else 0) - 0.15f,
+            0.5f,
+            Color(0, 0, 0).rgb,
+            crosshairColor.rgb
+        )
+        RenderUtils.drawBorderedRect(
+            sr.scaledWidth / 2f - gap - size - (if (isMoving) 2 else 0) + 0.15f,
+            sr.scaledHeight / 2f - width,
+            sr.scaledWidth / 2f - gap - (if (isMoving) 2 else 0) + 0.15f,
+            sr.scaledHeight / 2 + 1.0f + width,
+            0.5f,
+            Color(0, 0, 0).rgb,
+            crosshairColor.rgb
+        )
+        RenderUtils.drawBorderedRect(
+            sr.scaledWidth / 2f + 1 + gap + if (isMoving) 2 else 0,
+            sr.scaledHeight / 2f - width,
+            sr.scaledWidth / 2f + size + gap + 1.0f + if (isMoving) 2 else 0,
+            sr.scaledHeight / 2 + 1.0f + width,
+            0.5f,
+            Color(0, 0, 0).rgb,
+            crosshairColor.rgb
+        )
         GL11.glPopMatrix()
         GlStateManager.resetColor()
         val target = Leaf.combatManager.target/* ?: RaycastUtils.raycastEntity(Reach.hitReach.toDouble()) {
@@ -59,7 +90,12 @@ class Crosshair : Module() {
             GL11.glPushMatrix()
             GlStateManager.enableBlend()
             GlStateManager.disableTexture2D()
-            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO)
+            GlStateManager.tryBlendFuncSeparate(
+                GL11.GL_SRC_ALPHA,
+                GL11.GL_ONE_MINUS_SRC_ALPHA,
+                GL11.GL_ONE,
+                GL11.GL_ZERO
+            )
             GL11.glColor4f(1f, 1f, 1f, target.hurtTime.toFloat() / target.maxHurtTime.toFloat())
             GL11.glEnable(GL11.GL_LINE_SMOOTH)
             GL11.glLineWidth(1f)
@@ -88,8 +124,22 @@ class Crosshair : Module() {
     private val crosshairColor: Color
         get() =
             when (colorModeValue.get().lowercase()) {
-                "custom" -> Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get(), colorAlphaValue.get())
-                "slowly" -> ColorUtils.reAlpha(ColorUtils.slowlyRainbow(System.nanoTime(), 0, saturationValue.get(), brightnessValue.get()), colorAlphaValue.get())
+                "custom" -> Color(
+                    colorRedValue.get(),
+                    colorGreenValue.get(),
+                    colorBlueValue.get(),
+                    colorAlphaValue.get()
+                )
+
+                "slowly" -> ColorUtils.reAlpha(
+                    ColorUtils.slowlyRainbow(
+                        System.nanoTime(),
+                        0,
+                        saturationValue.get(),
+                        brightnessValue.get()
+                    ), colorAlphaValue.get()
+                )
+
                 "rainbow" -> ColorUtils.rainbowWithAlpha(colorAlphaValue.get())
                 else -> Color.WHITE
             }

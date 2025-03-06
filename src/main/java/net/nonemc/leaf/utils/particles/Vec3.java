@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.particles;
 
 import net.minecraft.util.MathHelper;

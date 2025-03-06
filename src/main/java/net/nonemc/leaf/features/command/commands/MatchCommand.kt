@@ -21,19 +21,19 @@ class MatchCommand : Command("match", arrayOf("match")) {
                 alert("Module '${args[0]}' not found.")
                 return
             }
-            
+
             if (module2 == null) {
                 alert("Module '${args[1]}' not found.")
                 return
             }
-            
+
             if (module == module2) {
                 alert("Must match ${args[0]} to ANOTHER module.")
                 return
             }
-            
+
             module.state = module2.state
-            
+
             alert("${if (module.state) "Enabled" else "Disabled"} module §8${module.name}§3 to match module §8${module2.name}§3.")
             return
         }
@@ -48,13 +48,15 @@ class MatchCommand : Command("match", arrayOf("match")) {
 
         return when (args.size) {
             1 -> Leaf.moduleManager.modules
-                    .map { it.name }
-                    .filter { it.startsWith(moduleName, true) }
-                    .toList()
+                .map { it.name }
+                .filter { it.startsWith(moduleName, true) }
+                .toList()
+
             2 -> Leaf.moduleManager.modules
-                    .map { it.name }
-                    .filter { it.startsWith(args[1], true) }
-                    .toList()
+                .map { it.name }
+                .filter { it.startsWith(args[1], true) }
+                .toList()
+
             else -> emptyList()
         }
     }

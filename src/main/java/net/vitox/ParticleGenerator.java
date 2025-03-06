@@ -1,7 +1,7 @@
 package net.vitox;
 
-import net.nonemc.leaf.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.nonemc.leaf.utils.render.RenderUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +21,9 @@ public class ParticleGenerator {
     }
 
     public void draw(final int mouseX, final int mouseY) {
-        if(Minecraft.getMinecraft() == null)
-        	return;
-        if(particles.isEmpty() || prevWidth != Minecraft.getMinecraft().displayWidth || prevHeight != Minecraft.getMinecraft().displayHeight) {
+        if (Minecraft.getMinecraft() == null)
+            return;
+        if (particles.isEmpty() || prevWidth != Minecraft.getMinecraft().displayWidth || prevHeight != Minecraft.getMinecraft().displayHeight) {
             particles.clear();
             create();
         }
@@ -31,14 +31,14 @@ public class ParticleGenerator {
         prevWidth = Minecraft.getMinecraft().displayWidth;
         prevHeight = Minecraft.getMinecraft().displayHeight;
 
-        for(final Particle particle : particles) {
+        for (final Particle particle : particles) {
             particle.fall();
             particle.interpolation();
 
             int range = 50;
             final boolean mouseOver = (mouseX >= particle.x - range) && (mouseY >= particle.y - range) && (mouseX <= particle.x + range) && (mouseY <= particle.y + range);
 
-            if(mouseOver) {
+            if (mouseOver) {
                 particles.stream()
                         .filter(part -> (part.getX() > particle.getX() && part.getX() - particle.getX() < range
                                 && particle.getX() - part.getX() < range)
@@ -54,7 +54,7 @@ public class ParticleGenerator {
     private void create() {
         final Random random = new Random();
 
-        for(int i = 0; i < amount; i++)
+        for (int i = 0; i < amount; i++)
             particles.add(new Particle(random.nextInt(Minecraft.getMinecraft().displayWidth), random.nextInt(Minecraft.getMinecraft().displayHeight)));
     }
 }

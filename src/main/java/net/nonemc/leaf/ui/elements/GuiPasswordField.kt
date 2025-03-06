@@ -3,7 +3,14 @@ package net.nonemc.leaf.ui.elements
 import net.minecraft.client.gui.FontRenderer
 import net.minecraft.client.gui.GuiTextField
 
-class GuiPasswordField(componentId: Int, fontrendererObj: FontRenderer, x: Int, y: Int, par5Width: Int, par6Height: Int) : GuiTextField(componentId, fontrendererObj, x, y, par5Width, par6Height) {
+class GuiPasswordField(
+    componentId: Int,
+    fontrendererObj: FontRenderer,
+    x: Int,
+    y: Int,
+    par5Width: Int,
+    par6Height: Int
+) : GuiTextField(componentId, fontrendererObj, x, y, par5Width, par6Height) {
 
     /**
      * Draw text box

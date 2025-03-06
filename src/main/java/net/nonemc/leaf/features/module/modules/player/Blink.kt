@@ -5,6 +5,12 @@
  */
 package net.nonemc.leaf.features.module.modules.player
 
+import net.minecraft.network.Packet
+import net.minecraft.network.play.INetHandlerPlayServer
+import net.minecraft.network.play.client.*
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
+import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
+import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -14,12 +20,6 @@ import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.network.Packet
-import net.minecraft.network.play.INetHandlerPlayServer
-import net.minecraft.network.play.client.*
-import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
-import net.minecraft.network.play.client.C03PacketPlayer.C06PacketPlayerPosLook
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import java.util.concurrent.LinkedBlockingQueue
 
 @ModuleInfo(name = "Blink", category = ModuleCategory.PLAYER)
@@ -55,7 +55,8 @@ class Blink : Module() {
         if (packet is C04PacketPlayerPosition || packet is C06PacketPlayerPosLook ||
             packet is C08PacketPlayerBlockPlacement ||
             packet is C0APacketAnimation ||
-            packet is C0BPacketEntityAction || packet is C02PacketUseEntity) {
+            packet is C0BPacketEntityAction || packet is C02PacketUseEntity
+        ) {
             event.cancelEvent()
             packets.add(packet as Packet<INetHandlerPlayServer>)
         }

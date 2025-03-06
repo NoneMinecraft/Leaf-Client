@@ -1,9 +1,10 @@
 package net.nonemc.leaf.utils;
 
 import net.minecraft.client.gui.*;
+import net.nonemc.leaf.ui.font.Fonts;
+import net.nonemc.leaf.utils.render.RenderUtils;
+
 import java.awt.*;
-import net.nonemc.leaf.utils.render.*;
-import net.nonemc.leaf.ui.font.*;
 
 public class MainMenuButton {
     private final GuiScreen parent;
@@ -28,10 +29,6 @@ public class MainMenuButton {
         this.y = y;
     }
 
-    public interface Executor {
-        void execute();
-    }
-
     public void draw(final int mouseX, final int mouseY) {
         boolean isMouseOver = mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
         int baseColor = new Color(0, 0, 0, 180).getRGB();
@@ -40,7 +37,7 @@ public class MainMenuButton {
 
         if (!isMouseOver) {
             RenderUtils.drawRoundedRect(width + 7, this.y, width + 3 + 7, this.y + this.height, 0.8f, otherColor);
-        }else{
+        } else {
             RenderUtils.drawRoundedRect(width + 10, this.y, width + 3 + 10, this.y + this.height, 0.0f, otherColor);
         }
         Fonts.font40.drawCenteredString(this.text, this.x + this.width / 2.0f, this.y + this.height / 2.0f - 5.25f, new Color(255, 255, 255).getRGB());
@@ -55,5 +52,9 @@ public class MainMenuButton {
     public void setPosition(final float x, final float y) {
         this.x = x;
         this.y = y;
+    }
+
+    public interface Executor {
+        void execute();
     }
 }

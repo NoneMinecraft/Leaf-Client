@@ -3,8 +3,8 @@
 class Value {
 
     companion object {
-       fun valuesP(){
+        fun valuesP() {
 
-       }
+        }
     }
 }

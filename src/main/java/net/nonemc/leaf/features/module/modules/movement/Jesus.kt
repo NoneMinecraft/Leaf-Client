@@ -4,6 +4,12 @@
  */
 package net.nonemc.leaf.features.module.modules.movement
 
+import net.minecraft.block.BlockLiquid
+import net.minecraft.block.material.Material
+import net.minecraft.init.Blocks
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.util.AxisAlignedBB
+import net.minecraft.util.BlockPos
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
@@ -16,17 +22,31 @@ import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import net.minecraft.block.BlockLiquid
-import net.minecraft.block.material.Material
-import net.minecraft.init.Blocks
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.util.AxisAlignedBB
-import net.minecraft.util.BlockPos
 import kotlin.math.*
 
 @ModuleInfo(name = "Jesus", category = ModuleCategory.MOVEMENT)
 class Jesus : Module() {
-    val modeValue = ListValue("Mode", arrayOf("Vanilla", "NCP", "Jump", "AAC", "AACFly", "AAC3.3.11", "AAC4.2.1", "Horizon1.4.6", "Spartan", "Twilight", "Matrix", "Medusa","Vulcan", "Dolphin", "Legit"), "Vanilla")
+    val modeValue = ListValue(
+        "Mode",
+        arrayOf(
+            "Vanilla",
+            "NCP",
+            "Jump",
+            "AAC",
+            "AACFly",
+            "AAC3.3.11",
+            "AAC4.2.1",
+            "Horizon1.4.6",
+            "Spartan",
+            "Twilight",
+            "Matrix",
+            "Medusa",
+            "Vulcan",
+            "Dolphin",
+            "Legit"
+        ),
+        "Vanilla"
+    )
     private val noJumpValue = BoolValue("NoJump", false)
     private val jumpMotionValue = FloatValue("JumpMotion", 0.5f, 0.1f, 1f)
         .displayable { modeValue.equals("Jump") || modeValue.equals("AACFly") }
@@ -46,16 +66,18 @@ class Jesus : Module() {
         val blockPos = mc.thePlayer.position.down()
 
         when (modeValue.get().lowercase()) {
-            "ncp","medusa","vulcan" -> {
+            "ncp", "medusa", "vulcan" -> {
                 if (isLiquidBlock() && mc.thePlayer.isInsideOfMaterial(Material.air)) {
                     mc.thePlayer.motionY = 0.08
                 }
             }
+
             "jump" -> {
                 if (BlockUtils.getBlock(blockPos) === Blocks.water && mc.thePlayer.onGround) {
                     mc.thePlayer.motionY = jumpMotionValue.get().toDouble()
                 }
             }
+
             "aac" -> {
                 if (!mc.thePlayer.onGround && BlockUtils.getBlock(blockPos) === Blocks.water || mc.thePlayer.isInWater) {
                     if (!mc.thePlayer.isSprinting) {
@@ -63,14 +85,16 @@ class Jesus : Module() {
                         mc.thePlayer.motionY *= 0.0
                         mc.thePlayer.motionZ *= 0.99999
                         if (mc.thePlayer.isCollidedHorizontally) {
-                            mc.thePlayer.motionY = ((mc.thePlayer.posY - (mc.thePlayer.posY - 1).toInt()).toInt() / 8f).toDouble()
+                            mc.thePlayer.motionY =
+                                ((mc.thePlayer.posY - (mc.thePlayer.posY - 1).toInt()).toInt() / 8f).toDouble()
                         }
                     } else {
                         mc.thePlayer.motionX *= 0.99999
                         mc.thePlayer.motionY *= 0.0
                         mc.thePlayer.motionZ *= 0.99999
                         if (mc.thePlayer.isCollidedHorizontally) {
-                            mc.thePlayer.motionY = ((mc.thePlayer.posY - (mc.thePlayer.posY - 1).toInt()).toInt() / 8f).toDouble()
+                            mc.thePlayer.motionY =
+                                ((mc.thePlayer.posY - (mc.thePlayer.posY - 1).toInt()).toInt() / 8f).toDouble()
                         }
                     }
                     if (mc.thePlayer.fallDistance >= 4) {
@@ -81,6 +105,7 @@ class Jesus : Module() {
                     mc.thePlayer.onGround = false
                 }
             }
+
             "matrix" -> {
                 if (mc.thePlayer.isInWater) {
                     mc.gameSettings.keyBindJump.pressed = false
@@ -88,8 +113,10 @@ class Jesus : Module() {
                         mc.thePlayer.motionY = +0.09
                         return
                     }
-                    val block = BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1, mc.thePlayer.posZ))
-                    val blockUp = BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1.1, mc.thePlayer.posZ))
+                    val block =
+                        BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1, mc.thePlayer.posZ))
+                    val blockUp =
+                        BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1.1, mc.thePlayer.posZ))
                     if (blockUp is BlockLiquid) {
                         mc.thePlayer.motionY = 0.1
                     } else if (block is BlockLiquid) {
@@ -98,7 +125,8 @@ class Jesus : Module() {
                     mc.thePlayer.motionX *= 1.15
                     mc.thePlayer.motionZ *= 1.15
                 }
-             }
+            }
+
             "spartan" -> if (mc.thePlayer.isInWater) {
                 if (mc.thePlayer.isCollidedHorizontally) {
                     mc.thePlayer.motionY += 0.15
@@ -115,22 +143,32 @@ class Jesus : Module() {
                 mc.thePlayer.motionX *= 1.085
                 mc.thePlayer.motionZ *= 1.085
             }
+
             "aac3.3.11" -> {
                 if (mc.thePlayer.isInWater) {
                     mc.thePlayer.motionX *= 1.17
                     mc.thePlayer.motionZ *= 1.17
                     if (mc.thePlayer.isCollidedHorizontally) {
                         mc.thePlayer.motionY = 0.24
-                    } else if (mc.theWorld.getBlockState(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1.0, mc.thePlayer.posZ)).block !== Blocks.air) {
+                    } else if (mc.theWorld.getBlockState(
+                            BlockPos(
+                                mc.thePlayer.posX,
+                                mc.thePlayer.posY + 1.0,
+                                mc.thePlayer.posZ
+                            )
+                        ).block !== Blocks.air
+                    ) {
                         mc.thePlayer.motionY += 0.04
                     }
                 }
             }
+
             "dolphin" -> {
                 if (mc.thePlayer.isInWater) {
                     mc.thePlayer.motionY += 0.03999999910593033
                 }
             }
+
             "aac4.2.1" -> {
                 if (!mc.thePlayer.onGround && BlockUtils.getBlock(blockPos) === Blocks.water || mc.thePlayer.isInWater) {
                     mc.thePlayer.motionY *= 0.0
@@ -142,6 +180,7 @@ class Jesus : Module() {
                     }
                 }
             }
+
             "horizon1.4.6" -> {
                 mc.gameSettings.keyBindJump.pressed = mc.thePlayer.isInWater
                 if (mc.thePlayer.isInWater) {
@@ -151,6 +190,7 @@ class Jesus : Module() {
                     }
                 }
             }
+
             "twilight" -> {
                 if (mc.thePlayer.isInWater) {
                     mc.thePlayer.motionX *= 1.04
@@ -172,6 +212,7 @@ class Jesus : Module() {
                 event.y = jumpMotionValue.get().toDouble()
                 mc.thePlayer.motionY = jumpMotionValue.get().toDouble()
             }
+
             "twilight" -> {
                 event.y = 0.01
                 mc.thePlayer.motionY = 0.01
@@ -187,9 +228,16 @@ class Jesus : Module() {
 
         if (event.block is BlockLiquid && !isLiquidBlock() && !mc.thePlayer.isSneaking) {
             when (modeValue.get().lowercase()) {
-                "ncp", "vanilla", "jump", "medusa","vulcan" -> {
-                    event.boundingBox = AxisAlignedBB.fromBounds(event.x.toDouble(), event.y.toDouble(), event.z.toDouble(), (event.x + 1).toDouble(), (event.y + 1).toDouble(), (event.z + 1).toDouble())
-                    if (modeValue.get() == "Vulcan") 
+                "ncp", "vanilla", "jump", "medusa", "vulcan" -> {
+                    event.boundingBox = AxisAlignedBB.fromBounds(
+                        event.x.toDouble(),
+                        event.y.toDouble(),
+                        event.z.toDouble(),
+                        (event.x + 1).toDouble(),
+                        (event.y + 1).toDouble(),
+                        (event.z + 1).toDouble()
+                    )
+                    if (modeValue.get() == "Vulcan")
                         MovementUtils.strafe(MovementUtils.getSpeed() * 0.39f)
                 }
             }
@@ -205,15 +253,24 @@ class Jesus : Module() {
         if (event.packet is C03PacketPlayer) {
             when (modeValue.get()) {
                 "NCP" -> {
-                    if (isLiquidBlock(AxisAlignedBB(mc.thePlayer.entityBoundingBox.maxX, mc.thePlayer.entityBoundingBox.maxY,
-                        mc.thePlayer.entityBoundingBox.maxZ, mc.thePlayer.entityBoundingBox.minX, mc.thePlayer.entityBoundingBox.minY - 0.01,
-                        mc.thePlayer.entityBoundingBox.minZ))) {
-                            nextTick = !nextTick
-                            if (nextTick) {
-                                event.packet.y -= 0.001
-                            }
+                    if (isLiquidBlock(
+                            AxisAlignedBB(
+                                mc.thePlayer.entityBoundingBox.maxX,
+                                mc.thePlayer.entityBoundingBox.maxY,
+                                mc.thePlayer.entityBoundingBox.maxZ,
+                                mc.thePlayer.entityBoundingBox.minX,
+                                mc.thePlayer.entityBoundingBox.minY - 0.01,
+                                mc.thePlayer.entityBoundingBox.minZ
+                            )
+                        )
+                    ) {
+                        nextTick = !nextTick
+                        if (nextTick) {
+                            event.packet.y -= 0.001
                         }
+                    }
                 }
+
                 "Medusa" -> {
                     nextTick = !nextTick
                     event.packet.y = mc.thePlayer.posY + if (nextTick) 0.1 else -0.1
@@ -224,6 +281,7 @@ class Jesus : Module() {
                         event.packet.onGround = false
                     }
                 }
+
                 "Vulcan" -> {
                     nextTick = !nextTick
                     event.packet.y = mc.thePlayer.posY + if (nextTick) 0.1 else -0.1
@@ -247,7 +305,7 @@ class Jesus : Module() {
         }
 
         val block = BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.01, mc.thePlayer.posZ))
-        if ((noJumpValue.get() || modeValue.get().equals("Vulcan"))&& block is BlockLiquid) {
+        if ((noJumpValue.get() || modeValue.get().equals("Vulcan")) && block is BlockLiquid) {
             event.cancelEvent()
         }
     }
@@ -264,9 +322,9 @@ class Jesus : Module() {
         } else {
             if (forward != 0.0) {
                 if (strafe > 0.0) {
-                    yaw += if(forward > 0.0) -45 else 45
+                    yaw += if (forward > 0.0) -45 else 45
                 } else if (strafe < 0.0) {
-                    yaw += if(forward > 0.0) 45 else -45
+                    yaw += if (forward > 0.0) 45 else -45
                 }
                 strafe = 0.0
                 if (forward > 0.0) {
@@ -275,8 +333,10 @@ class Jesus : Module() {
                     forward = -1.0
                 }
             }
-            mc.thePlayer.motionX = forward * speed * cos(Math.toRadians(yaw + 90.0)) + strafe * speed * sin(Math.toRadians(yaw + 90.0))
-            mc.thePlayer.motionZ = forward * speed * sin(Math.toRadians(yaw + 90.0)) - strafe * speed * cos(Math.toRadians(yaw + 90.0))
+            mc.thePlayer.motionX =
+                forward * speed * cos(Math.toRadians(yaw + 90.0)) + strafe * speed * sin(Math.toRadians(yaw + 90.0))
+            mc.thePlayer.motionZ =
+                forward * speed * sin(Math.toRadians(yaw + 90.0)) - strafe * speed * cos(Math.toRadians(yaw + 90.0))
         }
     }
 }

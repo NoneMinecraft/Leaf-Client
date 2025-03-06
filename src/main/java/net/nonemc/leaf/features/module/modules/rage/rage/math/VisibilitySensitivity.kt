@@ -5,7 +5,7 @@ import net.nonemc.leaf.features.module.modules.rage.RageBot.visibilitySensitivit
 
 private var vsvt = 0
 
-fun vs(can:Boolean): Boolean {
+fun vs(can: Boolean): Boolean {
     if (visibilitySensitivityTick.get() != 0) {
         if (can) {
             if (vsvt < visibilitySensitivityTick.get()) {

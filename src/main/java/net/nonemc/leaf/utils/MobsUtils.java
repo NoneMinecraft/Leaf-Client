@@ -1,10 +1,5 @@
-
 package net.nonemc.leaf.utils;
 
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.features.module.modules.misc.AntiBot;
-import net.nonemc.leaf.features.module.modules.misc.Teams;
-import net.nonemc.leaf.utils.render.ColorUtils;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +14,10 @@ import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.features.module.modules.misc.AntiBot;
+import net.nonemc.leaf.features.module.modules.misc.Teams;
+import net.nonemc.leaf.utils.render.ColorUtils;
 
 public final class MobsUtils extends MinecraftInstance {
 
@@ -29,19 +28,18 @@ public final class MobsUtils extends MinecraftInstance {
     public static boolean targetDead = false;
 
     public static boolean isSelected(final Entity entity, final boolean canAttackCheck) {
-        if(entity instanceof EntityLivingBase && (targetDead || entity.isEntityAlive()) && entity != mc.thePlayer) {
-            if(targetInvisible || !entity.isInvisible()) {
-                if(targetPlayer && entity instanceof EntityPlayer) {
-                    final EntityPlayer entityPlayer = (EntityPlayer) entity;
+        if (entity instanceof EntityLivingBase && (targetDead || entity.isEntityAlive()) && entity != mc.thePlayer) {
+            if (targetInvisible || !entity.isInvisible()) {
+                if (targetPlayer && entity instanceof EntityPlayer entityPlayer) {
 
-                    if(canAttackCheck) {
-                        if(AntiBot.isBot(entityPlayer))
+                    if (canAttackCheck) {
+                        if (AntiBot.isBot(entityPlayer))
                             return false;
 
-                        if(entityPlayer.isSpectator())
+                        if (entityPlayer.isSpectator())
                             return false;
 
-                        final Teams teams = (Teams) Leaf.moduleManager.getModule(Teams.class);
+                        final Teams teams = Leaf.moduleManager.getModule(Teams.class);
                         return !teams.getState() || !teams.isInYourTeam(entityPlayer);
                     }
 
@@ -76,7 +74,7 @@ public final class MobsUtils extends MinecraftInstance {
     }
 
     public static int getPing(final EntityPlayer entityPlayer) {
-        if(entityPlayer == null)
+        if (entityPlayer == null)
             return 0;
 
         final NetworkPlayerInfo networkPlayerInfo = mc.getNetHandler().getPlayerInfo(entityPlayer.getUniqueID());

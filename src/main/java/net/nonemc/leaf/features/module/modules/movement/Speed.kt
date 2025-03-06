@@ -17,7 +17,12 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.ListValue
 import org.lwjgl.input.Keyboard
 
-@ModuleInfo(name = "Speed", category = ModuleCategory.MOVEMENT, autoDisable = EnumAutoDisableType.FLAG, keyBind = Keyboard.KEY_V)
+@ModuleInfo(
+    name = "Speed",
+    category = ModuleCategory.MOVEMENT,
+    autoDisable = EnumAutoDisableType.FLAG,
+    keyBind = Keyboard.KEY_V
+)
 class Speed : Module() {
     private val modes = ClassUtils.resolvePackage("${this.javaClass.`package`.name}.speeds", SpeedMode::class.java)
         .map { it.newInstance() as SpeedMode }
@@ -73,7 +78,7 @@ class Speed : Module() {
         }
 
         mode.onMove(event)
-        if(event != null) {
+        if (event != null) {
             Leaf.moduleManager[TargetStrafe::class.java]!!.doMove(event)
         }
     }
@@ -115,5 +120,6 @@ class Speed : Module() {
         get() = modeValue.get()
 
 
-    override val values = super.values.toMutableList().also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
+    override val values = super.values.toMutableList()
+        .also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
 }

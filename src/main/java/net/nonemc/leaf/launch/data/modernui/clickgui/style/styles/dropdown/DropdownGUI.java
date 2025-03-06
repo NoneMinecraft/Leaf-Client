@@ -1,12 +1,12 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.dropdown;
 
-import net.nonemc.leaf.features.module.ModuleCategory;
-import net.nonemc.leaf.ui.client.hud.designer.GuiHudDesigner;
-import net.nonemc.leaf.utils.render.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.util.ResourceLocation;
+import net.nonemc.leaf.features.module.ModuleCategory;
+import net.nonemc.leaf.ui.client.hud.designer.GuiHudDesigner;
+import net.nonemc.leaf.utils.render.RenderUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -14,17 +14,21 @@ import org.lwjgl.opengl.GL11;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 public class DropdownGUI extends GuiScreen {
 
     private final List<Tab> tabs = new CopyOnWriteArrayList<>();
+    private final ResourceLocation hudIcon = new ResourceLocation("leaf/ui/clickgui/hud.png");
+    int alphaBG = 0;
     private boolean dragging;
     private int dragX;
     private int dragY;
     private int alpha;
-   private final ResourceLocation hudIcon = new ResourceLocation("leaf/ui/clickgui/hud.png");
+
     public DropdownGUI() {
 
     }
+
     @Override
     public void initGui() {
         float x = 75;
@@ -36,7 +40,7 @@ public class DropdownGUI extends GuiScreen {
                 x += 110;
             }
 
-      //    tabs.add(new ConfigTab(x, 10));
+            //    tabs.add(new ConfigTab(x, 10));
         }
 
         if (!(mc.currentScreen instanceof GuiChest) && mc.currentScreen != this) {
@@ -49,29 +53,27 @@ public class DropdownGUI extends GuiScreen {
                     }
                 }
 
-            //    if (tab instanceof ConfigTab) {
-              //      ((ConfigTab) tab).refreshConfigs();
-             //   }
+                //    if (tab instanceof ConfigTab) {
+                //      ((ConfigTab) tab).refreshConfigs();
+                //   }
             }
         }
 
-    //    if (Client.getInstance().getModuleManager().getModule(ClickGUI.class).getBlur().get()) {
-     //       mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
-     //   }
+        //    if (Client.getInstance().getModuleManager().getModule(ClickGUI.class).getBlur().get()) {
+        //       mc.entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
+        //   }
 
         super.initGui();
     }
 
     @Override
     public void onGuiClosed() {
-      //  if (mc.entityRenderer.theShaderGroup != null) {
-      //      mc.entityRenderer.theShaderGroup.deleteShaderGroup();
-      //      mc.entityRenderer.theShaderGroup = null;
-     //   }
+        //  if (mc.entityRenderer.theShaderGroup != null) {
+        //      mc.entityRenderer.theShaderGroup.deleteShaderGroup();
+        //      mc.entityRenderer.theShaderGroup = null;
+        //   }
         super.onGuiClosed();
     }
-
-    int alphaBG = 0;
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -91,7 +93,7 @@ public class DropdownGUI extends GuiScreen {
             }
             int i = 0;
             int panlesize = this.tabs.size();
-            if (i < panlesize){
+            if (i < panlesize) {
                 this.updatemouse();
                 ++i;
             }
@@ -100,20 +102,22 @@ public class DropdownGUI extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
         GL11.glPopMatrix();
     }
-    public void updatemouse(){
+
+    public void updatemouse() {
         int scrollWheel = Mouse.getDWheel();
         int panlesize = this.tabs.size();
-        for (int i = 0; i< panlesize; ++i){
-            if (scrollWheel < 0){
+        for (int i = 0; i < panlesize; ++i) {
+            if (scrollWheel < 0) {
                 (this.tabs.get(i)).setPosY((this.tabs.get(i)).getPosY() - 15);
                 continue;
             }
-            if (scrollWheel <=0)continue;
+            if (scrollWheel <= 0) continue;
             (this.tabs.get(i)).setPosY((this.tabs.get(i)).getPosY() + 15);
         }
 
 
     }
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         int x = ScaleUtils.getScaledMouseCoordinates(mc, mouseX, mouseY)[0];

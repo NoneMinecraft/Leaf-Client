@@ -1,5 +1,7 @@
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.entity.EntityLivingBase
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -11,8 +13,6 @@ import net.nonemc.leaf.utils.EntityUtils
 import net.nonemc.leaf.utils.render.ColorUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.entity.EntityLivingBase
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.math.BigDecimal
@@ -36,25 +36,39 @@ class DamageParticle : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         synchronized(particles) {
-            for(entity in mc.theWorld.loadedEntityList) {
-                if(entity is EntityLivingBase && EntityUtils.isSelected(entity,true)) {
-                    val lastHealth = healthData.getOrDefault(entity.entityId,entity.maxHealth)
+            for (entity in mc.theWorld.loadedEntityList) {
+                if (entity is EntityLivingBase && EntityUtils.isSelected(entity, true)) {
+                    val lastHealth = healthData.getOrDefault(entity.entityId, entity.maxHealth)
                     healthData[entity.entityId] = entity.health
-                    if(lastHealth == entity.health) continue
+                    if (lastHealth == entity.health) continue
 
-                    val prefix = if (!colorRainbowValue.get()) (if(lastHealth>entity.health){"§c❤"}else{"§a❤"}) else (if(lastHealth>entity.health){"-"}else{"+"})
-                    particles.add(SingleParticle(prefix + BigDecimal(abs(lastHealth - entity.health).toDouble()).setScale(1, BigDecimal.ROUND_HALF_UP).toDouble()
-                        ,entity.posX - 0.5 + Random(System.currentTimeMillis()).nextInt(5).toDouble() * 0.1
-                        ,entity.entityBoundingBox.minY + (entity.entityBoundingBox.maxY - entity.entityBoundingBox.minY) / 2.0
-                        ,entity.posZ - 0.5 + Random(System.currentTimeMillis() + 1L).nextInt(5).toDouble() * 0.1)
+                    val prefix = if (!colorRainbowValue.get()) (if (lastHealth > entity.health) {
+                        "§c❤"
+                    } else {
+                        "§a❤"
+                    }) else (if (lastHealth > entity.health) {
+                        "-"
+                    } else {
+                        "+"
+                    })
+                    particles.add(
+                        SingleParticle(
+                            prefix + BigDecimal(abs(lastHealth - entity.health).toDouble()).setScale(
+                                1,
+                                BigDecimal.ROUND_HALF_UP
+                            ).toDouble(),
+                            entity.posX - 0.5 + Random(System.currentTimeMillis()).nextInt(5).toDouble() * 0.1,
+                            entity.entityBoundingBox.minY + (entity.entityBoundingBox.maxY - entity.entityBoundingBox.minY) / 2.0,
+                            entity.posZ - 0.5 + Random(System.currentTimeMillis() + 1L).nextInt(5).toDouble() * 0.1
+                        )
                     )
                 }
             }
 
-            val needRemove = ArrayList<SingleParticle> ()
+            val needRemove = ArrayList<SingleParticle>()
             for (particle in particles) {
                 particle.ticks++
-                if (particle.ticks>aliveTicksValue.get()) {
+                if (particle.ticks > aliveTicksValue.get()) {
                     needRemove.add(particle)
                 }
             }
@@ -79,7 +93,11 @@ class DamageParticle : Module() {
                 GlStateManager.doPolygonOffset(1.0f, -1500000.0f)
                 GlStateManager.translate(n.toFloat(), n2.toFloat(), n3.toFloat())
                 GlStateManager.rotate(-renderManager.playerViewY, 0.0f, 1.0f, 0.0f)
-                val textY = if (mc.gameSettings.thirdPersonView == 2) { -1.0f } else { 1.0f }
+                val textY = if (mc.gameSettings.thirdPersonView == 2) {
+                    -1.0f
+                } else {
+                    1.0f
+                }
 
                 GlStateManager.rotate(renderManager.playerViewX, textY, 0.0f, 0.0f)
                 GlStateManager.scale(-size, -size, size)
@@ -88,7 +106,12 @@ class DamageParticle : Module() {
                     particle.str,
                     (-(mc.fontRendererObj.getStringWidth(particle.str) / 2)).toFloat(),
                     (-(mc.fontRendererObj.FONT_HEIGHT - 1)).toFloat(),
-                    (if (colorRainbowValue.get()) ColorUtils.rainbowWithAlpha(colorAlphaValue.get()) else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get(), colorAlphaValue.get())).rgb
+                    (if (colorRainbowValue.get()) ColorUtils.rainbowWithAlpha(colorAlphaValue.get()) else Color(
+                        colorRedValue.get(),
+                        colorGreenValue.get(),
+                        colorBlueValue.get(),
+                        colorAlphaValue.get()
+                    )).rgb
                 )
                 GL11.glColor4f(187.0f, 255.0f, 255.0f, 1.0f)
                 GL11.glDepthMask(true)

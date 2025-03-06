@@ -1,8 +1,6 @@
-
 package net.nonemc.leaf.utils.particles;
 
 import com.google.common.collect.Multimap;
-import net.nonemc.leaf.utils.block.BlockUtils;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -16,16 +14,18 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.Vec3;
 import net.minecraft.util.*;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.nonemc.leaf.utils.block.BlockUtils;
 
 import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+
 public class PlayerParticles {
-    private static Minecraft mc = Minecraft.getMinecraft();
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static float[] getRotations(Entity ent) {
         double x = ent.posX;
@@ -33,9 +33,11 @@ public class PlayerParticles {
         double y = ent.posY + ent.getEyeHeight() / 4.0F;
         return getRotationFromPosition(x, z, y);
     }
+
     public static Block getBlock(final double offsetX, final double offsetY, final double offsetZ) {
         return mc.theWorld.getBlockState(new BlockPos(offsetX, offsetY, offsetZ)).getBlock();
     }
+
     public static void damagePlayer() {
         for (int i = 0; i <= 3 * 15; ++i) {
             mc.thePlayer.sendQueue.getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(
@@ -49,17 +51,19 @@ public class PlayerParticles {
         }
         mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
     }
+
     public static boolean isBlockUnder() {
-        if(mc.thePlayer.posY < 0)
+        if (mc.thePlayer.posY < 0)
             return false;
-        for(int off = 0; off < (int)mc.thePlayer.posY+2; off += 2){
+        for (int off = 0; off < (int) mc.thePlayer.posY + 2; off += 2) {
             AxisAlignedBB bb = mc.thePlayer.getEntityBoundingBox().offset(0, -off, 0);
-            if(!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, bb).isEmpty()){
+            if (!mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, bb).isEmpty()) {
                 return true;
             }
         }
         return false;
     }
+
     private static float[] getRotationFromPosition(double x, double z, double y) {
         double xDiff = x - mc.thePlayer.posX;
         double zDiff = z - mc.thePlayer.posZ;
@@ -101,6 +105,7 @@ public class PlayerParticles {
         return baseSpeed;
 
     }
+
     public static boolean isInWater() {
         return PlayerParticles.mc.theWorld.getBlockState(new BlockPos(PlayerParticles.mc.thePlayer.posX, PlayerParticles.mc.thePlayer.posY, PlayerParticles.mc.thePlayer.posZ)).getBlock().getMaterial() == Material.water;
     }
@@ -117,10 +122,10 @@ public class PlayerParticles {
         double d;
         ArrayList positions = new ArrayList();
         double posX = tpX - mc.thePlayer.posX;
-        double posY = tpY - (mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight() + 1.1);
+        double posY = tpY - (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight() + 1.1);
         double posZ = tpZ - mc.thePlayer.posZ;
-        float yaw = (float)(Math.atan2((double)posZ, (double)posX) * 180.0 / 3.141592653589793 - 90.0);
-        float pitch = (float)((- Math.atan2((double)posY, (double)Math.sqrt((double)(posX * posX + posZ * posZ)))) * 180.0 / 3.141592653589793);
+        float yaw = (float) (Math.atan2(posZ, posX) * 180.0 / 3.141592653589793 - 90.0);
+        float pitch = (float) ((-Math.atan2(posY, Math.sqrt(posX * posX + posZ * posZ))) * 180.0 / 3.141592653589793);
         double tmpX = mc.thePlayer.posX;
         double tmpY = mc.thePlayer.posY;
         double tmpZ = mc.thePlayer.posZ;
@@ -129,11 +134,11 @@ public class PlayerParticles {
             steps += 1.0;
         }
         for (d = speed; d < PlayerParticles.getDistance(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, tpX, tpY, tpZ); d += speed) {
-            tmpX = mc.thePlayer.posX - Math.sin((double)PlayerParticles.getDirection(yaw)) * d;
-            tmpZ = mc.thePlayer.posZ + Math.cos((double)PlayerParticles.getDirection(yaw)) * d;
-            positions.add((Object)new Vector3f((float)tmpX, (float)(tmpY -= (mc.thePlayer.posY - tpY) / steps), (float)tmpZ));
+            tmpX = mc.thePlayer.posX - Math.sin(PlayerParticles.getDirection(yaw)) * d;
+            tmpZ = mc.thePlayer.posZ + Math.cos(PlayerParticles.getDirection(yaw)) * d;
+            positions.add(new Vector3f((float) tmpX, (float) (tmpY -= (mc.thePlayer.posY - tpY) / steps), (float) tmpZ));
         }
-        positions.add((Object)new Vector3f((float)tpX, (float)tpY, (float)tpZ));
+        positions.add(new Vector3f((float) tpX, (float) tpY, (float) tpZ));
         return positions;
     }
 
@@ -160,13 +165,13 @@ public class PlayerParticles {
         double d0 = x1 - x2;
         double d2 = y1 - y2;
         double d3 = z1 - z2;
-        return MathHelper.sqrt_double((double)(d0 * d0 + d2 * d2 + d3 * d3));
+        return MathHelper.sqrt_double((double) (d0 * d0 + d2 * d2 + d3 * d3));
     }
 
     public static void blockHit(Entity en, boolean value) {
         ItemStack stack = mc.thePlayer.getCurrentEquippedItem();
-        if (mc.thePlayer.getCurrentEquippedItem() != null && en != null && value && stack.getItem() instanceof ItemSword && (double)mc.thePlayer.swingProgress > 0.2) {
-            mc.thePlayer.getCurrentEquippedItem().useItemRightClick((World)mc.theWorld, (EntityPlayer)mc.thePlayer);
+        if (mc.thePlayer.getCurrentEquippedItem() != null && en != null && value && stack.getItem() instanceof ItemSword && (double) mc.thePlayer.swingProgress > 0.2) {
+            mc.thePlayer.getCurrentEquippedItem().useItemRightClick((World) mc.theWorld, (EntityPlayer) mc.thePlayer);
         }
     }
 
@@ -175,11 +180,11 @@ public class PlayerParticles {
         Multimap multimap = itemStack.getAttributeModifiers();
         if (!multimap.isEmpty() && (iterator = multimap.entries().iterator()).hasNext()) {
             double damage;
-            Map.Entry entry = (Map.Entry)iterator.next();
-            AttributeModifier attributeModifier = (AttributeModifier)entry.getValue();
+            Map.Entry entry = (Map.Entry) iterator.next();
+            AttributeModifier attributeModifier = (AttributeModifier) entry.getValue();
             double d = damage = attributeModifier.getOperation() != 1 && attributeModifier.getOperation() != 2 ? attributeModifier.getAmount() : attributeModifier.getAmount() * 100.0;
             if (attributeModifier.getAmount() > 1.0) {
-                return 1.0f + (float)damage;
+                return 1.0f + (float) damage;
             }
             return 1.0f;
         }
@@ -191,11 +196,11 @@ public class PlayerParticles {
         int firstSlot = 0;
         int bestWeapon = -1;
         int j = 1;
-        for (int i = 0; i < 9; i = (int)((byte)(i + 1))) {
+        for (int i = 0; i < 9; i = (byte) (i + 1)) {
             mc.thePlayer.inventory.currentItem = i;
             ItemStack itemStack = mc.thePlayer.getHeldItem();
             if (itemStack == null) continue;
-            int itemAtkDamage = (int)PlayerParticles.getItemAtkDamage(itemStack);
+            int itemAtkDamage = (int) PlayerParticles.getItemAtkDamage(itemStack);
             //   if ((itemAtkDamage = (int)((float)itemAtkDamage + EnchantmentHelper.getEnchantedItem((ItemStack)itemStack, (EnumCreatureAttribute)EnumCreatureAttribute.UNDEFINED))) <= j) continue;
             j = itemAtkDamage;
             bestWeapon = i;
@@ -210,7 +215,7 @@ public class PlayerParticles {
         for (int i1 = 9; i1 < 37; ++i1) {
             ItemStack itemstack = PlayerParticles.mc.thePlayer.inventoryContainer.getSlot(i1).getStack();
             if (itemstack == null || itemstack.getItem() != i) continue;
-            PlayerParticles.mc.playerController.windowClick(0, i1, 0, 1, (EntityPlayer)PlayerParticles.mc.thePlayer);
+            PlayerParticles.mc.playerController.windowClick(0, i1, 0, 1, (EntityPlayer) PlayerParticles.mc.thePlayer);
             break;
         }
     }
@@ -231,20 +236,17 @@ public class PlayerParticles {
         float var6 = MathHelper.sin(-p_174806_1_ * 0.017453292F);
         return new Vec3(var4 * var5, var6, var3 * var5);
     }
+
     public static void tellPlayer(String string) {
         mc.thePlayer.addChatMessage(new ChatComponentText(string));
 
     }
+
     public static boolean isMoving() {
         if ((!mc.thePlayer.isCollidedHorizontally) && (!mc.thePlayer.isSneaking())) {
             return ((mc.thePlayer.movementInput.moveForward != 0.0F || mc.thePlayer.movementInput.moveStrafe != 0.0F));
         }
         return false;
-    }
-
-    public EntityLivingBase getEntity() {
-
-        return null;
     }
 
     public static double getIncremental(final double val, final double inc) {
@@ -268,5 +270,10 @@ public class PlayerParticles {
             i2 -= 0.1;
         }
         return mc.thePlayer.posY - distance;
+    }
+
+    public EntityLivingBase getEntity() {
+
+        return null;
     }
 }

@@ -1,30 +1,33 @@
 package net.nonemc.leaf.launch.data.modernui.mainmenu;
 
-import net.nonemc.leaf.ui.client.altmanager.*;
-import net.nonemc.leaf.utils.MainMenuButton;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.*;
-import net.nonemc.leaf.utils.render.*;
+import net.nonemc.leaf.ui.client.altmanager.GuiAltManager;
+import net.nonemc.leaf.utils.MainMenuButton;
+import net.nonemc.leaf.utils.render.RenderUtils;
+
 import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class ModernGuiMainMenu extends GuiScreen {
     private final ArrayList<MainMenuButton> buttons = new ArrayList<>();
+    private final float sidebarWidth = 120.0f;
+    private final float sidebarHeight = 250.0f;
+    private final float animationSpeed = 5.0f;
     private MainMenuButton toggleUIButton; // UI切换按钮
     private ScaledResolution res;
     private float sidebarX = -120.0f;
     private boolean hoveringSidebar = false;
-    private final float sidebarWidth = 120.0f;
-    private final float sidebarHeight = 250.0f;
-    private final float animationSpeed = 5.0f;
     private boolean isAlternativeLayout = false;
     private boolean isLoading = false;
-    private long loadingStartTime = 0;
+    private final long loadingStartTime = 0;
     private ResourceLocation backgroundImage = new ResourceLocation("leaf/background.png");
-    private ResourceLocation image = new ResourceLocation("leaf/image.png");
-    public ModernGuiMainMenu() {}
+    private final ResourceLocation image = new ResourceLocation("leaf/image.png");
+
+    public ModernGuiMainMenu() {
+    }
 
     @Override
     public void initGui() {
@@ -82,6 +85,7 @@ public class ModernGuiMainMenu extends GuiScreen {
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         for (MainMenuButton button : buttons) {

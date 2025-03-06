@@ -1,17 +1,16 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.dropdown;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.MathHelper;
 import net.nonemc.leaf.Leaf;
-
-import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
 import net.nonemc.leaf.features.module.modules.client.HUD;
+import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
 import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.impl.Fonts;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.utils.timer.Timer;
 import net.nonemc.leaf.value.TextValue;
 import net.nonemc.leaf.value.Value;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+
 public class Module {
     private final net.nonemc.leaf.features.module.Module module;
     public int yPerModule, y;
@@ -26,17 +26,20 @@ public class Module {
     public boolean opened;
     public List<Setting> settings = new CopyOnWriteArrayList<>();
     public Timer hoverTimer = new Timer();
+    float fraction = 0;
+    float fractionBackground = 0;
+    private double length = 3, anim = 5;
+    private final int alph = 0;
+    private final float alpha = 0;
+
     public Module(net.nonemc.leaf.features.module.Module module, Tab tab) {
         this.module = module;
         this.tab = tab;
-        for (Value setting :module.getValues() ) {
+        for (Value setting : module.getValues()) {
             settings.add(new Setting(setting, this));
         }
     }
-    private double length = 3, anim = 5;
-    private int alph = 0;
-    float fraction = 0;
-    float fractionBackground = 0;
+
     public void drawScreen(int mouseX, int mouseY) {
 
         Minecraft instance = Minecraft.getMinecraft();
@@ -76,7 +79,7 @@ public class Module {
             }
         }
 
-        HUD hud = (HUD) Leaf.moduleManager.getModule(HUD.class);
+        HUD hud = Leaf.moduleManager.getModule(HUD.class);
         Color colorHUD = ClickGUIModule.generateColor();
         Color white = new Color(0xFFFFFF);
 
@@ -110,14 +113,14 @@ public class Module {
             ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
             if (yPerModule != getY() && scaledResolution.getScaleFactor() != 1) {
                 GL11.glScissor(0,
-                        scaledResolution.getScaledHeight() * 2 - y * 2 - yPerModule * 2,scaledResolution.getScaledWidth() * 2,
+                        scaledResolution.getScaledHeight() * 2 - y * 2 - yPerModule * 2, scaledResolution.getScaledWidth() * 2,
                         yPerModule * 2);
                 GL11.glEnable(GL11.GL_SCISSOR_TEST);
                 settings.stream().filter(s -> s.setting.getDisplayable()).forEach(setting -> setting.drawScreen(mouseX, mouseY));
                 GL11.glDisable(GL11.GL_SCISSOR_TEST);
-                settings.stream().filter(s ->!s.setting.getDisplayable()).forEach(setting -> setting.setPercent(0));
+                settings.stream().filter(s -> !s.setting.getDisplayable()).forEach(setting -> setting.setPercent(0));
             } else {
-                settings.stream().filter(s -> s.setting.getDisplayable() ).forEach(setting -> setting.drawScreen(mouseX, mouseY));
+                settings.stream().filter(s -> s.setting.getDisplayable()).forEach(setting -> setting.drawScreen(mouseX, mouseY));
             }
         } else {
             settings.forEach(setting -> setting.setPercent(0));
@@ -145,16 +148,14 @@ public class Module {
     public int getY() {
         if (opened) {
             int gay = 17;
-            for (Setting setting : settings.stream().filter(s -> s.setting.getDisplayable() ).collect(Collectors.toList())) {
+            for (Setting setting : settings.stream().filter(s -> s.setting.getDisplayable()).collect(Collectors.toList())) {
                 gay += 15;
             }
-            return tab.modules.indexOf(this) == tab.modules.size() - 1 ? gay : gay;
+            return gay;
         } else {
             return 14;
         }
     }
-
-    private float alpha = 0;
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (isHovered(mouseX, mouseY)) {
@@ -164,7 +165,7 @@ public class Module {
                     break;
                 case 1:
                     if (!module.getValues().isEmpty()) {
-                        final ClickGUIModule clickGUI = (ClickGUIModule) Leaf.moduleManager.getModule(ClickGUIModule.class);
+                        final ClickGUIModule clickGUI = Leaf.moduleManager.getModule(ClickGUIModule.class);
                         if (!opened && clickGUI.getClosePrevious.get())
                             tab.modules.forEach(module -> {
                                 if (module.opened)
@@ -192,11 +193,13 @@ public class Module {
             });
         }
     }
+
     public void mouseReleased(int mouseX, int mouseY, int state) {
         if (opened) {
             settings.stream().filter(s -> s.setting.getDisplayable()).forEach(setting -> setting.mouseReleased(mouseX, mouseY, state));
         }
     }
+
     public boolean isHovered(int mouseX, int mouseY) {
         y = (int) (tab.getPosY() + 15);
         for (Module tabModule : tab.getModules()) {
@@ -210,8 +213,10 @@ public class Module {
             return mouseX >= tab.getPosX() && mouseY >= y && mouseX <= tab.getPosX() + 101 && mouseY <= y + 14;
         return mouseX >= tab.getPosX() && mouseY >= y && mouseX <= tab.getPosX() + 101 && mouseY <= y + yPerModule;
     }
+
     private void update() {
     }
+
     public net.nonemc.leaf.features.module.Module getModule() {
         return module;
     }

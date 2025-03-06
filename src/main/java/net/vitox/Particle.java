@@ -1,19 +1,19 @@
 package net.vitox;
 
-import net.nonemc.leaf.injection.access.StaticStorage;
-import net.nonemc.leaf.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.nonemc.leaf.injection.access.StaticStorage;
+import net.nonemc.leaf.utils.render.RenderUtils;
 
 import java.util.Random;
 
 class Particle {
 
-    public float x;
-    public float y;
     public final float size;
     private final float ySpeed = new Random().nextInt(5);
     private final float xSpeed = new Random().nextInt(5);
+    public float x;
+    public float y;
     private int height;
     private int width;
 
@@ -68,12 +68,12 @@ class Particle {
     }
 
     void interpolation() {
-        for(int n = 0; n <= 64; ++n) {
+        for (int n = 0; n <= 64; ++n) {
             final float f = n / 64.0f;
             final float p1 = lint1(f);
             final float p2 = lint2(f);
 
-            if(p1 != p2) {
+            if (p1 != p2) {
                 y -= f;
                 x -= f;
             }
@@ -83,11 +83,11 @@ class Particle {
     void fall() {
         try {
             final Minecraft mc = Minecraft.getMinecraft();
-            if(mc == null)
-            		return;
+            if (mc == null)
+                return;
             final ScaledResolution scaledResolution = StaticStorage.scaledResolution;
-            if(scaledResolution == null)
-            		return;
+            if (scaledResolution == null)
+                return;
             y = (y + ySpeed);
             x = (x + xSpeed);
 
@@ -102,7 +102,7 @@ class Particle {
 
             if (y < 1)
                 y = scaledResolution.getScaledHeight();
-        }catch (Exception E){
+        } catch (Exception E) {
             E.printStackTrace();
         }
     }

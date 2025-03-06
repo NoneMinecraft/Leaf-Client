@@ -5,9 +5,9 @@
  */
 package net.nonemc.leaf.features.module.modules.movement.speeds.ncp
 
+import net.minecraft.util.AxisAlignedBB
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
 import net.nonemc.leaf.utils.MovementUtils
-import net.minecraft.util.AxisAlignedBB
 
 class Boost : SpeedMode("Boost") {
     private var motionDelay = 0
@@ -18,7 +18,10 @@ class Boost : SpeedMode("Boost") {
         var offset = 4.69
         var shouldOffset = true
 
-        for (o in mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.entityBoundingBox.offset(mc.thePlayer.motionX / offset, 0.0, mc.thePlayer.motionZ / offset))) {
+        for (o in mc.theWorld.getCollidingBoundingBoxes(
+            mc.thePlayer,
+            mc.thePlayer.entityBoundingBox.offset(mc.thePlayer.motionX / offset, 0.0, mc.thePlayer.motionZ / offset)
+        )) {
             if (o is AxisAlignedBB) {
                 shouldOffset = false
                 break
@@ -41,10 +44,12 @@ class Boost : SpeedMode("Boost") {
                     mc.thePlayer.motionX *= speed
                     mc.thePlayer.motionZ *= speed
                 }
+
                 2 -> {
                     mc.thePlayer.motionX /= 1.458
                     mc.thePlayer.motionZ /= 1.458
                 }
+
                 4 -> {
                     if (shouldOffset) mc.thePlayer.setPosition(
                         mc.thePlayer.posX + mc.thePlayer.motionX / offset,
@@ -57,5 +62,6 @@ class Boost : SpeedMode("Boost") {
         }
     }
 
-    private fun shouldSpeedUp() = !mc.thePlayer.isInWater && !mc.thePlayer.isOnLadder && !mc.thePlayer.isSneaking && MovementUtils.isMoving()
+    private fun shouldSpeedUp() =
+        !mc.thePlayer.isInWater && !mc.thePlayer.isOnLadder && !mc.thePlayer.isSneaking && MovementUtils.isMoving()
 }

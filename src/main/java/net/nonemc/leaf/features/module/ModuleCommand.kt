@@ -1,18 +1,18 @@
-
 package net.nonemc.leaf.features.module
 
+import net.minecraft.block.Block
 import net.nonemc.leaf.features.command.Command
 import net.nonemc.leaf.utils.block.BlockUtils
 import net.nonemc.leaf.utils.misc.StringUtils
 import net.nonemc.leaf.value.*
-import net.minecraft.block.Block
 
 /**
  * Module command
  *
  * @author SenkJu
  */
-class ModuleCommand(val module: Module, val values: List<Value<*>> = module.values) : Command(module.name.lowercase(), emptyArray()) {
+class ModuleCommand(val module: Module, val values: List<Value<*>> = module.values) :
+    Command(module.name.lowercase(), emptyArray()) {
 
     init {
         if (values.isEmpty())
@@ -52,7 +52,11 @@ class ModuleCommand(val module: Module, val values: List<Value<*>> = module.valu
                 if (value is IntegerValue || value is FloatValue || value is TextValue)
                     chatSyntax("$moduleName ${args[1].lowercase()} <value>")
                 else if (value is ListValue)
-                    chatSyntax("$moduleName ${args[1].lowercase()} <${value.values.joinToString(separator = "/").lowercase()}>")
+                    chatSyntax(
+                        "$moduleName ${args[1].lowercase()} <${
+                            value.values.joinToString(separator = "/").lowercase()
+                        }>"
+                    )
                 return
             }
 
@@ -77,16 +81,22 @@ class ModuleCommand(val module: Module, val values: List<Value<*>> = module.valu
                         playEdit()
                         return
                     }
+
                     is IntegerValue -> value.set(args[2].toInt())
                     is FloatValue -> value.set(args[2].toFloat())
                     is ListValue -> {
                         if (!value.values.any { it.lowercase() == args[2].lowercase() }) {
-                            chatSyntax("$moduleName ${args[1].lowercase()} <${value.values.joinToString(separator = "/").lowercase()}>")
+                            chatSyntax(
+                                "$moduleName ${args[1].lowercase()} <${
+                                    value.values.joinToString(separator = "/").lowercase()
+                                }>"
+                            )
                             return
                         }
 
                         value.set(args[2])
                     }
+
                     is TextValue -> value.set(StringUtils.toCompleteString(args, 2))
                 }
 
@@ -105,13 +115,15 @@ class ModuleCommand(val module: Module, val values: List<Value<*>> = module.valu
             1 -> values
                 .filter { it !is FontValue && it.name.startsWith(args[0], true) }
                 .map { it.name.lowercase() }
+
             2 -> {
-                when(module.getValue(args[0])) {
+                when (module.getValue(args[0])) {
                     is BlockValue -> {
                         return Block.blockRegistry.keys
                             .map { it.resourcePath.lowercase() }
                             .filter { it.startsWith(args[1], true) }
                     }
+
                     is ListValue -> {
                         values.forEach { value ->
                             if (!value.name.equals(args[0], true))
@@ -121,9 +133,11 @@ class ModuleCommand(val module: Module, val values: List<Value<*>> = module.valu
                         }
                         return emptyList()
                     }
+
                     else -> emptyList()
                 }
             }
+
             else -> emptyList()
         }
     }

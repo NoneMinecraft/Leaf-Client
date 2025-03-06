@@ -1,30 +1,32 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.dropdown;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.util.MathHelper;
 import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
 import net.nonemc.leaf.features.module.modules.client.HUD;
+import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
 import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.impl.Fonts;
 import net.nonemc.leaf.utils.math.MathUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.utils.timer.Timer;
 import net.nonemc.leaf.value.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.stream.Collectors;
+
 public class Setting {
-    public Value setting;
-    private Module module;
-    public boolean opened;
     private final Timer backSpace = new Timer();
     private final Timer caretTimer = new Timer();
+    public Value setting;
+    public boolean opened;
     public int height;
     public float percent = 0;
+    private final Module module;
+    private boolean dragging, dragging2;
 
     public Setting(Value setting, Module module) {
         this.setting = setting;
@@ -37,14 +39,13 @@ public class Setting {
 
     public void drawScreen(int mouseX, int mouseY) {
         int y = getY();
-        HUD hud = (HUD) Leaf.moduleManager.getModule(HUD.class);
+        HUD hud = Leaf.moduleManager.getModule(HUD.class);
         ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         boolean scissor = scaledResolution.getScaleFactor() != 1;
         double clamp = MathHelper.clamp_double(Minecraft.getMinecraft().getDebugFPS() / 30, 1, 9999);
 
 
-        if (setting instanceof FloatValue) {
-            final FloatValue numberValue = (FloatValue) setting;
+        if (setting instanceof FloatValue numberValue) {
             if (module.yPerModule == module.getY() && scissor) {
                 GL11.glPushMatrix();
                 GL11.glScissor((int) (module.tab.getPosX() * 2 + 1), 0, 197, 999999999);
@@ -52,8 +53,8 @@ public class Setting {
             }
 
             double rounded = (int) (numberValue.get() * 100.0D) / 100.0D;
-            final double percentBar = (numberValue.get()- numberValue.getMinimum()
-                  ) / (numberValue.getMaximum() - numberValue.getMinimum());
+            final double percentBar = (numberValue.get() - numberValue.getMinimum()
+            ) / (numberValue.getMaximum() - numberValue.getMinimum());
 
             percent = Math.max(0, Math.min(1, (float) (percent + (Math.max(0, Math.min(percentBar, 1)) - percent) * (0.2 / clamp))));
             RenderUtils.drawRect(module.tab.getPosX() + 1, y + 3, module.tab.getPosX() + 99, y + 14, new Color(0, 0, 0, 50).getRGB());
@@ -64,10 +65,10 @@ public class Setting {
                 double difference = numberValue.getMaximum() - numberValue.getMinimum();
                 double value = numberValue.getMinimum() +
                         MathHelper.clamp_double((mouseX - (module.tab.getPosX() + 1)) / 99, 0, 1) * difference;
-                double set = MathUtils.incValue(value,0.01);
+                double set = MathUtils.incValue(value, 0.01);
 
                 numberValue.set(set);
-             //   EventManager.call(new SettingEvent(module.getModule(), setting.getName(), setting.getSliderNumber()));
+                //   EventManager.call(new SettingEvent(module.getModule(), setting.getName(), setting.getSliderNumber()));
             }
 
             if (module.yPerModule == module.getY() && scissor) {
@@ -76,8 +77,7 @@ public class Setting {
             }
 
         }
-        if (setting instanceof IntegerValue) {
-            final IntegerValue integerValue = (IntegerValue) setting;
+        if (setting instanceof IntegerValue integerValue) {
             if (module.yPerModule == module.getY() && scissor) {
                 GL11.glPushMatrix();
                 GL11.glScissor((int) (module.tab.getPosX() * 2 + 1), 0, 197, 999999999);
@@ -85,7 +85,7 @@ public class Setting {
             }
 
             double rounded = (int) (integerValue.get() * 100.0D) / 100.0D;
-            final double percentBar = (integerValue.get().doubleValue()- integerValue.getMinimum()
+            final double percentBar = (integerValue.get().doubleValue() - integerValue.getMinimum()
             ) / (integerValue.getMaximum() - integerValue.getMinimum());
 
             percent = Math.max(0, Math.min(1, (float) (percent + (Math.max(0, Math.min(percentBar, 1)) - percent) * (0.2 / clamp))));
@@ -97,7 +97,7 @@ public class Setting {
                 double difference = integerValue.getMaximum() - integerValue.getMinimum();
                 double value = integerValue.getMinimum() +
                         MathHelper.clamp_double((mouseX - (module.tab.getPosX() + 1)) / 99, 0, 1) * difference;
-                double set = MathUtils.incValue(value,1);
+                double set = MathUtils.incValue(value, 1);
 
                 integerValue.set(set);
                 //   EventManager.call(new SettingEvent(module.getModule(), setting.getName(), setting.getSliderNumber()));
@@ -109,8 +109,7 @@ public class Setting {
             }
 
         }
-        if (setting instanceof BoolValue) {
-            final BoolValue boolValue = (BoolValue) setting;
+        if (setting instanceof BoolValue boolValue) {
             RenderUtils.drawRect(module.tab.getPosX() + 89, y + 4, module.tab.getPosX() + 99, y + 14, new Color(0, 0, 0, 50).getRGB());
             if (boolValue.get()) {
                 RenderUtils.drawCheck(module.tab.getPosX() + 91, y + 8.5f, 2, ClickGUIModule.generateColor().brighter().getRGB());
@@ -120,8 +119,7 @@ public class Setting {
                     new Color(227, 227, 227, 255).getRGB(), true);
 
         }
-        if (setting instanceof ListValue) {
-            final ListValue listValue = (ListValue) setting;
+        if (setting instanceof ListValue listValue) {
             Fonts.SF.SF_17.SF_17.drawString(listValue.getName(), module.tab.getPosX() + 3, (float) (y + 6),
                     0xffffffff, true);
             Fonts.SF.SF_17.SF_17.drawString(listValue.get().toUpperCase(),
@@ -129,28 +127,27 @@ public class Setting {
                     new Color(255, 255, 255, 255).getRGB(), true);
         }
 
-       if (setting instanceof TextValue){
-           final TextValue textValue = (TextValue) setting;
-        final String s = textValue.get();
+        if (setting instanceof TextValue textValue) {
+            final String s = textValue.get();
 
-        if (textValue.getTextHovered() && Keyboard.isKeyDown(Keyboard.KEY_BACK) && this.backSpace.delay(100) && s.length() >= 1) {
-            textValue.set(s.substring(0, s.length() - 1));
-            this.backSpace.reset();
+            if (textValue.getTextHovered() && Keyboard.isKeyDown(Keyboard.KEY_BACK) && this.backSpace.delay(100) && s.length() >= 1) {
+                textValue.set(s.substring(0, s.length() - 1));
+                this.backSpace.reset();
+            }
+
+            RenderUtils.drawRect(module.tab.getPosX() + 6, y + 16, module.tab.getPosX() + 84, y + 16.5, new Color(195, 195, 195, 220).getRGB());
+            Fonts.SF.SF_16.SF_16.drawString(textValue.getName(), module.tab.getPosX() + 5.5f, y + 1.5f, new Color(227, 227, 227, 255).getRGB());
+
+            if (Fonts.SF.SF_16.SF_16.stringWidth(s) > 65) {
+                Fonts.SF.SF_16.SF_16.drawString(Fonts.SF.SF_16.SF_16.trimStringToWidth(s, 78, true), module.tab.getPosX() + 6, y + 10, 0xFFFFFFFF);
+            } else {
+                Fonts.SF.SF_16.SF_16.drawString(s, module.tab.getPosX() + 6, y + 10, 0xFFFFFFFF);
+            }
+
         }
 
-        RenderUtils.drawRect(module.tab.getPosX() + 6, y + 16, module.tab.getPosX() + 84, y + 16.5, new Color(195, 195, 195, 220).getRGB());
-        Fonts.SF.SF_16.SF_16.drawString(textValue.getName(), module.tab.getPosX() + 5.5f, y + 1.5f, new Color(227, 227, 227, 255).getRGB());
-
-        if (Fonts.SF.SF_16.SF_16.stringWidth(s) > 65) {
-            Fonts.SF.SF_16.SF_16.drawString(Fonts.SF.SF_16.SF_16.trimStringToWidth(s, 78, true), module.tab.getPosX() + 6, y + 10, 0xFFFFFFFF);
-        } else {
-            Fonts.SF.SF_16.SF_16.drawString(s, module.tab.getPosX() + 6, y + 10, 0xFFFFFFFF);
-        }
 
     }
-
-
-        }
 
     private int getY() {
         int y = module.y + 14;
@@ -165,39 +162,36 @@ public class Setting {
     }
 
     public int getHeight() {
-            return 15;
+        return 15;
     }
-
-    private boolean dragging,dragging2;
 
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (isHovered(mouseX, mouseY)) {
 
-            if (setting instanceof BoolValue) {
-                final BoolValue boolValue = (BoolValue) setting;
+            if (setting instanceof BoolValue boolValue) {
                 if (mouseButton == 0) {
-                  if (boolValue.get()){
-                      boolValue.set(false);
-                  }else {
-                      boolValue.set(true);
-                  }
+                    if (boolValue.get()) {
+                        boolValue.set(false);
+                    } else {
+                        boolValue.set(true);
+                    }
                     //   EventManager.call(new SettingEvent(module.getModule(), boolValue.getName(), boolValue.getName(), setting.getCheckBoxProperty()));
                 }
             }
-          if (setting instanceof ListValue){
+            if (setting instanceof ListValue) {
                 if (mouseButton == 0) {
-                    ListValue m = (ListValue)this.setting;
+                    ListValue m = (ListValue) this.setting;
                     String current = m.get();
-                    this.setting.set(m.getValues()[m.getModeListNumber(current) + 1 >= m.getValues().length?0:m.getModeListNumber(current) + 1]);
-                   // EventManager.call(new SettingEvent(module.getModule(), setting.getName(), setting.getComboBoxProperty()));
+                    this.setting.set(m.getValues()[m.getModeListNumber(current) + 1 >= m.getValues().length ? 0 : m.getModeListNumber(current) + 1]);
+                    // EventManager.call(new SettingEvent(module.getModule(), setting.getName(), setting.getComboBoxProperty()));
                 }
-        }
+            }
 
-         if (setting instanceof IntegerValue) {
-             if (mouseButton == 0) {
-                 dragging2 = true;
-             }
-         }
+            if (setting instanceof IntegerValue) {
+                if (mouseButton == 0) {
+                    dragging2 = true;
+                }
+            }
             if (setting instanceof FloatValue) {
                 if (mouseButton == 0) {
                     dragging = true;
@@ -272,13 +266,15 @@ public class Setting {
 
     public boolean isHovered(int mouseX, int mouseY) {
         int y = getY();
-        if (setting instanceof FloatValue){}
+        if (setting instanceof FloatValue) {
+        }
 
-        if (setting instanceof IntegerValue){}
+        if (setting instanceof IntegerValue) {
+        }
 
-          if (setting instanceof BoolValue)
-              return mouseX >= module.tab.getPosX() + 89 && mouseY >= y + 4 && mouseX <= module.tab
-                      .getPosX() + 99 && mouseY <= y + 14;
+        if (setting instanceof BoolValue)
+            return mouseX >= module.tab.getPosX() + 89 && mouseY >= y + 4 && mouseX <= module.tab
+                    .getPosX() + 99 && mouseY <= y + 14;
 
           /*
             case BINDABLE:
@@ -288,8 +284,8 @@ public class Setting {
            */
 
 
-              return mouseX >= module.tab.getPosX() && mouseY >= y && mouseX <= module.tab
-                      .getPosX() + 90 && mouseY <= y + 17;
+        return mouseX >= module.tab.getPosX() && mouseY >= y && mouseX <= module.tab
+                .getPosX() + 90 && mouseY <= y + 17;
 
 
     }

@@ -1,17 +1,5 @@
-
 package net.nonemc.leaf.features.module.modules.movement
 
-import net.nonemc.leaf.event.*
-import net.nonemc.leaf.features.module.Module
-import net.nonemc.leaf.features.module.ModuleCategory
-import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.PacketUtils
-import net.nonemc.leaf.utils.timer.MSTimer
-import net.nonemc.leaf.value.BoolValue
-import net.nonemc.leaf.value.FloatValue
-import net.nonemc.leaf.value.IntegerValue
-import net.nonemc.leaf.value.ListValue
 import net.minecraft.item.*
 import net.minecraft.network.Packet
 import net.minecraft.network.play.INetHandlerPlayServer
@@ -24,6 +12,17 @@ import net.minecraft.network.play.server.S2FPacketSetSlot
 import net.minecraft.network.play.server.S30PacketWindowItems
 import net.minecraft.util.BlockPos
 import net.minecraft.util.EnumFacing
+import net.nonemc.leaf.event.*
+import net.nonemc.leaf.features.module.Module
+import net.nonemc.leaf.features.module.ModuleCategory
+import net.nonemc.leaf.features.module.ModuleInfo
+import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.PacketUtils
+import net.nonemc.leaf.utils.timer.MSTimer
+import net.nonemc.leaf.value.BoolValue
+import net.nonemc.leaf.value.FloatValue
+import net.nonemc.leaf.value.IntegerValue
+import net.nonemc.leaf.value.ListValue
 import java.util.*
 import kotlin.math.sqrt
 
@@ -57,10 +56,11 @@ object NoSlow : Module() {
     private val consumeModifyValue = BoolValue("Consume", true)
     private val consumePacketValue = ListValue(
         "ConsumePacket",
-        arrayOf("None", "AAC5","UNCP","Bug","Packet"),
+        arrayOf("None", "AAC5", "UNCP", "Bug", "Packet"),
         "None"
     ).displayable { consumeModifyValue.get() }
-    private val conmode = ListValue("BugMode", arrayOf("C07","C16"),"C07").displayable { consumePacketValue.equals("Bug")}
+    private val conmode =
+        ListValue("BugMode", arrayOf("C07", "C16"), "C07").displayable { consumePacketValue.equals("Bug") }
     private val consumeTimingValue =
         ListValue("ConsumeTiming", arrayOf("Pre", "Post"), "Pre").displayable { consumeModifyValue.get() }
     private val consumeForwardMultiplier =
@@ -70,7 +70,18 @@ object NoSlow : Module() {
     private val bowModifyValue = BoolValue("Bow", true)
     private val bowPacketValue = ListValue(
         "BowPacket",
-        arrayOf("None", "AAC5", "SpamItemChange", "SpamPlace", "SpamEmptyPlace","UNCP", "Glitch", "Grim","InvalidC08", "Packet"),
+        arrayOf(
+            "None",
+            "AAC5",
+            "SpamItemChange",
+            "SpamPlace",
+            "SpamEmptyPlace",
+            "UNCP",
+            "Glitch",
+            "Grim",
+            "InvalidC08",
+            "Packet"
+        ),
         "None"
     ).displayable { bowModifyValue.get() }
     private val bowTimingValue =
@@ -121,13 +132,16 @@ object NoSlow : Module() {
     private var sendPacket = false
     private var lastBlockingStat = false
     private var eatslow = false
+
     // bug
     private var bugt = 0
     private var start = false
     private var stop = false
     private var mstimer2 = MSTimer()
+
     //hypixel
     private var postPlace = false
+
     //UNCP
     private var shouldSwap = false
 
@@ -196,7 +210,7 @@ object NoSlow : Module() {
     }
 
     private fun sendPacket2(packetType: String) {
-        val isUsingItem = usingItemFunc()
+        usingItemFunc()
         when (packetType.lowercase()) {
             "aac5" -> {
                 mc.netHandler.addToSendQueue(
@@ -210,6 +224,7 @@ object NoSlow : Module() {
                     )
                 )
             }
+
             "spamitemchange" -> {
                 mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem))
             }
@@ -226,13 +241,30 @@ object NoSlow : Module() {
                 mc.netHandler.addToSendQueue(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9))
                 mc.netHandler.addToSendQueue(C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem))
             }
+
             "Intave" -> {
-                if (start) PacketUtils.sendPacketNoEvent(C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,BlockPos.ORIGIN,EnumFacing.UP))
+                if (start) PacketUtils.sendPacketNoEvent(
+                    C07PacketPlayerDigging(
+                        C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
+                        BlockPos.ORIGIN,
+                        EnumFacing.UP
+                    )
+                )
             }
+
             "uncp" -> {
                 if (start && (shouldSwap)) {
                     mc.netHandler.addToSendQueue(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9))
-                    PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 255, mc.thePlayer.heldItem, 0f, 0f, 0f))
+                    PacketUtils.sendPacketNoEvent(
+                        C08PacketPlayerBlockPlacement(
+                            BlockPos.ORIGIN,
+                            255,
+                            mc.thePlayer.heldItem,
+                            0f,
+                            0f,
+                            0f
+                        )
+                    )
                     shouldSwap = false
                 }
             }
@@ -350,10 +382,20 @@ object NoSlow : Module() {
                         )
                     }
                 }
+
                 "UNCP" -> {
                     if (event.eventState == EventState.POST && usingItemFunc()) {
                         mc.netHandler.addToSendQueue(C09PacketHeldItemChange((mc.thePlayer.inventory.currentItem + 1) % 9))
-                        PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 255, mc.thePlayer.heldItem, 0f, 0f, 0f))
+                        PacketUtils.sendPacketNoEvent(
+                            C08PacketPlayerBlockPlacement(
+                                BlockPos.ORIGIN,
+                                255,
+                                mc.thePlayer.heldItem,
+                                0f,
+                                0f,
+                                0f
+                            )
+                        )
                         PacketUtils.sendPacketNoEvent(
                             C08PacketPlayerBlockPlacement(
                                 BlockPos(-1, -1, -1), 255, mc.thePlayer.heldItem, 0f, 0f, 0f
@@ -399,14 +441,17 @@ object NoSlow : Module() {
                         )
                     }
                 }
+
                 "bug" -> {
                     mc.netHandler.addToSendQueue(C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT))
                     mc.thePlayer.stopUsingItem()
                     mc.thePlayer.closeScreen()
                 }
+
                 "intavesword" -> {
                     if (start) PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem))
                 }
+
                 "invalidc08" -> {
                     val heldItem = mc.thePlayer.heldItem
                     if (event.eventState == EventState.PRE) {
@@ -417,7 +462,16 @@ object NoSlow : Module() {
 
                         if (getEmptySlot() != -1) {
                             if (mc.thePlayer.ticksExisted % 3 == 0)
-                                PacketUtils.sendPacketNoEvent(C08PacketPlayerBlockPlacement(BlockPos(-1, -1, -1), 1, null, 0f, 0f, 0f))
+                                PacketUtils.sendPacketNoEvent(
+                                    C08PacketPlayerBlockPlacement(
+                                        BlockPos(-1, -1, -1),
+                                        1,
+                                        null,
+                                        0f,
+                                        0f,
+                                        0f
+                                    )
+                                )
                         }
                     }
                 }
@@ -471,6 +525,7 @@ object NoSlow : Module() {
                         }
                     }
                 }
+
                 "grimc09" -> {
                     val handle = mc.thePlayer.inventory.currentItem
                     mc.netHandler.addToSendQueue(C09PacketHeldItemChange(handle % 8 + 1))
@@ -542,12 +597,10 @@ object NoSlow : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
-        var count = 0
-        var lastItem: ItemStack? = null
         val isBlocking =
             mc.thePlayer.isUsingItem && mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.item is ItemSword
         val player = mc.thePlayer ?: return
-        val currentItem = player.currentEquippedItem
+        player.currentEquippedItem
         if (mc.thePlayer == null || mc.theWorld == null || (onlyGround.get() && !mc.thePlayer.onGround))
             return
 
@@ -640,7 +693,7 @@ object NoSlow : Module() {
             is C08PacketPlayerBlockPlacement -> {
                 if (packet.stack?.item != null && mc.thePlayer.heldItem?.item != null && packet.stack.item == mc.thePlayer.heldItem?.item) {
                     if ((consumePacketValue.get() == "UNCP" && (packet.stack.item is ItemFood || packet.stack.item is ItemPotion || packet.stack.item is ItemBucketMilk)) || (bowPacketValue.get() == "UNCP" && packet.stack.item is ItemBow)) {
-                        shouldSwap = true;
+                        shouldSwap = true
                     }
                 }
             }
@@ -735,8 +788,12 @@ object NoSlow : Module() {
             }
         }
     }
-    private fun isUNCPBlocking() = modeValue.get() == "UNCP" && mc.gameSettings.keyBindUseItem.isKeyDown && (mc.thePlayer.heldItem?.item is ItemSword)
-    fun usingItemFunc() = mc.thePlayer?.heldItem != null && (mc.thePlayer.isUsingItem || (mc.thePlayer.heldItem?.item is ItemSword) || isUNCPBlocking())
+
+    private fun isUNCPBlocking() =
+        modeValue.get() == "UNCP" && mc.gameSettings.keyBindUseItem.isKeyDown && (mc.thePlayer.heldItem?.item is ItemSword)
+
+    fun usingItemFunc() =
+        mc.thePlayer?.heldItem != null && (mc.thePlayer.isUsingItem || (mc.thePlayer.heldItem?.item is ItemSword) || isUNCPBlocking())
 
     override val tag: String
         get() = consumePacketValue.get()

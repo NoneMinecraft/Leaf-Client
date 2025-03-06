@@ -1,9 +1,9 @@
 package net.nonemc.leaf.features.special
 
+import net.minecraft.network.handshake.client.C00Handshake
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Listenable
 import net.nonemc.leaf.event.PacketEvent
-import net.minecraft.network.handshake.client.C00Handshake
 
 object ServerSpoof : Listenable {
     var enable = false

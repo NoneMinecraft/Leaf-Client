@@ -4,6 +4,11 @@
  */
 package net.nonemc.leaf.features.module.modules.combat
 
+import net.minecraft.enchantment.Enchantment
+import net.minecraft.item.ItemSword
+import net.minecraft.item.ItemTool
+import net.minecraft.network.play.client.C02PacketUseEntity
+import net.minecraft.network.play.client.C09PacketHeldItemChange
 import net.nonemc.leaf.event.AttackEvent
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
@@ -14,11 +19,6 @@ import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.utils.item.ItemUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
-import net.minecraft.enchantment.Enchantment
-import net.minecraft.item.ItemSword
-import net.minecraft.item.ItemTool
-import net.minecraft.network.play.client.C02PacketUseEntity
-import net.minecraft.network.play.client.C09PacketHeldItemChange
 
 @ModuleInfo(name = "AutoWeapon", category = ModuleCategory.COMBAT)
 class AutoWeapon : Module() {
@@ -37,7 +37,8 @@ class AutoWeapon : Module() {
     @EventTarget
     fun onPacket(event: PacketEvent) {
         if (event.packet is C02PacketUseEntity && event.packet.action == C02PacketUseEntity.Action.ATTACK &&
-                attackEnemy) {
+            attackEnemy
+        ) {
             attackEnemy = false
             val (slot, _) = (0..8)
                 .map { Pair(it, mc.thePlayer.inventory.getStackInSlot(it)) }

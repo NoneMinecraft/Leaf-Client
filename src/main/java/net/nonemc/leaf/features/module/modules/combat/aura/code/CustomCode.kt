@@ -5,7 +5,8 @@ import net.nonemc.leaf.features.module.modules.combat.Aura
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
- fun customCode(current: Float, target: Float, speed: Float): Double {
+
+fun customCode(current: Float, target: Float, speed: Float): Double {
     val engine: ScriptEngine = ScriptEngineManager().getEngineByName("JavaScript")
     val formattedExpression = Aura.customSmoothCode.get()
         .replace("current", current.toString())

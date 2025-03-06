@@ -1,13 +1,12 @@
-
 package net.nonemc.leaf.features.special
 
 import io.netty.buffer.Unpooled
+import net.minecraft.network.PacketBuffer
+import net.minecraft.network.play.client.C17PacketCustomPayload
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Listenable
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.utils.MinecraftInstance
-import net.minecraft.network.PacketBuffer
-import net.minecraft.network.play.client.C17PacketCustomPayload
 
 object AntiForge : MinecraftInstance(), Listenable {
     var enabled = true

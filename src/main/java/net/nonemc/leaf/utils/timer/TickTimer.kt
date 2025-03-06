@@ -1,4 +1,3 @@
-
 package net.nonemc.leaf.utils.timer
 
 class TickTimer {

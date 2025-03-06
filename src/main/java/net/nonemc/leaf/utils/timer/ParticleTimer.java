@@ -1,29 +1,26 @@
-
 package net.nonemc.leaf.utils.timer;
 
 public class ParticleTimer {
     public long lastMS;
     private long time;
+    private long prevTime;
 
     private long getCurrentMS() {
         return System.nanoTime() / 1000000L;
     }
-    private long prevTime;
+
     public boolean hasReached(double milliseconds) {
-        if ((double)(this.getCurrentMS() - this.lastMS) >= milliseconds) {
-            return true;
-        }
-        return false;
+        return (double) (this.getCurrentMS() - this.lastMS) >= milliseconds;
     }
-    public void setTime(long time) {
-        lastMS = time;
-    }
+
     public boolean hasTimeElapsed(long time) {
         return System.currentTimeMillis() - lastMS > time;
     }
+
     public boolean hasPassed(double milli) {
         return System.currentTimeMillis() - this.prevTime >= milli;
     }
+
     public boolean sleep(final long time) {
         if (time() >= time) {
             reset();
@@ -31,9 +28,11 @@ public class ParticleTimer {
         }
         return false;
     }
+
     public long time() {
         return System.nanoTime() / 1000000L - time;
     }
+
     public final long getElapsedTime() {
         return this.getCurrentMS() - this.lastMS;
     }
@@ -43,20 +42,19 @@ public class ParticleTimer {
     }
 
     public boolean delay(float milliSec) {
-        if ((float)(this.getTime() - this.lastMS) >= milliSec) {
-            return true;
-        }
-        return false;
+        return (float) (this.getTime() - this.lastMS) >= milliSec;
     }
 
     public long getTime() {
         return System.nanoTime() / 1000000L;
     }
 
+    public void setTime(long time) {
+        lastMS = time;
+    }
+
     public boolean isDelayComplete(long delay) {
-        if (System.currentTimeMillis() - this.lastMS > delay)
-            return true;
-        return false;
+        return System.currentTimeMillis() - this.lastMS > delay;
     }
 }
 

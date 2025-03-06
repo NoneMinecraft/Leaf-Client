@@ -5,11 +5,11 @@
  */
 package net.nonemc.leaf.features.module.modules.movement.speeds.aac
 
+import net.minecraft.block.BlockCarpet
+import net.minecraft.util.MathHelper
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
 import net.nonemc.leaf.utils.MovementUtils
 import net.nonemc.leaf.utils.block.BlockUtils.getBlock
-import net.minecraft.block.BlockCarpet
-import net.minecraft.util.MathHelper
 
 class AACHop3313 : SpeedMode("AACHop3.3.13") {
     override fun onUpdate() {

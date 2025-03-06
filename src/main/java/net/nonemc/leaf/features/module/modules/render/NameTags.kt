@@ -1,6 +1,11 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.client.renderer.GlStateManager.*
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.potion.Potion
+import net.minecraft.potion.PotionEffect
+import net.minecraft.util.ResourceLocation
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render3DEvent
@@ -14,12 +19,6 @@ import net.nonemc.leaf.utils.extensions.ping
 import net.nonemc.leaf.utils.render.ColorUtils
 import net.nonemc.leaf.utils.render.RenderUtils.*
 import net.nonemc.leaf.value.*
-import net.minecraft.client.renderer.GlStateManager.*
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionEffect
-import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11.*
 import java.awt.Color
 import kotlin.math.roundToInt
@@ -42,7 +41,7 @@ class NameTags : Module() {
     private val jelloColorValue = BoolValue("JelloHPColor", true).displayable { modeValue.equals("Jello") }
     private val jelloAlphaValue = IntegerValue("JelloAlpha", 170, 0, 255).displayable { modeValue.equals("Jello") }
     private val scaleValue = FloatValue("Scale", 1F, 1F, 4F)
-    private val onlyTarget = BoolValue("OnlyTarget",false)
+    private val onlyTarget = BoolValue("OnlyTarget", false)
     private val translateY = FloatValue("TanslateY", 0.55F, -2F, 2F)
     private val backgroundColorRedValue = IntegerValue("Background-R", 0, 0, 255)
     private val backgroundColorGreenValue = IntegerValue("Background-G", 0, 0, 255)
@@ -107,7 +106,7 @@ class NameTags : Module() {
         if (onlyTarget.get() && targetTicks == 0) {
             return
         }
-        
+
         // Set fontrenderer local
         val fontRenderer = fontValue.get()
 
@@ -120,7 +119,8 @@ class NameTags : Module() {
 
         glTranslated( // Translate to player position with render pos and interpolate it
             entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * timer.renderPartialTicks - renderManager.renderPosX,
-            entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * timer.renderPartialTicks - renderManager.renderPosY + entity.eyeHeight.toDouble() + translateY.get().toDouble(),
+            entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * timer.renderPartialTicks - renderManager.renderPosY + entity.eyeHeight.toDouble() + translateY.get()
+                .toDouble(),
             entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * timer.renderPartialTicks - renderManager.renderPosZ
         )
 
@@ -152,20 +152,46 @@ class NameTags : Module() {
                 val maxWidth = width * 2 + 12F
 
                 glScalef(-scale * 2, -scale * 2, scale * 2)
-                drawRect(-width - 6F, -fontRenderer.FONT_HEIGHT * 1.7F, width + 6F, -2F, Color(0, 0, 0, jelloAlphaValue.get()))
-                drawRect(-width - 6F, -2F, -width - 6F + (maxWidth * healthPercent), 0F, ColorUtils.healthColor(entity.health, entity.maxHealth, jelloAlphaValue.get()))
-                drawRect(-width - 6F + (maxWidth * healthPercent), -2F, width + 6F, 0F, Color(0, 0, 0, jelloAlphaValue.get()))
-                fontRenderer.drawString(tag, (-fontRenderer.getStringWidth(tag) * 0.5F).toInt(), (-fontRenderer.FONT_HEIGHT * 1.4F).toInt(), Color.WHITE.rgb)
+                drawRect(
+                    -width - 6F,
+                    -fontRenderer.FONT_HEIGHT * 1.7F,
+                    width + 6F,
+                    -2F,
+                    Color(0, 0, 0, jelloAlphaValue.get())
+                )
+                drawRect(
+                    -width - 6F,
+                    -2F,
+                    -width - 6F + (maxWidth * healthPercent),
+                    0F,
+                    ColorUtils.healthColor(entity.health, entity.maxHealth, jelloAlphaValue.get())
+                )
+                drawRect(
+                    -width - 6F + (maxWidth * healthPercent),
+                    -2F,
+                    width + 6F,
+                    0F,
+                    Color(0, 0, 0, jelloAlphaValue.get())
+                )
+                fontRenderer.drawString(
+                    tag,
+                    (-fontRenderer.getStringWidth(tag) * 0.5F).toInt(),
+                    (-fontRenderer.FONT_HEIGHT * 1.4F).toInt(),
+                    Color.WHITE.rgb
+                )
             }
 
             "liquid" -> {
                 // Modify tag
                 val bot = AntiBot.isBot(entity)
-                val nameColor = if (bot) "§3" else if (entity.isInvisible) "§6" else if (entity.isSneaking) "§4" else "§7"
+                val nameColor =
+                    if (bot) "§3" else if (entity.isInvisible) "§6" else if (entity.isSneaking) "§4" else "§7"
                 val ping = entity.ping
 
-                val distanceText = if (distanceValue.get()) "§7 [§a${mc.thePlayer.getDistanceToEntity(entity).roundToInt()}§7]" else ""
-                val pingText = if (pingValue.get() && entity is EntityPlayer) " §7[" + (if (ping > 200) "§c" else if (ping > 100) "§e" else "§a") + ping + "ms§7]" else ""
+                val distanceText =
+                    if (distanceValue.get()) "§7 [§a${mc.thePlayer.getDistanceToEntity(entity).roundToInt()}§7]" else ""
+                val pingText =
+                    if (pingValue.get() && entity is EntityPlayer) " §7[" + (if (ping > 200) "§c" else if (ping > 100) "§e" else "§a") + ping + "ms§7]" else ""
                 val healthText = if (healthValue.get()) "§7 [§f" + entity.health.toInt() + "§c❤§7]" else ""
                 val botText = if (bot) " §7[§6§lBot§7]" else ""
 
@@ -180,27 +206,67 @@ class NameTags : Module() {
                 glDisable(GL_TEXTURE_2D)
                 glEnable(GL_BLEND)
 
-                val bgColor = Color(backgroundColorRedValue.get(), backgroundColorGreenValue.get(), backgroundColorBlueValue.get(), backgroundColorAlphaValue.get())
-                val borderColor = Color(borderColorRedValue.get(), borderColorGreenValue.get(), borderColorBlueValue.get(), borderColorAlphaValue.get())
+                val bgColor = Color(
+                    backgroundColorRedValue.get(),
+                    backgroundColorGreenValue.get(),
+                    backgroundColorBlueValue.get(),
+                    backgroundColorAlphaValue.get()
+                )
+                val borderColor = Color(
+                    borderColorRedValue.get(),
+                    borderColorGreenValue.get(),
+                    borderColorBlueValue.get(),
+                    borderColorAlphaValue.get()
+                )
 
                 if (borderValue.get())
-                    quickDrawBorderedRect(-width - 2F, -2F, width + 4F, fontRenderer.FONT_HEIGHT + 2F + if (healthBarValue.get()) 2F else 0F, 2F, borderColor.rgb, bgColor.rgb)
+                    quickDrawBorderedRect(
+                        -width - 2F,
+                        -2F,
+                        width + 4F,
+                        fontRenderer.FONT_HEIGHT + 2F + if (healthBarValue.get()) 2F else 0F,
+                        2F,
+                        borderColor.rgb,
+                        bgColor.rgb
+                    )
                 else
-                    quickDrawRect(-width - 2F, -2F, width + 4F, fontRenderer.FONT_HEIGHT + 2F + if (healthBarValue.get()) 2F else 0F, bgColor.rgb)
+                    quickDrawRect(
+                        -width - 2F,
+                        -2F,
+                        width + 4F,
+                        fontRenderer.FONT_HEIGHT + 2F + if (healthBarValue.get()) 2F else 0F,
+                        bgColor.rgb
+                    )
 
                 if (healthBarValue.get()) {
-                    quickDrawRect(-width - 2F, fontRenderer.FONT_HEIGHT + 3F, -width - 2F + dist, fontRenderer.FONT_HEIGHT + 4F, Color(10, 155, 10).rgb)
-                    quickDrawRect(-width - 2F, fontRenderer.FONT_HEIGHT + 3F, -width - 2F + (dist * (entity.health.toFloat() / entity.maxHealth.toFloat()).coerceIn(0F, 1F)), fontRenderer.FONT_HEIGHT + 4F, Color(10, 255, 10).rgb)
+                    quickDrawRect(
+                        -width - 2F,
+                        fontRenderer.FONT_HEIGHT + 3F,
+                        -width - 2F + dist,
+                        fontRenderer.FONT_HEIGHT + 4F,
+                        Color(10, 155, 10).rgb
+                    )
+                    quickDrawRect(
+                        -width - 2F,
+                        fontRenderer.FONT_HEIGHT + 3F,
+                        -width - 2F + (dist * (entity.health.toFloat() / entity.maxHealth.toFloat()).coerceIn(0F, 1F)),
+                        fontRenderer.FONT_HEIGHT + 4F,
+                        Color(10, 255, 10).rgb
+                    )
                 }
 
                 glEnable(GL_TEXTURE_2D)
 
-                fontRenderer.drawString(text, 1F + -width, if (fontRenderer == Fonts.minecraftFont) 1F else 1.5F,
-                    0xFFFFFF, fontShadowValue.get())
+                fontRenderer.drawString(
+                    text, 1F + -width, if (fontRenderer == Fonts.minecraftFont) 1F else 1.5F,
+                    0xFFFFFF, fontShadowValue.get()
+                )
 
                 var foundPotion = false
                 if (potionValue.get() && entity is EntityPlayer) {
-                    val potions = (entity.getActivePotionEffects() as Collection<PotionEffect>).map { Potion.potionTypes[it.getPotionID()] }.filter { it.hasStatusIcon() }
+                    val potions =
+                        (entity.getActivePotionEffects() as Collection<PotionEffect>).map { Potion.potionTypes[it.getPotionID()] }
+                            .filter { it.hasStatusIcon() }
                     if (!potions.isEmpty()) {
                         foundPotion = true
 
@@ -218,7 +284,15 @@ class NameTags : Module() {
                             color(1.0F, 1.0F, 1.0F, 1.0F)
                             mc.getTextureManager().bindTexture(inventoryBackground)
                             val i1 = potion.getStatusIconIndex()
-                            drawTexturedModalRect(minX + index * 20, -22, 0 + i1 % 8 * 18, 198 + i1 / 8 * 18, 18, 18, 0F)
+                            drawTexturedModalRect(
+                                minX + index * 20,
+                                -22,
+                                0 + i1 % 8 * 18,
+                                198 + i1 / 8 * 18,
+                                18,
+                                18,
+                                0F
+                            )
                             index++
                         }
                         disableRescaleNormal()
@@ -237,7 +311,11 @@ class NameTags : Module() {
                         }
 
                         mc.renderItem.zLevel = -147F
-                        mc.renderItem.renderItemAndEffectIntoGUI(entity.getEquipmentInSlot(index), -50 + index * 20, if (potionValue.get() && foundPotion) -42 else -22)
+                        mc.renderItem.renderItemAndEffectIntoGUI(
+                            entity.getEquipmentInSlot(index),
+                            -50 + index * 20,
+                            if (potionValue.get() && foundPotion) -42 else -22
+                        )
                     }
 
                     enableAlpha()
@@ -263,7 +341,7 @@ class NameTags : Module() {
                 drawRect(-width - 4F, -fontRenderer.FONT_HEIGHT * 3F, width + 4F, -3F, bgColor)
 
                 // render hp bar
-                if (healthPercent> 1) {
+                if (healthPercent > 1) {
                     healthPercent = 1F
                 }
 
@@ -273,7 +351,12 @@ class NameTags : Module() {
                 // string
                 fontRenderer.drawString(tag, -width, -fontRenderer.FONT_HEIGHT * 2 - 4, Color.WHITE.rgb)
                 glScalef(0.5F, 0.5F, 0.5F)
-                fontRenderer.drawString("Health: " + entity.health.toInt(), -width * 2, -fontRenderer.FONT_HEIGHT * 2, Color.WHITE.rgb)
+                fontRenderer.drawString(
+                    "Health: " + entity.health.toInt(),
+                    -width * 2,
+                    -fontRenderer.FONT_HEIGHT * 2,
+                    Color.WHITE.rgb
+                )
             }
         }
         // Reset caps

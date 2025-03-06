@@ -121,7 +121,13 @@ class AWTFontRenderer(val font: Font, startChar: Int = 0, stopChar: Int = 255) {
 
                 // Ugly solution, because floating point numbers, but I think that shouldn't be that much of a problem
                 GlStateManager.scale(reverse, reverse, reverse)
-                Minecraft.getMinecraft().fontRendererObj.drawString("$char", currX.toFloat() * scale.toFloat() + 1, 2f, color, false)
+                Minecraft.getMinecraft().fontRendererObj.drawString(
+                    "$char",
+                    currX.toFloat() * scale.toFloat() + 1,
+                    2f,
+                    color,
+                    false
+                )
                 currX += Minecraft.getMinecraft().fontRendererObj.getStringWidth("$char") * reverse
 
                 GlStateManager.scale(scale, scale, scale)
@@ -217,11 +223,15 @@ class AWTFontRenderer(val font: Font, startChar: Int = 0, stopChar: Int = 255) {
 
         for (targetChar in startChar until stopChar)
             if (fontImages[targetChar] != null && charLocations[targetChar] != null)
-                graphics2D.drawImage(fontImages[targetChar], charLocations[targetChar]!!.x, charLocations[targetChar]!!.y,
-                    null)
+                graphics2D.drawImage(
+                    fontImages[targetChar], charLocations[targetChar]!!.x, charLocations[targetChar]!!.y,
+                    null
+                )
 
-        textureID = TextureUtil.uploadTextureImageAllocate(TextureUtil.glGenTextures(), bufferedImage, true,
-            true)
+        textureID = TextureUtil.uploadTextureImageAllocate(
+            TextureUtil.glGenTextures(), bufferedImage, true,
+            true
+        )
     }
 
     /**
@@ -267,10 +277,10 @@ class AWTFontRenderer(val font: Font, startChar: Int = 0, stopChar: Int = 255) {
 
         for (c in text.toCharArray()) {
             val fontChar = charLocations[
-                    if (c.toInt() < charLocations.size)
-                        c.toInt()
-                    else
-                        '\u0003'.toInt()
+                if (c.toInt() < charLocations.size)
+                    c.toInt()
+                else
+                    '\u0003'.toInt()
             ] ?: continue
 
             width += fontChar.width - 8

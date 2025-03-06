@@ -1,6 +1,6 @@
-
 package net.nonemc.leaf.features.module.modules.render;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.nonemc.leaf.event.AttackEvent;
 import net.nonemc.leaf.event.EventTarget;
 import net.nonemc.leaf.event.MotionEvent;
@@ -15,7 +15,6 @@ import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.utils.timer.ParticleTimer;
 import net.nonemc.leaf.value.BoolValue;
 import net.nonemc.leaf.value.IntegerValue;
-import net.minecraft.entity.EntityLivingBase;
 
 import java.util.List;
 

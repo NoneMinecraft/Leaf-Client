@@ -27,7 +27,7 @@ public class MinecraftWorldProvider implements IWorldProvider {
 
     private boolean isSolid(int x, int y, int z) {
         Block block = world.getBlockState(new BlockPos(x, y, z)).getBlock();
-        if(block == null) return true;
+        if (block == null) return true;
 
         return block.getMaterial().isSolid();
     }

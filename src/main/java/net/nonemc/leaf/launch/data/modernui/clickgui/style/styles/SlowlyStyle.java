@@ -1,5 +1,12 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles;
 
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.nonemc.leaf.launch.data.modernui.clickgui.Panel;
 import net.nonemc.leaf.launch.data.modernui.clickgui.elements.ButtonElement;
 import net.nonemc.leaf.launch.data.modernui.clickgui.elements.ModuleElement;
@@ -10,17 +17,11 @@ import net.nonemc.leaf.ui.i18n.LanguageManager;
 import net.nonemc.leaf.utils.block.BlockUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.value.*;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class SlowlyStyle extends Style {
@@ -41,7 +42,7 @@ public class SlowlyStyle extends Style {
             double i = MathHelper.clamp_double(((double) mouseX - (double) x) / ((double) width - 3), 0, 1);
 
             BigDecimal bigDecimal = new BigDecimal(Double.toString((min + (max - min) * i)));
-            bigDecimal = bigDecimal.setScale(2, 4);
+            bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
             return bigDecimal.floatValue();
         }
 
@@ -56,17 +57,17 @@ public class SlowlyStyle extends Style {
             RenderUtils.drawBorderedRect((float) panel.getX(), panel.getY() + 17 + panel.getFade(), (float) panel.getX() + panel.getWidth(), panel.getY() + 19 + panel.getFade() + 5, 3, new Color(42, 57, 79).getRGB(), new Color(42, 57, 79).getRGB());
         }
         GlStateManager.resetColor();
-        float textWidth = Fonts.font35.getStringWidth("§f" + StringUtils.stripControlCodes(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%",""))));
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%","")), (int) (panel.getX() - (textWidth - 100.0F) / 2F), panel.getY() + 7 - 3, Color.WHITE.getRGB());
+        float textWidth = Fonts.font35.getStringWidth("§f" + StringUtils.stripControlCodes(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%", ""))));
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%", "")), (int) (panel.getX() - (textWidth - 100.0F) / 2F), panel.getY() + 7 - 3, Color.WHITE.getRGB());
     }
 
     @Override
     public void drawDescription(int mouseX, int mouseY, String text) {
-        int textWidth = Fonts.font35.getStringWidth(LanguageManager.INSTANCE.get(text.replaceAll("%","")));
+        int textWidth = Fonts.font35.getStringWidth(LanguageManager.INSTANCE.get(text.replaceAll("%", "")));
 
         RenderUtils.drawBorderedRect(mouseX + 9, mouseY, mouseX + textWidth + 14, mouseY + Fonts.font35.FONT_HEIGHT + 3, 3F, new Color(42, 57, 79).getRGB(), new Color(42, 57, 79).getRGB());
         GlStateManager.resetColor();
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(text.replaceAll("%","")), mouseX + 12, mouseY + (Fonts.font35.FONT_HEIGHT / 2), Color.WHITE.getRGB());
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(text.replaceAll("%", "")), mouseX + 12, mouseY + (Fonts.font35.FONT_HEIGHT / 2), Color.WHITE.getRGB());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class SlowlyStyle extends Style {
 
         GlStateManager.resetColor();
 
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(buttonElement.getDisplayName().replaceAll("%","")), buttonElement.getX() + 5, buttonElement.getY() + 5, Color.WHITE.getRGB());
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(buttonElement.getDisplayName().replaceAll("%", "")), buttonElement.getX() + 5, buttonElement.getY() + 5, Color.WHITE.getRGB());
     }
 
     /*public static boolean drawCheckbox(final boolean value, final int x, final int y, final int mouseX, final int mouseY, final Color color) {
@@ -93,7 +94,7 @@ public class SlowlyStyle extends Style {
         Gui.drawRect(moduleElement.getX() - 1, moduleElement.getY() - 1, moduleElement.getX() + moduleElement.getWidth() + 1, moduleElement.getY() + moduleElement.getHeight() + 1, hoverColor(new Color(54, 71, 96), moduleElement.hoverTime).getRGB());
         Gui.drawRect(moduleElement.getX() - 1, moduleElement.getY() - 1, moduleElement.getX() + moduleElement.getWidth() + 1, moduleElement.getY() + moduleElement.getHeight() + 1, hoverColor(new Color(7, 152, 252, moduleElement.slowlyFade), moduleElement.hoverTime).getRGB());
         GlStateManager.resetColor();
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(moduleElement.getDisplayName().replaceAll("%","")), moduleElement.getX() + 5, moduleElement.getY() + 5, Color.WHITE.getRGB());
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(moduleElement.getDisplayName().replaceAll("%", "")), moduleElement.getX() + 5, moduleElement.getY() + 5, Color.WHITE.getRGB());
 
         // Draw settings
         final List<Value<?>> moduleValues = moduleElement.getModule().getValues();
@@ -107,7 +108,7 @@ public class SlowlyStyle extends Style {
 
                 moduleElement.slowlySettingsYPos = moduleElement.getY() + 6;
                 for (final Value value : moduleValues) {
-                    if(!value.getDisplayable())
+                    if (!value.getDisplayable())
                         continue;
 
                     if (value instanceof BoolValue) {
@@ -126,8 +127,7 @@ public class SlowlyStyle extends Style {
 
                         Fonts.font35.drawString(text, moduleElement.getX() + moduleElement.getWidth() + 6, moduleElement.slowlySettingsYPos + 2, ((BoolValue) value).get() ? Color.WHITE.getRGB() : Integer.MAX_VALUE);
                         moduleElement.slowlySettingsYPos += 11;
-                    } else if (value instanceof ListValue) {
-                        final ListValue listValue = (ListValue) value;
+                    } else if (value instanceof ListValue listValue) {
 
                         final String text = value.getName();
                         final float textWidth = Fonts.font35.getStringWidth(text);
@@ -166,8 +166,7 @@ public class SlowlyStyle extends Style {
                         if (!listValue.openList) {
                             moduleElement.slowlySettingsYPos += 1;
                         }
-                    } else if (value instanceof FloatValue) {
-                        final FloatValue floatValue = (FloatValue) value;
+                    } else if (value instanceof FloatValue floatValue) {
                         final String text = value.getName() + "§f: " + round(floatValue.get());
                         final float textWidth = Fonts.font35.getStringWidth(text);
 
@@ -181,8 +180,7 @@ public class SlowlyStyle extends Style {
 
                         Fonts.font35.drawString(text, moduleElement.getX() + moduleElement.getWidth() + 6, moduleElement.slowlySettingsYPos + 3, 0xffffff);
                         moduleElement.slowlySettingsYPos += 19;
-                    } else if (value instanceof IntegerValue) {
-                        final IntegerValue integerValue = (IntegerValue) value;
+                    } else if (value instanceof IntegerValue integerValue) {
                         final String text = value.getName() + "§f: " + (value instanceof BlockValue ? BlockUtils.getBlockName(integerValue.get()) + " (" + integerValue.get() + ")" : integerValue.get());
                         final float textWidth = Fonts.font35.getStringWidth(text);
 
@@ -196,14 +194,12 @@ public class SlowlyStyle extends Style {
 
                         Fonts.font35.drawString(text, moduleElement.getX() + moduleElement.getWidth() + 6, moduleElement.slowlySettingsYPos + 3, 0xffffff);
                         moduleElement.slowlySettingsYPos += 19;
-                    } else if (value instanceof FontValue) {
-                        final FontValue fontValue = (FontValue) value;
+                    } else if (value instanceof FontValue fontValue) {
                         final FontRenderer fontRenderer = fontValue.get();
 
                         String displayString = "Font: Unknown";
 
-                        if (fontRenderer instanceof GameFontRenderer) {
-                            final GameFontRenderer liquidFontRenderer = (GameFontRenderer) fontRenderer;
+                        if (fontRenderer instanceof GameFontRenderer liquidFontRenderer) {
 
                             displayString = "Font: " + liquidFontRenderer.getDefaultFont().getFont().getName() + " - " + liquidFontRenderer.getDefaultFont().getFont().getSize();
                         } else if (fontRenderer == Fonts.minecraftFont)
@@ -282,7 +278,7 @@ public class SlowlyStyle extends Style {
 
     private BigDecimal round(final float v) {
         BigDecimal bigDecimal = new BigDecimal(Float.toString(v));
-        bigDecimal = bigDecimal.setScale(2, 4);
+        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
         return bigDecimal;
     }
 

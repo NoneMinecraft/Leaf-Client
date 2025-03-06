@@ -1,11 +1,10 @@
-
 package net.nonemc.leaf.utils.render.shader.shaders
 
+import net.minecraft.client.gui.ScaledResolution
+import net.minecraft.client.shader.Framebuffer
 import net.nonemc.leaf.utils.MathUtils.gaussian
 import net.nonemc.leaf.utils.render.GLUtils
 import net.nonemc.leaf.utils.render.shader.Shader
-import net.minecraft.client.gui.ScaledResolution
-import net.minecraft.client.shader.Framebuffer
 import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL20

@@ -1,6 +1,8 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.block.Block
+import net.minecraft.init.Blocks
+import net.minecraft.util.BlockPos
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -13,9 +15,6 @@ import net.nonemc.leaf.utils.render.ColorUtils.rainbow
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.*
-import net.minecraft.block.Block
-import net.minecraft.init.Blocks
-import net.minecraft.util.BlockPos
 import java.awt.Color
 
 @ModuleInfo(name = "BlockESP", category = ModuleCategory.RENDER)
@@ -76,12 +75,15 @@ class BlockESP : Module() {
                     "box" -> {
                         RenderUtils.drawBlockBox(blockPos, color, true, true, outlineWidth.get())
                     }
+
                     "otherbox" -> {
                         RenderUtils.drawBlockBox(blockPos, color, false, true, outlineWidth.get())
                     }
+
                     "outline" -> {
                         RenderUtils.drawBlockBox(blockPos, color, true, false, outlineWidth.get())
                     }
+
                     "2d" -> {
                         RenderUtils.draw2D(blockPos, color.rgb, Color.BLACK.rgb)
                     }

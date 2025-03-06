@@ -2,8 +2,8 @@ package net.nonemc.leaf.value
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import net.nonemc.leaf.ui.font.Fonts
 import net.minecraft.client.gui.FontRenderer
+import net.nonemc.leaf.ui.font.Fonts
 
 /**
  * Font value represents a value with a font

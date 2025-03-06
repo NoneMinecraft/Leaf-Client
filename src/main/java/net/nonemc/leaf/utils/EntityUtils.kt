@@ -1,15 +1,5 @@
-
 package net.nonemc.leaf.utils
 
-import net.nonemc.leaf.Leaf
-import net.nonemc.leaf.features.module.modules.client.Target.animalValue
-import net.nonemc.leaf.features.module.modules.client.Target.deadValue
-import net.nonemc.leaf.features.module.modules.client.Target.invisibleValue
-import net.nonemc.leaf.features.module.modules.client.Target.mobValue
-import net.nonemc.leaf.features.module.modules.client.Target.playerValue
-import net.nonemc.leaf.features.module.modules.misc.AntiBot.isBot
-import net.nonemc.leaf.features.module.modules.misc.Teams
-import net.nonemc.leaf.utils.render.ColorUtils.stripColor
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EntityLivingBase
 import net.minecraft.entity.boss.EntityDragon
@@ -22,6 +12,15 @@ import net.minecraft.entity.passive.EntityBat
 import net.minecraft.entity.passive.EntitySquid
 import net.minecraft.entity.passive.EntityVillager
 import net.minecraft.entity.player.EntityPlayer
+import net.nonemc.leaf.Leaf
+import net.nonemc.leaf.features.module.modules.client.Target.animalValue
+import net.nonemc.leaf.features.module.modules.client.Target.deadValue
+import net.nonemc.leaf.features.module.modules.client.Target.invisibleValue
+import net.nonemc.leaf.features.module.modules.client.Target.mobValue
+import net.nonemc.leaf.features.module.modules.client.Target.playerValue
+import net.nonemc.leaf.features.module.modules.misc.AntiBot.isBot
+import net.nonemc.leaf.features.module.modules.misc.Teams
+import net.nonemc.leaf.utils.render.ColorUtils.stripColor
 
 object EntityUtils : MinecraftInstance() {
     fun isSelected(entity: Entity, canAttackCheck: Boolean): Boolean {
@@ -62,7 +61,11 @@ object EntityUtils : MinecraftInstance() {
     }
 
     fun isFriend(entity: Entity): Boolean {
-        return entity is EntityPlayer && entity.getName() != null && Leaf.fileManager.friendsConfig.isFriend(stripColor(entity.getName()))
+        return entity is EntityPlayer && entity.getName() != null && Leaf.fileManager.friendsConfig.isFriend(
+            stripColor(
+                entity.getName()
+            )
+        )
     }
 
     fun isFriend(entity: String): Boolean {

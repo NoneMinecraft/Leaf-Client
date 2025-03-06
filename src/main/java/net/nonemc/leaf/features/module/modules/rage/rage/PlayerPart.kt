@@ -3,6 +3,7 @@
 enum class getPart {
     HEAD, FEET, CHEST
 }
+
 enum class TargetPart {
     HEAD, FEET, CHEST
 }

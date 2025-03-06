@@ -24,6 +24,7 @@ class EventManager : MinecraftInstance() {
             }
         }
     }
+
     fun unregisterListener(listenable: Listenable) {
         for ((key, targets) in registry) {
             targets.removeIf { it.eventClass == listenable }
@@ -31,6 +32,7 @@ class EventManager : MinecraftInstance() {
             registry[key] = targets
         }
     }
+
     fun callEvent(event: Event) {
         val targets = registry[event.javaClass] ?: return
         try {
@@ -45,8 +47,8 @@ class EventManager : MinecraftInstance() {
                     throwable.printStackTrace()
                 }
             }
-        }catch (e :Exception){
-            e.printStackTrace();
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

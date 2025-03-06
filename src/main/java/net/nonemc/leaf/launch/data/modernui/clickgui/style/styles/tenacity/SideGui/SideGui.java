@@ -1,5 +1,6 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.tenacity.SideGui;
 
+import net.minecraft.client.gui.ScaledResolution;
 import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
 import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.impl.Fonts;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.Animation;
@@ -8,16 +9,14 @@ import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.impl.Decel
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.TimerUtil;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.objects.Drag;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.DrRenderUtils;
-
 import net.nonemc.leaf.utils.math.MathUtils;
 import net.nonemc.leaf.utils.render.RoundedUtil;
-import net.minecraft.client.gui.ScaledResolution;
 
 import java.awt.*;
 import java.util.HashMap;
 
 public class SideGui extends GuiPanel {
-  private final String[] categories = {"Scripts", "Configs"};
+    private final String[] categories = {"Scripts", "Configs"};
     public boolean focused;
     public Animation clickAnimation;
     private Animation hoverAnimation;
@@ -86,7 +85,7 @@ public class SideGui extends GuiPanel {
         textAnimation.setDirection(setDirection ? Direction.FORWARDS : Direction.BACKWARDS);
 
 
-        if(!textAnimation.isDone() || textAnimation.getDirection().equals(Direction.FORWARDS) && textAnimation.isDone()) {
+        if (!textAnimation.isDone() || textAnimation.getDirection().equals(Direction.FORWARDS) && textAnimation.isDone()) {
             //    FontUtil.iconFont26.drawString(FontUtil.PLAY, drag.getX() -
             //              ((FontUtil.iconFont26.getStringWidth(FontUtil.PLAY) + 10) * textAnimation.getOutput()),
             //     drag.getY() + FontUtil.iconFont26.getMiddleOfBox(rectHeight),

@@ -5,10 +5,10 @@
  */
 package net.nonemc.leaf.features.command.commands
 
+import net.minecraft.network.play.client.C01PacketChatMessage
 import net.nonemc.leaf.features.command.Command
 import net.nonemc.leaf.utils.PacketUtils
 import net.nonemc.leaf.utils.misc.StringUtils
-import net.minecraft.network.play.client.C01PacketChatMessage
 
 class SayCommand : Command("say", emptyArray()) {
     /**

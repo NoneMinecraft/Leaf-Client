@@ -1,9 +1,10 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.matrix
 
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
-import net.minecraft.network.play.client.C03PacketPlayer
+
 /**
 Thx To Zerolysimin#6403
  */
@@ -16,6 +17,7 @@ class MatrixCollideNofall : NoFallMode("MatrixCollide") {
         packetModify = false
         packet1Count = 0
     }
+
     override fun onNoFall(event: UpdateEvent) {
         if (mc.thePlayer.fallDistance.toInt() - mc.thePlayer.motionY > 3) {
             mc.thePlayer.motionY = 0.0
@@ -34,8 +36,9 @@ class MatrixCollideNofall : NoFallMode("MatrixCollide") {
         }
 
     }
+
     override fun onPacket(event: PacketEvent) {
-        if(event.packet is C03PacketPlayer && needSpoof) {
+        if (event.packet is C03PacketPlayer && needSpoof) {
             event.packet.onGround = true
             needSpoof = false
         }

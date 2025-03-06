@@ -4,14 +4,6 @@
  */
 package net.nonemc.leaf.features.module.modules.movement
 
-import net.nonemc.leaf.event.*
-import net.nonemc.leaf.features.module.Module
-import net.nonemc.leaf.features.module.ModuleCategory
-import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.PacketUtils
-import net.nonemc.leaf.value.BoolValue
-import net.nonemc.leaf.value.ListValue
 import net.minecraft.client.gui.GuiChat
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.client.settings.GameSettings
@@ -22,6 +14,14 @@ import net.minecraft.network.play.client.C0EPacketClickWindow
 import net.minecraft.network.play.client.C16PacketClientStatus
 import net.minecraft.network.play.server.S2DPacketOpenWindow
 import net.minecraft.network.play.server.S2EPacketCloseWindow
+import net.nonemc.leaf.event.*
+import net.nonemc.leaf.features.module.Module
+import net.nonemc.leaf.features.module.ModuleCategory
+import net.nonemc.leaf.features.module.ModuleInfo
+import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.PacketUtils
+import net.nonemc.leaf.value.BoolValue
+import net.nonemc.leaf.value.ListValue
 import org.lwjgl.input.Keyboard
 
 @ModuleInfo(name = "InventoryMove", category = ModuleCategory.MOVEMENT)
@@ -96,10 +96,20 @@ class InventoryMove : Module() {
             invOpen = true
             if (noSprintValue.equals("PacketSpoof")) {
                 if (mc.thePlayer.isSprinting) {
-                    mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SPRINTING))
+                    mc.netHandler.addToSendQueue(
+                        C0BPacketEntityAction(
+                            mc.thePlayer,
+                            C0BPacketEntityAction.Action.STOP_SPRINTING
+                        )
+                    )
                 }
                 if (mc.thePlayer.isSneaking) {
-                    mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING))
+                    mc.netHandler.addToSendQueue(
+                        C0BPacketEntityAction(
+                            mc.thePlayer,
+                            C0BPacketEntityAction.Action.STOP_SNEAKING
+                        )
+                    )
                 }
             }
         }
@@ -107,10 +117,20 @@ class InventoryMove : Module() {
             invOpen = false
             if (noSprintValue.equals("PacketSpoof")) {
                 if (mc.thePlayer.isSprinting) {
-                    mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SPRINTING))
+                    mc.netHandler.addToSendQueue(
+                        C0BPacketEntityAction(
+                            mc.thePlayer,
+                            C0BPacketEntityAction.Action.START_SPRINTING
+                        )
+                    )
                 }
                 if (mc.thePlayer.isSneaking) {
-                    mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SNEAKING))
+                    mc.netHandler.addToSendQueue(
+                        C0BPacketEntityAction(
+                            mc.thePlayer,
+                            C0BPacketEntityAction.Action.START_SNEAKING
+                        )
+                    )
                 }
             }
         }
@@ -127,23 +147,25 @@ class InventoryMove : Module() {
                 if (packet is C0EPacketClickWindow) {
                     packetListYes.clear()
                     packetListYes.add(packet)
-                    
+
                     event.cancelEvent()
-                    
+
                     PacketUtils.sendPacketNoEvent(C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT))
                     packetListYes.forEach {
                         PacketUtils.sendPacketNoEvent(it)
                     }
                     packetListYes.clear()
                     PacketUtils.sendPacketNoEvent(C0DPacketCloseWindow(mc.thePlayer.inventoryContainer.windowId))
-                    
+
                 }
             }
+
             "noopenpacket" -> {
                 if (packet is C16PacketClientStatus && packet.status == C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT) {
                     event.cancelEvent()
                 }
             }
+
             "blink" -> {
                 if (packet is C03PacketPlayer) {
                     if (lastInvOpen) {

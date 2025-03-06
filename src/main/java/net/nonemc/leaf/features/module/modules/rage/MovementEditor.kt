@@ -19,7 +19,7 @@ import kotlin.math.sin
 
 @ModuleInfo(name = "MovementEditor", category = ModuleCategory.COMBAT)
 class MovementEditor : Module() {
-    private val baseController = ListValue("BaseController", arrayOf("Linear-OpenLoop"),"Linear-OpenLoop")
+    private val baseController = ListValue("BaseController", arrayOf("Linear-OpenLoop"), "Linear-OpenLoop")
     private val enableQuickAdjustMode = BoolValue("EnableQuickAdjustMode", true)
     private val quickAdjustModeStep = IntegerValue("QuickAdjustModeStep", 10, 1, 500)
     private val stepValue = IntegerValue("StepTimerValue", 10, 1, 500)
@@ -47,24 +47,25 @@ class MovementEditor : Module() {
     override fun onDisable() {
         run = false
     }
+
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         moveAtYaw(tYaw.get())
         if (enableQuickAdjustMode.get()) {
             if (mc.currentScreen == null) {
-                if (Keyboard.isKeyDown(keyUP)){
+                if (Keyboard.isKeyDown(keyUP)) {
                     baseTimer += quickAdjustModeStep.get()
                     ChatPrint("[+]移动时间已被设为:$baseTimer")
                 }
-                if (Keyboard.isKeyDown(keyDOWN)){
+                if (Keyboard.isKeyDown(keyDOWN)) {
                     baseTimer -= quickAdjustModeStep.get()
                     ChatPrint("[-]移动时间已被设为:$baseTimer")
                 }
             }
-        }else{
+        } else {
             baseTimer = stepValue.get()
         }
-        when (baseController.get()){
+        when (baseController.get()) {
             "Linear-OpenLoop" -> {
                 // W方向处理
                 if (Keyboard.isKeyDown(keyW)) {
@@ -109,7 +110,7 @@ class MovementEditor : Module() {
                             mc.gameSettings.keyBindBack.pressed = false
                         }
                     }
-                }else if (!smove && !amove && !dmove){
+                } else if (!smove && !amove && !dmove) {
                     mc.gameSettings.keyBindBack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindBack)
                 }
 
@@ -132,7 +133,7 @@ class MovementEditor : Module() {
                             mc.gameSettings.keyBindForward.pressed = false
                         }
                     }
-                }else if (!wmove && !amove && !dmove){
+                } else if (!wmove && !amove && !dmove) {
                     mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward)
                 }
 
@@ -155,7 +156,7 @@ class MovementEditor : Module() {
                             mc.gameSettings.keyBindRight.pressed = false
                         }
                     }
-                }else if (!smove && !wmove && !dmove){
+                } else if (!smove && !wmove && !dmove) {
                     mc.gameSettings.keyBindRight.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindRight)
                 }
 
@@ -178,12 +179,13 @@ class MovementEditor : Module() {
                             mc.gameSettings.keyBindLeft.pressed = false
                         }
                     }
-                }else if (!smove && !amove && !wmove){
+                } else if (!smove && !amove && !wmove) {
                     mc.gameSettings.keyBindLeft.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindLeft)
                 }
             }
         }
     }
+
     fun moveAtYaw(targetYaw: Float) {
         // 角度规范化处理
         val normalizedYaw = (targetYaw % 360).let {

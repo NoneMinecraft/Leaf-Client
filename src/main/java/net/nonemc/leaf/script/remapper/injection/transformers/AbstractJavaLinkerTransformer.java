@@ -1,7 +1,7 @@
 package net.nonemc.leaf.script.remapper.injection.transformers;
 
-import net.nonemc.leaf.utils.ASMUtils;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.nonemc.leaf.utils.ASMUtils;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -27,12 +27,12 @@ public class AbstractJavaLinkerTransformer implements IClassTransformer {
      */
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if(name.equals("jdk.internal.dynalink.beans.AbstractJavaLinker")) {
+        if (name.equals("jdk.internal.dynalink.beans.AbstractJavaLinker")) {
             try {
                 final ClassNode classNode = ASMUtils.INSTANCE.toClassNode(basicClass);
 
                 classNode.methods.forEach(methodNode -> {
-                    switch(methodNode.name + methodNode.desc) {
+                    switch (methodNode.name + methodNode.desc) {
                         case "addMember(Ljava/lang/String;Ljava/lang/reflect/AccessibleObject;Ljava/util/Map;)V":
                             methodNode.instructions.insertBefore(methodNode.instructions.getFirst(), ASMUtils.INSTANCE.toNodes(
                                     new VarInsnNode(ALOAD, 0),
@@ -65,7 +65,7 @@ public class AbstractJavaLinkerTransformer implements IClassTransformer {
                 });
 
                 return ASMUtils.INSTANCE.toBytes(classNode);
-            }catch(final Throwable throwable) {
+            } catch (final Throwable throwable) {
                 throwable.printStackTrace();
             }
         }

@@ -1,6 +1,6 @@
-
 package net.nonemc.leaf.features.module
 
+import net.minecraft.client.Minecraft
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.KeyEvent
@@ -11,7 +11,6 @@ import net.nonemc.leaf.ui.client.hud.element.elements.Notification
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
 import net.nonemc.leaf.utils.ClassUtils
 import net.nonemc.leaf.utils.ClientUtils
-import net.minecraft.client.Minecraft
 import org.lwjgl.input.Keyboard
 
 class ModuleManager : Listenable {
@@ -126,11 +125,24 @@ class ModuleManager : Listenable {
     @EventTarget
     private fun onKey(event: KeyEvent) {
         if (pendingBindModule == null) {
-            modules.toMutableList().filter { it.triggerType == EnumTriggerType.TOGGLE && it.keyBind == event.key }.forEach { it.toggle() }
+            modules.toMutableList().filter { it.triggerType == EnumTriggerType.TOGGLE && it.keyBind == event.key }
+                .forEach { it.toggle() }
         } else {
             pendingBindModule!!.keyBind = event.key
-            ClientUtils.displayAlert("Bound module §a§l${pendingBindModule!!.name}§3 to key §a§l${Keyboard.getKeyName(event.key)}§3.")
-            Leaf.hud.addNotification(Notification("KeyBind", "Bound ${pendingBindModule!!.name} to ${Keyboard.getKeyName(event.key)}.", NotifyType.INFO))
+            ClientUtils.displayAlert(
+                "Bound module §a§l${pendingBindModule!!.name}§3 to key §a§l${
+                    Keyboard.getKeyName(
+                        event.key
+                    )
+                }§3."
+            )
+            Leaf.hud.addNotification(
+                Notification(
+                    "KeyBind",
+                    "Bound ${pendingBindModule!!.name} to ${Keyboard.getKeyName(event.key)}.",
+                    NotifyType.INFO
+                )
+            )
             pendingBindModule = null
         }
     }

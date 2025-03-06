@@ -1,8 +1,8 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.other
 
+import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
-import net.minecraft.network.play.client.C03PacketPlayer
 
 class CubeCraftNofall : NoFallMode("CubeCraft") {
     override fun onNoFall(event: UpdateEvent) {

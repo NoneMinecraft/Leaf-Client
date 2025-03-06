@@ -1,37 +1,41 @@
-
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.block.Block
+import net.minecraft.init.Blocks
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.features.command.Command
 import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.minecraft.block.Block
-import net.minecraft.init.Blocks
 
-@ModuleInfo(name = "XRay", category = ModuleCategory.RENDER, autoDisable = EnumAutoDisableType.RESPAWN, moduleCommand = false)
+@ModuleInfo(
+    name = "XRay",
+    category = ModuleCategory.RENDER,
+    autoDisable = EnumAutoDisableType.RESPAWN,
+    moduleCommand = false
+)
 class XRay : Module() {
     val xrayBlocks = mutableListOf<Block>(
-            Blocks.bed,
-            Blocks.coal_ore,
-            Blocks.iron_ore,
-            Blocks.gold_ore,
-            Blocks.redstone_ore,
-            Blocks.lapis_ore,
-            Blocks.diamond_ore,
-            Blocks.emerald_ore,
-            Blocks.quartz_ore,
-            Blocks.coal_block,
-            Blocks.iron_block,
-            Blocks.gold_block,
-            Blocks.diamond_block,
-            Blocks.emerald_block,
-            Blocks.redstone_block,
-            Blocks.lapis_block,
-            Blocks.mob_spawner,
-            Blocks.end_portal_frame,
-            Blocks.command_block
+        Blocks.bed,
+        Blocks.coal_ore,
+        Blocks.iron_ore,
+        Blocks.gold_ore,
+        Blocks.redstone_ore,
+        Blocks.lapis_ore,
+        Blocks.diamond_ore,
+        Blocks.emerald_ore,
+        Blocks.quartz_ore,
+        Blocks.coal_block,
+        Blocks.iron_block,
+        Blocks.gold_block,
+        Blocks.diamond_block,
+        Blocks.emerald_block,
+        Blocks.redstone_block,
+        Blocks.lapis_block,
+        Blocks.mob_spawner,
+        Blocks.end_portal_frame,
+        Blocks.command_block
     )
 
     init {

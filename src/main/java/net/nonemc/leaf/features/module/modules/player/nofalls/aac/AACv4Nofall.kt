@@ -1,11 +1,11 @@
 package net.nonemc.leaf.features.module.modules.player.nofalls.aac
 
+import net.minecraft.network.play.client.C03PacketPlayer
+import net.minecraft.util.AxisAlignedBB
 import net.nonemc.leaf.event.EventState
 import net.nonemc.leaf.event.MotionEvent
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.util.AxisAlignedBB
 
 class AACv4Nofall : NoFallMode("AACv4") {
     private var aac4Fakelag = false
@@ -13,12 +13,12 @@ class AACv4Nofall : NoFallMode("AACv4") {
     private val aac4Packets = mutableListOf<C03PacketPlayer>()
     override fun onEnable() {
         aac4Packets.clear()
-        packetModify =false
+        packetModify = false
         aac4Fakelag = false
     }
 
     override fun onPacket(event: PacketEvent) {
-        if(event.packet is C03PacketPlayer && aac4Fakelag) {
+        if (event.packet is C03PacketPlayer && aac4Fakelag) {
             event.cancelEvent()
             if (packetModify) {
                 event.packet.onGround = true
@@ -29,7 +29,7 @@ class AACv4Nofall : NoFallMode("AACv4") {
     }
 
     override fun onMotion(event: MotionEvent) {
-        if(event.eventState == EventState.PRE) {
+        if (event.eventState == EventState.PRE) {
             if (!inVoid()) {
                 if (aac4Fakelag) {
                     aac4Fakelag = false
@@ -64,6 +64,7 @@ class AACv4Nofall : NoFallMode("AACv4") {
             }
         }
     }
+
     private fun inVoid(): Boolean {
         if (mc.thePlayer.posY < 0) {
             return false
@@ -85,6 +86,7 @@ class AACv4Nofall : NoFallMode("AACv4") {
         }
         return false
     }
+
     private fun inAir(height: Double, plus: Double): Boolean {
         if (mc.thePlayer.posY < 0) return false
         var off = 0
