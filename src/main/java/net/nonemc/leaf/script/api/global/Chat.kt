@@ -1,4 +1,4 @@
-package net.nonemc.leaf.script.api.global
+﻿package net.nonemc.leaf.script.api.global
 
 import net.nonemc.leaf.utils.ClientUtils
 

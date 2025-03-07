@@ -1,5 +1,6 @@
-package net.nonemc.leaf.event;
 
+
+package net.nonemc.leaf.event;
 public enum EventType {
     PRE,
     POST

@@ -1,4 +1,4 @@
-package net.nonemc.leaf.script
+﻿package net.nonemc.leaf.script
 
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.script.remapper.Remapper

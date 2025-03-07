@@ -1,4 +1,4 @@
-package net.nonemc.leaf.file.config
+﻿package net.nonemc.leaf.file.config
 
 import com.google.gson.JsonObject
 

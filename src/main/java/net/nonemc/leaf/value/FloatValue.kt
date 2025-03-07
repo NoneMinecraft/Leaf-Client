@@ -1,4 +1,4 @@
-package net.nonemc.leaf.value
+﻿package net.nonemc.leaf.value
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
@@ -6,8 +6,7 @@ import com.google.gson.JsonPrimitive
 /**
  * Float value represents a value with a float
  */
-open class FloatValue(name: String, value: Float, val minimum: Float = 0F, val maximum: Float = Float.MAX_VALUE) :
-    Value<Float>(name, value) {
+open class FloatValue(name: String, value: Float, val minimum: Float = 0F, val maximum: Float = Float.MAX_VALUE) : Value<Float>(name, value) {
 
     fun set(newValue: Number) {
         set(newValue.toFloat())

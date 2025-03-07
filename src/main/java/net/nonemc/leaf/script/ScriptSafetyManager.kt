@@ -1,4 +1,4 @@
-package net.nonemc.leaf.script
+﻿package net.nonemc.leaf.script
 
 import com.sun.jna.Native
 import jdk.nashorn.api.scripting.ClassFilter
@@ -32,7 +32,6 @@ object ScriptSafetyManager {
         val restrictedClasses = mutableMapOf<Class<*>, Int>()
         val restrictedChilds = mutableMapOf<Class<*>, Pair<String, Int>>()
 
-        // this can be used by a malicious script to remote control the user
         restrictedClasses[ScriptSafetyManager::class.java] = ProtectionLevel.HARMFUL.level
         restrictedClasses[ClassLoader::class.java] = ProtectionLevel.HARMFUL.level
         restrictedClasses[Native::class.java] = ProtectionLevel.HARMFUL.level
@@ -81,7 +80,7 @@ object ScriptSafetyManager {
             if (isRestrictedSimple(klass)) {
                 return true
             }
-            if (klass.superclass != null) {
+            if(klass.superclass != null) {
                 klass = klass.superclass
             } else {
                 break
@@ -96,7 +95,7 @@ object ScriptSafetyManager {
             if (isRestrictedSimple(klass, child)) {
                 return true
             }
-            if (klass.superclass != null) {
+            if(klass.superclass != null) {
                 klass = klass.superclass
             } else {
                 break
@@ -106,7 +105,7 @@ object ScriptSafetyManager {
     }
 
     fun isRestrictedSimple(klass: Class<*>): Boolean {
-        return if (restrictedClasses.containsKey(klass) && restrictedClasses[klass]!! > level) {
+        return if(restrictedClasses.containsKey(klass) && restrictedClasses[klass]!! > level) {
             warnRestricted(klass.name, "")
             true
         } else {
@@ -115,10 +114,10 @@ object ScriptSafetyManager {
     }
 
     fun isRestrictedSimple(klass: Class<*>, child: String): Boolean {
-        return if (isRestrictedSimple(klass)) {
+        return if(isRestrictedSimple(klass)) {
             warnRestricted(klass.name, "")
             true
-        } else if (restrictedChilds.containsKey(klass) && restrictedChilds[klass]!!.first == child && restrictedChilds[klass]!!.second > level) {
+        } else if(restrictedChilds.containsKey(klass) && restrictedChilds[klass]!!.first == child && restrictedChilds[klass]!!.second > level) {
             warnRestricted(klass.name, child)
             true
         } else {
@@ -129,16 +128,14 @@ object ScriptSafetyManager {
     private val alerted = mutableListOf<String>()
 
     private fun warnRestricted(klass: String, child: String = "") {
-        val message = klass + (if (child.isNotEmpty()) ".$child" else "")
-        if (!alerted.contains(message)) {
+        val message = klass + (if(child.isNotEmpty()) ".$child" else "")
+        if(!alerted.contains(message)) {
             alerted.add(message)
-            ClientUtils.logWarn(
-                "[ScriptAPI] \n" +
-                        "========= WARNING =========\n" +
-                        "The script tried to make a restricted call: $message,\n" +
-                        "please add a jvm argument to disable this check: -Dfdp.script.safety=HARMFUL\n" +
-                        "==========================="
-            )
+            ClientUtils.logWarn("[ScriptAPI] \n" +
+                    "========= WARNING =========\n" +
+                    "The script tried to make a restricted call: $message,\n" +
+                    "please add a jvm argument to disable this check: -Dfdp.script.safety=HARMFUL\n" +
+                    "===========================")
         }
     }
 

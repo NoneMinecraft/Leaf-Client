@@ -1,4 +1,4 @@
-package net.nonemc.leaf.script.remapper
+﻿package net.nonemc.leaf.script.remapper
 
 import net.nonemc.leaf.utils.ClientUtils
 import org.apache.commons.io.IOUtils

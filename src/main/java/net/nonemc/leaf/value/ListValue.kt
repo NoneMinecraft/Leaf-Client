@@ -1,4 +1,4 @@
-package net.nonemc.leaf.value
+﻿package net.nonemc.leaf.value
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
@@ -11,7 +11,6 @@ open class ListValue(name: String, val values: Array<String>, value: String) : V
     @JvmField
     var openList = false
     fun getModeListNumber(mode: String) = values.indexOf(mode)
-
     init {
         this.value = value
     }

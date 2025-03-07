@@ -1,4 +1,4 @@
-package net.nonemc.leaf.value
+﻿package net.nonemc.leaf.value
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
@@ -35,6 +35,7 @@ abstract class Value<T>(val name: String, var value: T) {
     }
 
 
+
     fun get() = value
 
     fun setDefault() {
@@ -59,7 +60,6 @@ abstract class Value<T>(val name: String, var value: T) {
         fun set(newValue: Number) {
             set(newValue.toInt())
         }
-
         override fun toJson() = JsonPrimitive(value)
         override fun fromJson(element: JsonElement) {
             if (element.isJsonPrimitive)
@@ -72,7 +72,7 @@ abstract class Value<T>(val name: String, var value: T) {
         if (value is String && other is String) {
             return (value as String).equals(other, true)
         }
-        return value?.equals(other) == true
+        return value?.equals(other) ?: false
     }
 
     fun contains(text: String/*, ignoreCase: Boolean*/): Boolean {

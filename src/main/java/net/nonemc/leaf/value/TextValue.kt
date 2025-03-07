@@ -1,4 +1,4 @@
-package net.nonemc.leaf.value
+﻿package net.nonemc.leaf.value
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
@@ -12,10 +12,9 @@ open class TextValue(name: String, value: String) : Value<String>(name, value) {
         }
 
     }
-
     fun append(o: Any): TextValue {
         set(get() + o)
         return this
     }
 
-}
+    }

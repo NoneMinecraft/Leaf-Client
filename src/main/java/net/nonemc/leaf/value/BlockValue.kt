@@ -1,4 +1,4 @@
-package net.nonemc.leaf.value
+﻿package net.nonemc.leaf.value
 
 /**
  * Block value represents a value with a block

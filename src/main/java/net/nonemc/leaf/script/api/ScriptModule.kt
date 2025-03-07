@@ -1,4 +1,4 @@
-package net.nonemc.leaf.script.api
+﻿package net.nonemc.leaf.script.api
 
 import jdk.nashorn.api.scripting.JSObject
 import net.nonemc.leaf.event.*

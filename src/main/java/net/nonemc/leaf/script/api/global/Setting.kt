@@ -1,4 +1,4 @@
-package net.nonemc.leaf.script.api.global
+﻿package net.nonemc.leaf.script.api.global
 
 import jdk.nashorn.api.scripting.JSObject
 import jdk.nashorn.api.scripting.ScriptUtils

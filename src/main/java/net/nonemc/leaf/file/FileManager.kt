@@ -1,16 +1,16 @@
-package net.nonemc.leaf.file
+﻿package net.nonemc.leaf.file
 
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import net.minecraft.client.renderer.texture.DynamicTexture
-import net.minecraft.util.ResourceLocation
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.features.macro.Macro
 import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.file.configs.*
 import net.nonemc.leaf.utils.ClientUtils
 import net.nonemc.leaf.utils.MinecraftInstance
+import net.minecraft.client.renderer.texture.DynamicTexture
+import net.minecraft.util.ResourceLocation
 import java.io.*
 import javax.imageio.ImageIO
 
@@ -69,7 +69,7 @@ class FileManager : MinecraftInstance() {
         }
 
         if (!themesDir.exists()) {
-            themesDir.mkdir()
+            themesDir.mkdir();
         }
 
     }

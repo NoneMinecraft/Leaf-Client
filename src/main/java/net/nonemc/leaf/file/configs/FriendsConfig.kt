@@ -1,4 +1,4 @@
-package net.nonemc.leaf.file.configs
+﻿package net.nonemc.leaf.file.configs
 
 import net.nonemc.leaf.file.FileConfig
 import java.io.File

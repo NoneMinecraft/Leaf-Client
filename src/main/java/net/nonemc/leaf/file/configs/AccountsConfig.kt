@@ -1,4 +1,4 @@
-package net.nonemc.leaf.file.configs
+﻿package net.nonemc.leaf.file.configs
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonParser

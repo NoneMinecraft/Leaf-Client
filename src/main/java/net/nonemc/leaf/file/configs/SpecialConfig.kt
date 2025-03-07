@@ -1,4 +1,4 @@
-package net.nonemc.leaf.file.configs
+﻿package net.nonemc.leaf.file.configs
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -95,13 +95,11 @@ class SpecialConfig(file: File) : FileConfig(file) {
             }
             if (jsonValue.has("gradient")) {
                 val name = jsonValue.get("gradient").asString
-                GradientBackground.nowGradient =
-                    GradientBackground.gradients.find { it.name == name } ?: GradientBackground.gradients.first()
+                GradientBackground.nowGradient = GradientBackground.gradients.find { it.name == name } ?: GradientBackground.gradients.first()
             }
             if (jsonValue.has("gradient-side")) {
                 val side = jsonValue.get("gradient-side").asString
-                GradientBackground.gradientSide = GradientBackground.gradientSides.find { it.name == side }
-                    ?: GradientBackground.gradientSides.first()
+                GradientBackground.gradientSide = GradientBackground.gradientSides.find { it.name == side } ?: GradientBackground.gradientSides.first()
             }
             if (jsonValue.has("gradient-animated")) {
                 GradientBackground.animated = jsonValue.get("gradient-animated").asBoolean

@@ -1,4 +1,4 @@
-package net.nonemc.leaf.script.api
+﻿package net.nonemc.leaf.script.api
 
 import jdk.nashorn.api.scripting.JSObject
 import jdk.nashorn.api.scripting.ScriptUtils
@@ -6,10 +6,8 @@ import net.nonemc.leaf.features.command.Command
 import net.nonemc.leaf.utils.ClientUtils
 
 @Suppress("UNCHECKED_CAST", "unused")
-class ScriptCommand(private val commandObject: JSObject) : Command(
-    commandObject.getMember("name") as String,
-    ScriptUtils.convert(commandObject.getMember("aliases"), Array<String>::class.java) as Array<String>
-) {
+class ScriptCommand(private val commandObject: JSObject) : Command(commandObject.getMember("name") as String,
+        ScriptUtils.convert(commandObject.getMember("aliases"), Array<String>::class.java) as Array<String>) {
 
     private val events = HashMap<String, JSObject>()
 

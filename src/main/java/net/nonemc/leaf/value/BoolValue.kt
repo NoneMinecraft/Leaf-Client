@@ -1,4 +1,4 @@
-package net.nonemc.leaf.value
+﻿package net.nonemc.leaf.value
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
@@ -17,12 +17,10 @@ open class BoolValue(name: String, value: Boolean) : Value<Boolean>(name, value)
             value = element.asBoolean || element.asString.equals("true", ignoreCase = true)
         }
     }
-
     init {
         animation.animationX = if (value) 5F else -5F
     }
-
-    open fun toggle() {
+    open fun toggle(){
         this.value = !this.value
     }
 

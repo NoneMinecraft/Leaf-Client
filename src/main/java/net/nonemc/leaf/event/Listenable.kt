@@ -1,4 +1,4 @@
-package net.nonemc.leaf.event
+﻿package net.nonemc.leaf.event
 
 import java.lang.reflect.Method
 
