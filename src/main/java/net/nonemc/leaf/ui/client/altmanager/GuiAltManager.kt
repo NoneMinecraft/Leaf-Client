@@ -1,12 +1,7 @@
+﻿
 package net.nonemc.leaf.ui.client.altmanager
 
 import me.liuli.elixir.account.MinecraftAccount
-import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.GuiSlot
-import net.minecraft.client.gui.GuiTextField
-import net.minecraft.util.Session
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.SessionEvent
 import net.nonemc.leaf.ui.client.altmanager.sub.GuiAdd
@@ -15,6 +10,12 @@ import net.nonemc.leaf.ui.client.altmanager.sub.GuiMicrosoftLoginPending
 import net.nonemc.leaf.ui.i18n.LanguageManager
 import net.nonemc.leaf.utils.extensions.drawCenteredString
 import net.nonemc.leaf.utils.login.LoginUtils
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.GuiButton
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.gui.GuiSlot
+import net.minecraft.client.gui.GuiTextField
+import net.minecraft.util.Session
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 import java.util.*
@@ -46,40 +47,14 @@ class GuiAltManager(private val prevGui: GuiScreen) : GuiScreen() {
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         drawBackground(0)
         altsList.drawScreen(mouseX, mouseY, partialTicks)
-        mc.fontRendererObj.drawCenteredString(
-            LanguageManager.getAndFormat("ui.altmanager"),
-            (width / 2).toFloat(),
-            6f,
-            0xffffff
-        )
-        mc.fontRendererObj.drawCenteredString(
-            LanguageManager.getAndFormat(
-                "ui.alt.alts",
-                Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts.size
-            ), (width / 2).toFloat(), 18f, 0xffffff
-        )
+        mc.fontRendererObj.drawCenteredString(LanguageManager.getAndFormat("ui.altmanager"), (width / 2).toFloat(), 6f, 0xffffff)
+        mc.fontRendererObj.drawCenteredString(LanguageManager.getAndFormat("ui.alt.alts", Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts.size), (width / 2).toFloat(), 18f, 0xffffff)
         mc.fontRendererObj.drawCenteredString(status, (width / 2).toFloat(), 32f, 0xffffff)
-        mc.fontRendererObj.drawStringWithShadow(
-            LanguageManager.getAndFormat(
-                "ui.alt.username",
-                mc.getSession().username
-            ), 6f, 6f, 0xffffff
-        )
-        mc.fontRendererObj.drawStringWithShadow(
-            LanguageManager.getAndFormat(
-                "ui.alt.type",
-                if (mc.getSession().token.length >= 32) "%ui.alt.type.premium%" else "%ui.alt.type.cracked%"
-            ), 6f, 15f, 0xffffff
-        )
+        mc.fontRendererObj.drawStringWithShadow(LanguageManager.getAndFormat("ui.alt.username", mc.getSession().username), 6f, 6f, 0xffffff)
+        mc.fontRendererObj.drawStringWithShadow(LanguageManager.getAndFormat("ui.alt.type", if (mc.getSession().token.length >= 32) "%ui.alt.type.premium%" else "%ui.alt.type.cracked%"), 6f, 15f, 0xffffff)
         randomAltField.drawTextBox()
         if (randomAltField.text.isEmpty() && !randomAltField.isFocused) {
-            drawCenteredString(
-                mc.fontRendererObj,
-                "§7" + LanguageManager.getAndFormat("ui.alt.randomAltField"),
-                width / 2 - 55,
-                66,
-                0xffffff
-            )
+            drawCenteredString(mc.fontRendererObj, "§7" + LanguageManager.getAndFormat("ui.alt.randomAltField"), width / 2 - 55, 66, 0xffffff)
         }
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
@@ -96,18 +71,15 @@ class GuiAltManager(private val prevGui: GuiScreen) : GuiScreen() {
             } else {
                 "§c${LanguageManager.getAndFormat("ui.alt.needSelect")}"
             }
-
             3 -> if (altsList.selectedSlot != -1 && altsList.selectedSlot < altsList.size) {
                 Thread {
-                    val minecraftAccount =
-                        Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts[altsList.selectedSlot]
+                    val minecraftAccount = Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts[altsList.selectedSlot]
                     status = "§a${LanguageManager.getAndFormat("ui.alt.loggingIn")}"
                     status = login(minecraftAccount)
                 }.start()
             } else {
                 status = "§c${LanguageManager.getAndFormat("ui.alt.needSelect")}"
             }
-
             4 -> {
                 if (Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts.size <= 0) {
                     status = "§c${LanguageManager.getAndFormat("ui.alt.emptyList")}"
@@ -122,7 +94,6 @@ class GuiAltManager(private val prevGui: GuiScreen) : GuiScreen() {
                     status = login(minecraftAccount)
                 }.start()
             }
-
             6 -> mc.displayGuiScreen(GuiDirectLogin(this))
             89 -> Thread { LoginUtils.randomCracked() }.start()
             11 -> mc.displayGuiScreen(GuiMicrosoftLoginPending(this))
@@ -146,27 +117,22 @@ class GuiAltManager(private val prevGui: GuiScreen) : GuiScreen() {
                 mc.displayGuiScreen(prevGui)
                 return
             }
-
             Keyboard.KEY_UP -> {
                 var i = altsList.selectedSlot - 1
                 if (i < 0) i = 0
                 altsList.elementClicked(i, false, 0, 0)
             }
-
             Keyboard.KEY_DOWN -> {
                 var i = altsList.selectedSlot + 1
                 if (i >= altsList.size) i = altsList.size - 1
                 altsList.elementClicked(i, false, 0, 0)
             }
-
             Keyboard.KEY_RETURN -> {
                 altsList.elementClicked(altsList.selectedSlot, true, 0, 0)
             }
-
             Keyboard.KEY_NEXT -> {
                 altsList.scrollBy(height - 100)
             }
-
             Keyboard.KEY_PRIOR -> {
                 altsList.scrollBy(-height + 100)
                 return
@@ -181,8 +147,8 @@ class GuiAltManager(private val prevGui: GuiScreen) : GuiScreen() {
         altsList.handleMouseInput()
     }
 
-    private inner class GuiList(prevGui: GuiScreen) :
-        GuiSlot(mc, prevGui.width, prevGui.height, 40, prevGui.height - 40, 30) {
+    private inner class GuiList(prevGui: GuiScreen)
+        : GuiSlot(mc, prevGui.width, prevGui.height, 40, prevGui.height - 40, 30) {
 
         var selectedSlot = 0
             get() {
@@ -195,17 +161,16 @@ class GuiAltManager(private val prevGui: GuiScreen) : GuiScreen() {
             return selectedSlot == id
         }
 
-        override fun getSize(): Int {
+        public override fun getSize(): Int {
             return Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts.size
         }
 
-        override fun elementClicked(var1: Int, doubleClick: Boolean, var3: Int, var4: Int) {
+        public override fun elementClicked(var1: Int, doubleClick: Boolean, var3: Int, var4: Int) {
             selectedSlot = var1
             if (doubleClick) {
                 if (altsList.selectedSlot != -1 && altsList.selectedSlot < altsList.size) {
                     Thread {
-                        val minecraftAccount =
-                            Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts[altsList.selectedSlot]
+                        val minecraftAccount = Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts[altsList.selectedSlot]
                         status = "§a${LanguageManager.getAndFormat("ui.alt.loggingIn")}"
                         status = "§c" + login(minecraftAccount)
                     }.start()
@@ -218,13 +183,7 @@ class GuiAltManager(private val prevGui: GuiScreen) : GuiScreen() {
         override fun drawSlot(id: Int, x: Int, y: Int, var4: Int, var5: Int, var6: Int) {
             val minecraftAccount = Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts[id]
             mc.fontRendererObj.drawCenteredString(minecraftAccount.name, width / 2f, y + 2f, Color.WHITE.rgb, true)
-            mc.fontRendererObj.drawCenteredString(
-                minecraftAccount.type,
-                width / 2f,
-                y + 15f,
-                Color.LIGHT_GRAY.rgb,
-                true
-            )
+            mc.fontRendererObj.drawCenteredString(minecraftAccount.type, width / 2f, y + 15f, Color.LIGHT_GRAY.rgb, true)
         }
 
         override fun drawBackground() {}

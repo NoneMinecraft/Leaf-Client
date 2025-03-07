@@ -1,13 +1,7 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 package net.nonemc.leaf.ui.client.hud.element
 
 import net.nonemc.leaf.injection.access.StaticStorage
-import net.nonemc.leaf.ui.client.hud.element.Side.Horizontal.values
-import net.nonemc.leaf.ui.client.hud.element.Side.Vertical.values
 import net.nonemc.leaf.utils.ClassUtils
 import net.nonemc.leaf.utils.MinecraftInstance
 import net.nonemc.leaf.utils.render.BlurUtils
@@ -29,7 +23,7 @@ abstract class Element(
 ) : MinecraftInstance() {
 
     val info = javaClass.getAnnotation(ElementInfo::class.java)
-        ?: throw IllegalArgumentException("Passed element with missing element info")
+            ?: throw IllegalArgumentException("Passed element with missing element info")
 
     val name: String
         get() = info.name
@@ -44,7 +38,6 @@ abstract class Element(
             Side.Horizontal.LEFT -> {
                 x += value
             }
-
             Side.Horizontal.MIDDLE, Side.Horizontal.RIGHT -> {
                 x -= value
             }
@@ -60,7 +53,6 @@ abstract class Element(
             Side.Vertical.UP -> {
                 y += value
             }
-
             Side.Vertical.MIDDLE, Side.Vertical.DOWN -> {
                 y -= value
             }
@@ -136,13 +128,7 @@ abstract class Element(
             return
         }
 
-        BlurUtils.draw(
-            (renderX + (x.coerceAtMost(x2))).toFloat() * scale,
-            (renderY + (y.coerceAtMost(y2))).toFloat() * scale,
-            abs(x2 - x) * scale,
-            abs(y2 - y) * scale,
-            blurValue.get()
-        )
+        BlurUtils.draw((renderX + (x.coerceAtMost(x2))).toFloat() * scale, (renderY + (y.coerceAtMost(y2))).toFloat() * scale, abs(x2 - x) * scale, abs(y2 - y) * scale, blurValue.get())
     }
 
     /**
@@ -159,7 +145,7 @@ abstract class Element(
 /**
  * Element info
  */
-@Retention(AnnotationRetention.RUNTIME)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class ElementInfo(val name: String, val blur: Boolean = false)
 
 /**

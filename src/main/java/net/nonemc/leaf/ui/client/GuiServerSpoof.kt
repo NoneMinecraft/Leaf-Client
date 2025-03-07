@@ -1,10 +1,10 @@
-package net.nonemc.leaf.ui.client
+﻿package net.nonemc.leaf.ui.client
 
+import net.nonemc.leaf.Leaf
+import net.nonemc.leaf.features.special.ServerSpoof
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.GuiTextField
-import net.nonemc.leaf.Leaf
-import net.nonemc.leaf.features.special.ServerSpoof
 import org.lwjgl.input.Keyboard
 
 class GuiServerSpoof(private val prevGui: GuiScreen) : GuiScreen() {
@@ -43,7 +43,6 @@ class GuiServerSpoof(private val prevGui: GuiScreen) : GuiScreen() {
                 ServerSpoof.address = textField.text
                 mc.displayGuiScreen(prevGui)
             }
-
             2 -> {
                 ServerSpoof.enable = !ServerSpoof.enable
             }

@@ -1,12 +1,13 @@
+﻿
 package net.nonemc.leaf.ui.client.altmanager.sub
 
 import me.liuli.elixir.manage.AccountSerializer
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.GuiTextField
 import net.nonemc.leaf.ui.client.altmanager.GuiAltManager
 import net.nonemc.leaf.ui.elements.GuiPasswordField
 import net.nonemc.leaf.ui.i18n.LanguageManager
+import net.minecraft.client.gui.GuiButton
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.gui.GuiTextField
 import org.lwjgl.input.Keyboard
 
 class GuiDirectLogin(private val prevGui: GuiAltManager) : GuiScreen() {
@@ -28,41 +29,18 @@ class GuiDirectLogin(private val prevGui: GuiAltManager) : GuiScreen() {
 
     override fun drawScreen(mouseX: Int, mouseY: Int, partialTicks: Float) {
         drawBackground(0)
-        drawCenteredString(
-            mc.fontRendererObj,
-            LanguageManager.getAndFormat("ui.alt.directLogin"),
-            width / 2,
-            34,
-            0xffffff
-        )
+        drawCenteredString(mc.fontRendererObj, LanguageManager.getAndFormat("ui.alt.directLogin"), width / 2, 34, 0xffffff)
         drawCenteredString(mc.fontRendererObj, status, width / 2, height / 4 + 60, 0xffffff)
         username.drawTextBox()
         password.drawTextBox()
         if (username.text.isEmpty() && !username.isFocused) {
-            drawCenteredString(
-                mc.fontRendererObj,
-                "§7${LanguageManager.getAndFormat("ui.alt.loginUsername")}",
-                width / 2 - 55,
-                66,
-                0xffffff
-            )
+            drawCenteredString(mc.fontRendererObj, "§7${LanguageManager.getAndFormat("ui.alt.loginUsername")}", width / 2 - 55, 66, 0xffffff)
         }
         if (password.text.isEmpty() && !password.isFocused) {
-            drawCenteredString(
-                mc.fontRendererObj,
-                "§7${LanguageManager.getAndFormat("ui.alt.loginPassword")}",
-                width / 2 - 74,
-                91,
-                0xffffff
-            )
+            drawCenteredString(mc.fontRendererObj, "§7${LanguageManager.getAndFormat("ui.alt.loginPassword")}", width / 2 - 74, 91, 0xffffff)
         }
         "Add ms@ before your real username can login microsoft account without browser!".also {
-            mc.fontRendererObj.drawString(
-                it,
-                width - mc.fontRendererObj.getStringWidth(it),
-                height - mc.fontRendererObj.FONT_HEIGHT,
-                0xffffff
-            )
+            mc.fontRendererObj.drawString(it, width - mc.fontRendererObj.getStringWidth(it), height - mc.fontRendererObj.FONT_HEIGHT, 0xffffff)
         }
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
@@ -82,7 +60,6 @@ class GuiDirectLogin(private val prevGui: GuiAltManager) : GuiScreen() {
                     status = res
                 }.start()
             }
-
             2 -> {
                 val args = getClipboardString().split(":")
                 username.text = args[0]
@@ -99,7 +76,6 @@ class GuiDirectLogin(private val prevGui: GuiAltManager) : GuiScreen() {
                 mc.displayGuiScreen(prevGui)
                 return
             }
-
             Keyboard.KEY_RETURN -> {
                 actionPerformed(buttonList.find { it.id == 1 }!!)
                 return

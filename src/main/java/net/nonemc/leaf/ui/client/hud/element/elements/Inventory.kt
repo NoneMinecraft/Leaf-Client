@@ -1,8 +1,5 @@
-package net.nonemc.leaf.ui.client.hud.element.elements
+﻿package net.nonemc.leaf.ui.client.hud.element.elements
 
-import net.minecraft.client.gui.FontRenderer
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.renderer.RenderHelper
 import net.nonemc.leaf.ui.client.hud.element.Border
 import net.nonemc.leaf.ui.client.hud.element.Element
 import net.nonemc.leaf.ui.client.hud.element.ElementInfo
@@ -16,6 +13,9 @@ import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FontValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
+import net.minecraft.client.gui.FontRenderer
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.RenderHelper
 import java.awt.Color
 
 /**
@@ -42,29 +42,17 @@ class Inventory : Element(300.0, 50.0, 1F, Side(Side.Horizontal.RIGHT, Side.Vert
     private val fontValue = FontValue("Font", Fonts.font35)
 
     override fun drawElement(partialTicks: Float): Border {
-        val borderColor = if (bdRainbow.get()) {
-            ColorUtils.rainbow()
-        } else {
-            Color(bdRedValue.get(), bdGreenValue.get(), bdBlueValue.get())
-        }
-        val fontColor = if (fontRainbow.get()) {
-            ColorUtils.rainbow()
-        } else {
-            Color(fontRedValue.get(), fontGreenValue.get(), fontBlueValue.get())
-        }
+        val borderColor = if (bdRainbow.get()) { ColorUtils.rainbow() } else { Color(bdRedValue.get(), bdGreenValue.get(), bdBlueValue.get()) }
+        val fontColor = if (fontRainbow.get()) { ColorUtils.rainbow() } else { Color(fontRedValue.get(), fontGreenValue.get(), fontBlueValue.get()) }
         val backgroundColor = Color(bgRedValue.get(), bgGreenValue.get(), bgBlueValue.get(), bgAlphaValue.get())
         val font = fontValue.get()
-        val startY = if (!titleValue.equals("None")) {
-            -(6 + font.FONT_HEIGHT)
-        } else {
-            0
-        }.toFloat()
+        val startY = if (!titleValue.equals("None")) { -(6 + font.FONT_HEIGHT) } else { 0 }.toFloat()
 
         // draw rect
         RenderUtils.drawRect(0F, startY, 174F, 66F, backgroundColor)
-        shadowRenderUtils.drawShadowWithCustomAlpha(0F, startY, 174F, 66F - startY, 255f)
+        shadowRenderUtils.drawShadowWithCustomAlpha(0F, startY, 174F, 66F-startY, 255f)
 
-        if (themeValue.equals("CS:GO")) {
+        if(themeValue.equals("CS:GO")) {
             RenderUtils.drawRect(0F, startY, 174F, startY + 1f, borderColor)
         } else {
             RenderUtils.drawBorder(0f, startY, 174f, 66f, 3f, borderColor.rgb)
@@ -72,23 +60,10 @@ class Inventory : Element(300.0, 50.0, 1F, Side(Side.Horizontal.RIGHT, Side.Vert
         }
 
         val invDisplayName = mc.thePlayer.inventory.displayName.formattedText
-        when (titleValue.get().lowercase()) {
-            "center" -> font.drawCenteredString(
-                invDisplayName,
-                174f / 2,
-                -(font.FONT_HEIGHT).toFloat(),
-                fontColor.rgb,
-                false
-            )
-
+        when(titleValue.get().lowercase()) {
+            "center" -> font.drawCenteredString(invDisplayName, 174f / 2, -(font.FONT_HEIGHT).toFloat(), fontColor.rgb, false)
             "left" -> font.drawString(invDisplayName, 6f, -(font.FONT_HEIGHT).toFloat(), fontColor.rgb, false)
-            "right" -> font.drawString(
-                invDisplayName,
-                168f - font.getStringWidth(invDisplayName),
-                -(font.FONT_HEIGHT).toFloat(),
-                fontColor.rgb,
-                false
-            )
+            "right" -> font.drawString(invDisplayName, 168f - font.getStringWidth(invDisplayName), -(font.FONT_HEIGHT).toFloat(), fontColor.rgb, false)
         }
 
         // render item

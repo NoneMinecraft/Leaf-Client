@@ -1,12 +1,6 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 package net.nonemc.leaf.ui.client.hud.element.elements
 
-import net.minecraft.client.Minecraft
-import net.minecraft.util.ChatAllowedCharacters
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.font.FontLoaders
 import net.nonemc.leaf.ui.client.hud.designer.GuiHudDesigner
@@ -20,6 +14,8 @@ import net.nonemc.leaf.utils.extensions.ping
 import net.nonemc.leaf.utils.render.ColorUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.*
+import net.minecraft.client.Minecraft
+import net.minecraft.util.ChatAllowedCharacters
 import org.lwjgl.input.Keyboard
 import java.awt.Color
 import java.text.DecimalFormat
@@ -56,8 +52,7 @@ class Text(
     val colorModeValue = ListValue("Color", arrayOf("Custom", "Rainbow", "AnotherRainbow", "SkyRainbow"), "Custom")
     private val shadow = BoolValue("Shadow", false)
     val rectValue = ListValue("Rect", arrayOf("Normal", "RNormal", "OneTap", "Skeet", "Rounded", "None"), "None")
-    val rectColorModeValue =
-        ListValue("RectColor", arrayOf("Custom", "Rainbow", "AnotherRainbow", "SkyRainbow"), "Custom")
+    val rectColorModeValue = ListValue("RectColor", arrayOf("Custom", "Rainbow", "AnotherRainbow", "SkyRainbow"), "Custom")
     private val rectRedValue = IntegerValue("RectRed", 0, 0, 255)
     private val rectGreenValue = IntegerValue("RectGreen", 0, 0, 255)
     private val rectBlueValue = IntegerValue("RectBlue", 0, 0, 255)
@@ -104,8 +99,7 @@ class Text(
                 "health" -> return DECIMAL_FORMAT.format(mc.thePlayer.health)
                 "yaw" -> return DECIMAL_FORMAT.format(mc.thePlayer.rotationYaw)
                 "pitch" -> return DECIMAL_FORMAT.format(mc.thePlayer.rotationPitch)
-                "attackDist" -> return if (Leaf.combatManager.target != null) mc.thePlayer.getDistanceToEntity(Leaf.combatManager.target)
-                    .toString() + " Blocks" else "Hasn't attacked"
+                "attackDist" -> return if (Leaf.combatManager.target != null) mc.thePlayer.getDistanceToEntity(Leaf.combatManager.target).toString() + " Blocks" else "Hasn't attacked"
             }
         }
 
@@ -117,7 +111,6 @@ class Text(
                     SessionUtils.getFormatSessionTime()
                 }
             }
-
             "kills" -> StatisticsUtils.getKills().toString()
             "deaths" -> StatisticsUtils.getDeaths().toString()
             "username" -> mc.getSession().username
@@ -164,11 +157,9 @@ class Text(
 
         return result.toString()
     }
-
-    fun getClientName(i: Int, i2: Int): String {
-        return "Leaf".substring(i, i2)
+    fun getClientName(i: Int,i2: Int): String{
+        return "Leaf".substring(i,i2);
     }
-
     /**
      * Draw element
      */
@@ -176,156 +167,75 @@ class Text(
         val color = Color(redValue.get(), greenValue.get(), blueValue.get(), alphaValue.get())
 
         val fontRenderer = fontValue.get()
-
+        
 
         val rectColor = when (rectColorModeValue.get().lowercase()) {
             "rainbow" -> ColorUtils.hslRainbow(rainbowIndex.get(), indexOffset = 100 * rainbowSpeed.get()).rgb
             "skyrainbow" -> ColorUtils.skyRainbow(rainbowIndex.get(), 1F, 1F, rainbowSpeed.get().toDouble()).rgb
-            "anotherrainbow" -> ColorUtils.fade(
-                Color(
-                    rectRedValue.get(),
-                    rectGreenValue.get(),
-                    rectBlueValue.get(),
-                    rectAlphaValue.get()
-                ), 100, rainbowIndex.get()
-            ).rgb
-
+            "anotherrainbow" -> ColorUtils.fade(Color(rectRedValue.get(), rectGreenValue.get(), rectBlueValue.get(), rectAlphaValue.get()), 100, rainbowIndex.get()).rgb
             else -> Color(rectRedValue.get(), rectGreenValue.get(), rectBlueValue.get(), rectAlphaValue.get()).rgb
         }
         val expand = fontRenderer.FONT_HEIGHT * rectExpandValue.get()
         when (rectValue.get().lowercase()) {
             "normal" -> {
-                RenderUtils.drawRect(
-                    -expand,
-                    -expand,
-                    fontRenderer.getStringWidth(displayText) + expand,
-                    fontRenderer.FONT_HEIGHT + expand,
-                    rectColor
-                )
+                RenderUtils.drawRect(-expand, -expand, fontRenderer.getStringWidth(displayText) + expand, fontRenderer.FONT_HEIGHT + expand, rectColor)
             }
-
+            
             "rounded" -> {
-                RenderUtils.drawRoundedCornerRect(
-                    -expand,
-                    -expand,
-                    fontRenderer.getStringWidth(displayText) + expand,
-                    fontRenderer.FONT_HEIGHT + expand,
-                    2 + (expand / 4) * rectRoundValue.get(),
-                    rectColor
-                )
+                RenderUtils.drawRoundedCornerRect(-expand, -expand, fontRenderer.getStringWidth(displayText) + expand, fontRenderer.FONT_HEIGHT + expand, 2 + (expand / 4) * rectRoundValue.get(), rectColor)
             }
-
+            
             "rnormal" -> {
-                RenderUtils.drawRect(
-                    -expand,
-                    -expand - 1,
-                    fontRenderer.getStringWidth(displayText) + expand,
-                    -expand,
-                    ColorUtils.rainbow()
-                )
-                RenderUtils.drawRect(
-                    -expand,
-                    -expand,
-                    fontRenderer.getStringWidth(displayText) + expand,
-                    fontRenderer.FONT_HEIGHT + expand,
-                    rectColor
-                )
+                RenderUtils.drawRect(-expand, -expand - 1, fontRenderer.getStringWidth(displayText) + expand, -expand, ColorUtils.rainbow())
+                RenderUtils.drawRect(-expand, -expand, fontRenderer.getStringWidth(displayText) + expand, fontRenderer.FONT_HEIGHT + expand, rectColor)
             }
-
             "onetap" -> {
-                RenderUtils.drawRect(
-                    -4.0f,
-                    -8.0f,
-                    (fontRenderer.getStringWidth(displayText) + 3).toFloat(),
-                    fontRenderer.FONT_HEIGHT.toFloat(),
-                    Color(43, 43, 43).rgb
-                )
-                RenderUtils.drawGradientSidewaysH(
-                    -3.0,
-                    -7.0,
-                    fontRenderer.getStringWidth(displayText) + 2.0,
-                    -3.0,
-                    Color(rectColor).darker().rgb,
-                    rectColor
-                )
+                RenderUtils.drawRect(-4.0f, -8.0f, (fontRenderer.getStringWidth(displayText) + 3).toFloat(), fontRenderer.FONT_HEIGHT.toFloat(), Color(43, 43, 43).rgb)
+                RenderUtils.drawGradientSidewaysH(-3.0, -7.0, fontRenderer.getStringWidth(displayText) + 2.0, -3.0, Color(rectColor).darker().rgb, rectColor)
             }
-
             "skeet" -> {
-                RenderUtils.drawRect(
-                    -11.0,
-                    -11.0,
-                    (fontRenderer.getStringWidth(displayText) + 10).toDouble(),
-                    fontRenderer.FONT_HEIGHT.toDouble() + 8.0,
-                    Color(0, 0, 0).rgb
-                )
-                RenderUtils.drawOutLineRect(
-                    -10.0,
-                    -10.0,
-                    (fontRenderer.getStringWidth(displayText) + 9).toDouble(),
-                    fontRenderer.FONT_HEIGHT.toDouble() + 7.0,
-                    8.0,
-                    Color(59, 59, 59).rgb,
-                    Color(59, 59, 59).rgb
-                )
-                RenderUtils.drawOutLineRect(
-                    -9.0,
-                    -9.0,
-                    (fontRenderer.getStringWidth(displayText) + 8).toDouble(),
-                    fontRenderer.FONT_HEIGHT.toDouble() + 6.0,
-                    4.0,
-                    Color(59, 59, 59).rgb,
-                    Color(40, 40, 40).rgb
-                )
-                RenderUtils.drawOutLineRect(
-                    -4.0,
-                    -4.0,
-                    (fontRenderer.getStringWidth(displayText) + 3).toDouble(),
-                    fontRenderer.FONT_HEIGHT.toDouble() + 1.0,
-                    1.0,
-                    Color(18, 18, 18).rgb,
-                    Color(0, 0, 0).rgb
-                )
+                RenderUtils.drawRect(-11.0, -11.0, (fontRenderer.getStringWidth(displayText) + 10).toDouble(), fontRenderer.FONT_HEIGHT.toDouble() + 8.0, Color(0, 0, 0).rgb)
+                RenderUtils.drawOutLineRect(-10.0, -10.0, (fontRenderer.getStringWidth(displayText) + 9).toDouble(), fontRenderer.FONT_HEIGHT.toDouble() + 7.0, 8.0, Color(59, 59, 59).rgb, Color(59, 59, 59).rgb)
+                RenderUtils.drawOutLineRect(-9.0, -9.0, (fontRenderer.getStringWidth(displayText) + 8).toDouble(), fontRenderer.FONT_HEIGHT.toDouble() + 6.0, 4.0, Color(59, 59, 59).rgb, Color(40, 40, 40).rgb)
+                RenderUtils.drawOutLineRect(-4.0, -4.0, (fontRenderer.getStringWidth(displayText) + 3).toDouble(), fontRenderer.FONT_HEIGHT.toDouble() + 1.0, 1.0, Color(18, 18, 18).rgb, Color(0, 0, 0).rgb)
             }
         }
-        if (textStyle.get().contains("Default")) {
-            fontRenderer.drawString(
-                displayText, 0F, 0F, when (colorModeValue.get().lowercase()) {
-                    "rainbow" -> ColorUtils.hslRainbow(rainbowIndex.get(), indexOffset = 100 * rainbowSpeed.get()).rgb
-                    "skyrainbow" -> ColorUtils.skyRainbow(rainbowIndex.get(), 1F, 1F, rainbowSpeed.get().toDouble()).rgb
-                    "anotherrainbow" -> ColorUtils.fade(color, 100, rainbowIndex.get()).rgb
-                    else -> color.rgb
-                }, shadow.get()
-            )
+        if(textStyle.get().contains("Default")) {
+                fontRenderer.drawString(
+                    displayText, 0F, 0F, when (colorModeValue.get().lowercase()) {
+                        "rainbow" -> ColorUtils.hslRainbow(rainbowIndex.get(), indexOffset = 100 * rainbowSpeed.get()).rgb
+                        "skyrainbow" -> ColorUtils.skyRainbow(rainbowIndex.get(), 1F, 1F, rainbowSpeed.get().toDouble()).rgb
+                        "anotherrainbow" -> ColorUtils.fade(color, 100, rainbowIndex.get()).rgb
+                        else -> color.rgb
+                    }, shadow.get())
         }
 
-        if (textStyle.get().contains("Jello")) {
-            FontLoaders.F40.drawString(
-                displayText, 5F, 0F, Color(255, 255, 255, 140).rgb
-            )
-            /*                  FontLoaders.F24.drawString(
-                                LiquidBounce.CLIENT_VERSION.toString() , 5F, 23F,Color(255,255,255,140).rgb
-                            ) */
+        if(textStyle.get().contains("Jello")) {
+                FontLoaders.F40.drawString(
+                    displayText, 5F, 0F,Color(255,255,255,140).rgb
+                )
+/*                  FontLoaders.F24.drawString(
+                    LiquidBounce.CLIENT_VERSION.toString() , 5F, 23F,Color(255,255,255,140).rgb 
+                ) */
         }
 
         // maybe.
-        if (textStyle.get().contains("Leaf")) {
+        if(textStyle.get().contains("Leaf")) {
             FontLoaders.F40.drawString(
-                getClientName(0, 3), 5F, 0F, Color(255, 255, 255, 180).rgb
+                getClientName(0,3), 5F, 0F,Color(255,255,255,180).rgb
             )
             FontLoaders.C16.drawString(
-                getClientName(3, 9), 5F + FontLoaders.F40.getStringWidth("Leaf"), 13F, Color(255, 255, 255, 180).rgb
+                getClientName(3,9), 5F + FontLoaders.F40.getStringWidth("Leaf"), 13F,Color(255,255,255,180).rgb
             )
-            RenderUtils.drawRect(5f, 22.5f, 70f, 22.8f, Color(200, 200, 200, 120).rgb)
+            RenderUtils.drawRect(5f,22.5f,70f,22.8f,Color(200,200,200,120).rgb)
             FontLoaders.C14.drawString(
-                Leaf.CLIENT_VERSION + " | " + Leaf.VERSIONTYPE, 5F, 27F, Color(255, 255, 255, 180).rgb
+                Leaf.CLIENT_VERSION + " | "+Leaf.VERSIONTYPE, 5F, 27F,Color(255,255,255,180).rgb
             )
         }
 
         if (editMode && mc.currentScreen is GuiHudDesigner && editTicks <= 40) {
-            fontRenderer.drawString(
-                "_", fontRenderer.getStringWidth(displayText) + 2F,
-                0F, Color.WHITE.rgb, shadow.get()
-            )
+            fontRenderer.drawString("_", fontRenderer.getStringWidth(displayText) + 2F,
+                0F, Color.WHITE.rgb, shadow.get())
         }
 
         if (editMode && mc.currentScreen !is GuiHudDesigner) {

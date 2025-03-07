@@ -1,6 +1,5 @@
-package net.nonemc.leaf.ui.client.keybind
+﻿package net.nonemc.leaf.ui.client.keybind
 
-import net.minecraft.util.ChatAllowedCharacters
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.features.macro.Macro
 import net.nonemc.leaf.features.module.Module
@@ -8,6 +7,7 @@ import net.nonemc.leaf.ui.client.other.PopUI
 import net.nonemc.leaf.ui.font.Fonts
 import net.nonemc.leaf.ui.i18n.LanguageManager
 import net.nonemc.leaf.utils.render.RenderUtils
+import net.minecraft.util.ChatAllowedCharacters
 import org.lwjgl.input.Keyboard
 import org.lwjgl.opengl.GL11
 import java.awt.Color
@@ -28,27 +28,17 @@ class KeySelectUI(val info: KeyInfo) : PopUI(LanguageManager.get("ui.keybind.sel
         // modules
         var yOffset = height - stroll + 5F
         if (str.startsWith(".")) {
-            Fonts.font35.drawString(
-                LanguageManager.get("ui.keybind.addMacro"),
-                8F,
-                singleHeight + yOffset,
-                Color.BLACK.rgb,
-                false
-            )
+            Fonts.font35.drawString(LanguageManager.get("ui.keybind.addMacro"), 8F, singleHeight + yOffset, Color.BLACK.rgb, false)
         } else {
             for (module in modules) {
-                if (yOffset > (height - singleHeight) && (yOffset - singleHeight) < 190) {
+                if (yOffset> (height - singleHeight) && (yOffset - singleHeight) <190) {
                     GL11.glPushMatrix()
                     GL11.glTranslatef(0F, yOffset, 0F)
 
                     val name = module.name
-                    Fonts.font35.drawString(
-                        if (str.isNotEmpty()) {
-                            "§0" + name.substring(0, str.length) + "§7" + name.substring(str.length, name.length)
-                        } else {
-                            "§0$name"
-                        }, 8F, singleHeight * 0.5F, Color.BLACK.rgb, false
-                    )
+                    Fonts.font35.drawString(if (str.isNotEmpty()) {
+                        "§0" + name.substring(0, str.length) + "§7" + name.substring(str.length, name.length)
+                    } else { "§0$name" }, 8F, singleHeight * 0.5F, Color.BLACK.rgb, false)
 
                     GL11.glPopMatrix()
                 }
@@ -59,13 +49,7 @@ class KeySelectUI(val info: KeyInfo) : PopUI(LanguageManager.get("ui.keybind.sel
         RenderUtils.drawRect(0F, baseHeight - singleHeight, baseWidth.toFloat(), baseHeight.toFloat(), Color.WHITE.rgb)
 
         // search bar
-        Fonts.font35.drawString(
-            str.ifEmpty { LanguageManager.get("ui.keybind.search") },
-            8F,
-            8F + Fonts.font40.height + 4F,
-            Color.LIGHT_GRAY.rgb,
-            false
-        )
+        Fonts.font35.drawString(str.ifEmpty { LanguageManager.get("ui.keybind.search") }, 8F, 8F + Fonts.font40.height + 4F, Color.LIGHT_GRAY.rgb, false)
         RenderUtils.drawRect(8F, height + 2F, baseWidth - 8F, height + 3F, Color.LIGHT_GRAY.rgb)
     }
 
@@ -95,19 +79,19 @@ class KeySelectUI(val info: KeyInfo) : PopUI(LanguageManager.get("ui.keybind.sel
 
     override fun stroll(mouseX: Float, mouseY: Float, wheel: Int) {
         val afterStroll = stroll - (wheel / 10)
-        if (afterStroll > 0 && afterStroll < (maxStroll - 100)) {
+        if (afterStroll> 0 && afterStroll <(maxStroll - 100)) {
             stroll = afterStroll
         }
     }
 
     override fun click(mouseX: Float, mouseY: Float) {
-        if (mouseX < 8 || mouseX > (baseWidth - 8) || mouseY < height || mouseY > (baseHeight - singleHeight)) {
-            return
+        if (mouseX <8 || mouseX> (baseWidth - 8) || mouseY <height || mouseY> (baseHeight - singleHeight)) {
+                return
         }
 
         var yOffset = height - stroll + 2F
         for (module in modules) {
-            if (mouseY > yOffset && mouseY < (yOffset + singleHeight)) {
+            if (mouseY> yOffset && mouseY <(yOffset + singleHeight)) {
                 apply(module)
                 break
             }

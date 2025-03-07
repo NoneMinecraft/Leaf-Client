@@ -1,10 +1,10 @@
-package net.nonemc.leaf.ui.client.keybind
+﻿package net.nonemc.leaf.ui.client.keybind
 
-import net.minecraft.client.gui.GuiScreen
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.font.FontLoaders
 import net.nonemc.leaf.ui.client.other.PopUI
 import net.nonemc.leaf.utils.render.RenderUtils
+import net.minecraft.client.gui.GuiScreen
 import org.lwjgl.input.Keyboard
 import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.GL11
@@ -42,13 +42,7 @@ class KeyBindManager : GuiScreen() {
 
 //        GL11.glPushMatrix()
         GL11.glScalef(2f, 2f, 2f)
-        FontLoaders.C18.DisplayFonts(
-            "%ui.keybind.title%",
-            width * 0.21f * 0.5f,
-            height * 0.2f * 0.5f,
-            Color.WHITE.rgb,
-            FontLoaders.C18
-        )
+        FontLoaders.C18.DisplayFonts("%ui.keybind.title%", width * 0.21f * 0.5f, height * 0.2f * 0.5f, Color.WHITE.rgb, FontLoaders.C18)
 //        GL11.glPopMatrix()
         GL11.glScalef(0.5f, 0.5f, 0.5f)
 
@@ -196,34 +190,14 @@ class KeyBindManager : GuiScreen() {
         keys.add(KeyInfo(12F + 32F * 9.5F, 12F + 37F * 3, 27F, 32F, Keyboard.KEY_COMMA, ","))
         keys.add(KeyInfo(12F + 32F * 10.5F, 12F + 37F * 3, 27F, 32F, Keyboard.KEY_PERIOD, "."))
         keys.add(KeyInfo(12F + 32F * 11.5F, 12F + 37F * 3, 27F, 32F, Keyboard.KEY_SLASH, "/"))
-        keys.add(
-            KeyInfo(
-                12F + 32F * 12.5F,
-                12F + 37F * 3,
-                32F * 2.5F - 5F,
-                32F,
-                Keyboard.KEY_RSHIFT,
-                "Shift",
-                "RShift"
-            )
-        )
+        keys.add(KeyInfo(12F + 32F * 12.5F, 12F + 37F * 3, 32F * 2.5F - 5F, 32F, Keyboard.KEY_RSHIFT, "Shift", "RShift"))
         // line5
         keys.add(KeyInfo(12F, 12F + 37F * 4, 32F * 1.5F - 5F, 32F, Keyboard.KEY_LCONTROL, "Ctrl", "LCtrl"))
         keys.add(KeyInfo(12F + 32F * 1.5F, 12F + 37F * 4, 32F * 1.5F - 5F, 32F, Keyboard.KEY_LMENU, "Alt", "LAlt"))
         keys.add(KeyInfo(12F + 32F * 3F, 12F + 37F * 4, 32 * 8F - 5F, 32F, Keyboard.KEY_SPACE, " ", "Space"))
         keys.add(KeyInfo(12F + 32F * 11F, 12F + 37F * 4, 32F * 1.5F - 5F, 32F, Keyboard.KEY_RMENU, "Alt", "RAlt"))
         keys.add(KeyInfo(12F + 32F * 12.5F, 12F + 37F * 4, 27F, 32F, Keyboard.KEY_HOME, "\u00d8", "Home"))
-        keys.add(
-            KeyInfo(
-                12F + 32F * 13.5F,
-                12F + 37F * 4,
-                32F * 1.5F - 5F,
-                32F,
-                Keyboard.KEY_RCONTROL,
-                "Ctrl",
-                "RCtrl"
-            )
-        )
+        keys.add(KeyInfo(12F + 32F * 13.5F, 12F + 37F * 4, 32F * 1.5F - 5F, 32F, Keyboard.KEY_RCONTROL, "Ctrl", "RCtrl"))
     }
 
     override fun doesGuiPauseGame(): Boolean {

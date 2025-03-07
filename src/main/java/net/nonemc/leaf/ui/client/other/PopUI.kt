@@ -1,4 +1,4 @@
-package net.nonemc.leaf.ui.client.other
+﻿package net.nonemc.leaf.ui.client.other
 
 import net.nonemc.leaf.ui.font.Fonts
 import net.nonemc.leaf.utils.render.RenderUtils
@@ -28,7 +28,7 @@ open class PopUI(val title: String) {
         val scaledMouseX = (mouseX - width * 0.4f) / scale
         val scaledMouseY = (mouseY - height * 0.3f) / scale
 
-        if (scaledMouseX > 0 && scaledMouseY > 0 && scaledMouseX < baseWidth && scaledMouseY < baseHeight) {
+        if (scaledMouseX> 0 && scaledMouseY> 0 && scaledMouseX <baseWidth && scaledMouseY <baseHeight) {
             click(scaledMouseX, scaledMouseY)
         } else {
             close()
@@ -40,7 +40,7 @@ open class PopUI(val title: String) {
         val scaledMouseX = (mouseX - width * 0.4f) / scale
         val scaledMouseY = (mouseY - height * 0.3f) / scale
 
-        if (scaledMouseX > 0 && scaledMouseY > 0 && scaledMouseX < baseWidth && scaledMouseY < baseHeight) {
+        if (scaledMouseX> 0 && scaledMouseY> 0 && scaledMouseX <baseWidth && scaledMouseY <baseHeight) {
             stroll(scaledMouseX, scaledMouseY, wheel)
         }
     }

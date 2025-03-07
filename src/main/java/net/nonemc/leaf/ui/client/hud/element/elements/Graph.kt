@@ -1,4 +1,4 @@
-/*
+﻿/*
  * FDPClient Hacked Client
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
  * https://github.com/SkidderMC/FDPClient/
@@ -7,9 +7,6 @@
 
 package net.nonemc.leaf.ui.client.hud.element.elements
 
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.renderer.Tessellator
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.nonemc.leaf.ui.client.hud.element.Border
 import net.nonemc.leaf.ui.client.hud.element.Element
 import net.nonemc.leaf.ui.client.hud.element.ElementInfo
@@ -20,6 +17,9 @@ import net.nonemc.leaf.utils.PacketCounterUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.*
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import java.lang.Math.pow
@@ -32,14 +32,11 @@ import kotlin.math.sqrt
  * Allows to draw custom text
  */
 @ElementInfo(name = "Graph")
-class Graph(
-    x: Double = 75.0, y: Double = 110.0, scale: Float = 1F,
-    side: Side = Side(Side.Horizontal.MIDDLE, Side.Vertical.DOWN)
-) : Element(x, y, scale, side) {
+class Graph(x: Double = 75.0, y: Double = 110.0, scale: Float = 1F,
+            side: Side = Side(Side.Horizontal.MIDDLE, Side.Vertical.DOWN)) : Element(x, y, scale, side) {
 
     // general
-    private val graphValue =
-        ListValue("Graph-Value", arrayOf("Speed", "RotationSpeed", "Packet-In", "Packet-Out"), "Speed")
+    private val graphValue = ListValue("Graph-Value", arrayOf("Speed", "RotationSpeed", "Packet-In", "Packet-Out"), "Speed")
     private val updateDelay = IntegerValue("Update-Delay", 1000, 0, 5000)
     private val xMultiplier = FloatValue("xMultiplier", 7F, 1F, 20F)
     private val yMultiplier = FloatValue("yMultiplier", 7F, 0.1F, 20F)
@@ -78,12 +75,7 @@ class Graph(
 
     override fun updateElement() {
         if (mc.thePlayer == null) return
-        speedVal = sqrt(
-            pow(lastX - mc.thePlayer.posX, 2.0) + pow(
-                lastZ - mc.thePlayer.posZ,
-                2.0
-            )
-        ).toFloat() * 20F * mc.timer.timerSpeed
+        speedVal = sqrt(pow(lastX - mc.thePlayer.posX, 2.0) + pow(lastZ - mc.thePlayer.posZ, 2.0)).toFloat() * 20F * mc.timer.timerSpeed
         lastX = mc.thePlayer.posX
         lastZ = mc.thePlayer.posZ
     }
@@ -122,13 +114,8 @@ class Graph(
             avgtimer.reset()
         }
 
-        val working = if (graphValue.get().startsWith("packet", true)) valueStore[valueStore.size - 1].toInt()
-            .toString() else String.format("%.2f", valueStore[valueStore.size - 1])
-        val average =
-            if (graphValue.get().startsWith("packet", true)) averageNumber.toInt().toString() else String.format(
-                "%.2f",
-                averageNumber
-            )
+        val working = if (graphValue.get().startsWith("packet", true)) valueStore[valueStore.size - 1].toInt().toString() else String.format("%.2f", valueStore[valueStore.size - 1])
+        val average = if (graphValue.get().startsWith("packet", true)) averageNumber.toInt().toString() else String.format("%.2f", averageNumber)
 
         if (displayGraphName.get()) {
             var displayString = if (nameValue.get()) when (graphValue.get().lowercase()) {
@@ -153,24 +140,12 @@ class Graph(
             RenderUtils.drawRect(-1F, -1F, width - xMultiplier.get() + 1F, maxHeight.get() + 1F, bgColor)
 
         if (bordalpha.get() > 0F)
-            RenderUtils.drawBorder(
-                -1F,
-                -1F,
-                width - xMultiplier.get() + 1F,
-                maxHeight.get() + 1F,
-                bordRad.get(),
-                borderColor
-            )
+            RenderUtils.drawBorder(-1F, -1F, width - xMultiplier.get() + 1F, maxHeight.get() + 1F, bordRad.get(), borderColor)
 
         val avgheight = Math.min(averageNumber * yMultiplier.get(), maxHeight.get())
         val firstheight = Math.min(valueStore[valueStore.size - 1] * yMultiplier.get(), maxHeight.get())
 
-        if (showAverageLine.get() && !nameValue.get()) font.drawStringWithShadow(
-            average,
-            -font.getStringWidth(average) - 3F,
-            maxHeight.get() - avgheight - font.FONT_HEIGHT / 2F,
-            markColor
-        )
+        if (showAverageLine.get() && !nameValue.get()) font.drawStringWithShadow(average, -font.getStringWidth(average) - 3F, maxHeight.get() - avgheight - font.FONT_HEIGHT / 2F, markColor)
 
         GlStateManager.pushMatrix()
         GlStateManager.enableBlend()
@@ -184,8 +159,7 @@ class Graph(
             GlStateManager.color(0.1F, 1F, 0.1F, 1F)
             worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION)
             worldRenderer.pos(0.0, (maxHeight.get() - avgheight).toDouble(), 0.0).endVertex()
-            worldRenderer.pos((width - xMultiplier.get()).toDouble(), (maxHeight.get() - avgheight).toDouble(), 0.0)
-                .endVertex()
+            worldRenderer.pos((width - xMultiplier.get()).toDouble(), (maxHeight.get() - avgheight).toDouble(), 0.0).endVertex()
             tessellator.draw()
         }
         GlStateManager.color(1F, 1F, 1F, 1F)
@@ -200,8 +174,7 @@ class Graph(
             GlStateManager.color(0.1F, 1F, 0.1F, 1F)
             worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION)
             worldRenderer.pos(0.0, (maxHeight.get() - avgheight).toDouble(), 0.0).endVertex()
-            worldRenderer.pos((width - xMultiplier.get()).toDouble(), (maxHeight.get() - avgheight).toDouble(), 0.0)
-                .endVertex()
+            worldRenderer.pos((width - xMultiplier.get()).toDouble(), (maxHeight.get() - avgheight).toDouble(), 0.0).endVertex()
             tessellator.draw()
         }
         GL11.glDisable(GL11.GL_LINE_SMOOTH)
@@ -209,18 +182,8 @@ class Graph(
         GlStateManager.disableBlend()
         GlStateManager.popMatrix()
 
-        if (nameValue.get()) font.drawStringWithShadow(
-            average,
-            defaultX - xMultiplier.get() + 3F,
-            maxHeight.get() - avgheight - font.FONT_HEIGHT / 2F,
-            markColor
-        )
-        else font.drawStringWithShadow(
-            working,
-            defaultX - xMultiplier.get() + 3F,
-            maxHeight.get() - firstheight - font.FONT_HEIGHT / 2F,
-            -1
-        )
+        if (nameValue.get()) font.drawStringWithShadow(average, defaultX - xMultiplier.get() + 3F, maxHeight.get() - avgheight - font.FONT_HEIGHT / 2F, markColor)
+        else font.drawStringWithShadow(working, defaultX - xMultiplier.get() + 3F, maxHeight.get() - firstheight - font.FONT_HEIGHT / 2F, -1)
 
         return Border(0F, 0F, width, maxHeight.get() + 2F)
     }

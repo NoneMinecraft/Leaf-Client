@@ -1,11 +1,5 @@
 package net.nonemc.leaf.ui.client.hud.element.elements;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 import net.nonemc.leaf.ui.client.hud.element.Border;
 import net.nonemc.leaf.ui.client.hud.element.Element;
 import net.nonemc.leaf.ui.client.hud.element.ElementInfo;
@@ -15,6 +9,12 @@ import net.nonemc.leaf.utils.render.Colors;
 import net.nonemc.leaf.utils.render.PotionData;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.utils.render.Translate;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -25,7 +25,6 @@ import java.util.Map;
 public class Effects extends Element {
 
     private final Map<Potion, PotionData> potionMap = new HashMap<>();
-
     protected Border draw() {
         GlStateManager.pushMatrix();
         int y = 0;
@@ -33,30 +32,29 @@ public class Effects extends Element {
             final Potion potion = Potion.potionTypes[potionEffect.getPotionID()];
             final String name = I18n.format(potion.getName());
             final PotionData potionData;
-            if (potionMap.containsKey(potion) && potionMap.get(potion).level == potionEffect.getAmplifier())
+            if(potionMap.containsKey(potion) && potionMap.get(potion).level == potionEffect.getAmplifier())
                 potionData = potionMap.get(potion);
             else
-                potionMap.put(potion, (potionData = new PotionData(potion, new Translate(0, -40F + y), potionEffect.getAmplifier())));
+                potionMap.put(potion, (potionData = new PotionData(potion, new Translate(0, - 40F + y), potionEffect.getAmplifier())));
             boolean flag = true;
-            for (final PotionEffect checkEffect : mc.thePlayer.getActivePotionEffects())
+            for(final PotionEffect checkEffect : mc.thePlayer.getActivePotionEffects())
                 if (checkEffect.getAmplifier() == potionData.level) {
                     flag = false;
                     break;
                 }
-            if (flag) potionMap.remove(potion);
-            int potionTime, potionMaxTime;
+            if(flag) potionMap.remove(potion);
+            int potionTime,potionMaxTime;
             try {
                 potionTime = Integer.parseInt(Potion.getDurationString(potionEffect).split(":")[0]);
                 potionMaxTime = Integer.parseInt(Potion.getDurationString(potionEffect).split(":")[1]);
-            } catch (Exception ignored) {
+            } catch(Exception ignored) {
                 potionTime = 100;
                 potionMaxTime = 1000;
             }
             final int lifeTime = (potionTime * 60 + potionMaxTime);
-            if (potionData.getMaxTimer() == 0 || lifeTime > (double) potionData.getMaxTimer())
-                potionData.maxTimer = lifeTime;
+            if (potionData.getMaxTimer() == 0 || lifeTime > (double)potionData.getMaxTimer()) potionData.maxTimer = lifeTime;
             float state = 0.0F;
-            if (lifeTime >= 0.0D) state = (float) (lifeTime / (double) ((float) potionData.getMaxTimer()) * 100.0D);
+            if (lifeTime >= 0.0D) state = (float)(lifeTime / (double)((float)potionData.getMaxTimer()) * 100.0D);
             final int position = Math.round(potionData.translate.getY() + 5);
             state = Math.max(state, 2.0F);
             potionData.translate.interpolate(0, y, 0.1);
@@ -78,7 +76,7 @@ public class Effects extends Element {
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 int statusIconIndex = potion.getStatusIconIndex();
                 mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/container/inventory.png"));
-                mc.ingameGUI.drawTexturedModalRect(6F, (float) (position + 1), statusIconIndex % 8 * 18, 198 + statusIconIndex / 8 * 18, 18, 18);
+                mc.ingameGUI.drawTexturedModalRect(6F, (float)(position + 1), statusIconIndex % 8 * 18, 198 + statusIconIndex / 8 * 18, 18, 18);
                 GL11.glDepthMask(true);
                 GL11.glDisable(3042);
                 GL11.glEnable(2929);
@@ -95,15 +93,15 @@ public class Effects extends Element {
         final int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
         final String[] symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
         final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < values.length && num >= 0; i++)
-            while (values[i] <= num) {
+        for(int i = 0; i < values.length && num >= 0; i++)
+            while (values[i] <= num){
                 num -= values[i];
                 stringBuilder.append(symbols[i]);
             }
 
         return stringBuilder.toString();
     }
-
+    
     private double getAnimationState(double animation, double finalState, double speed) {
         float add = (float) (0.01 * speed);
         if (animation < finalState) {

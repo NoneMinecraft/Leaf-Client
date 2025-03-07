@@ -1,20 +1,16 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 package net.nonemc.leaf.ui.client.hud.element.elements
 
-import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.client.renderer.OpenGlHelper
-import net.minecraft.client.renderer.RenderHelper
-import net.minecraft.entity.EntityLivingBase
 import net.nonemc.leaf.ui.client.hud.element.Border
 import net.nonemc.leaf.ui.client.hud.element.Element
 import net.nonemc.leaf.ui.client.hud.element.ElementInfo
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
+import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.OpenGlHelper
+import net.minecraft.client.renderer.RenderHelper
+import net.minecraft.entity.EntityLivingBase
 import org.lwjgl.opengl.GL11
 import kotlin.math.abs
 import kotlin.math.atan
@@ -63,7 +59,6 @@ class Model(x: Double = 40.0, y: Double = 100.0) : Element(x, y) {
 
                 rotate
             }
-
             "custom" -> customYaw.get()
             else -> 0F
         }

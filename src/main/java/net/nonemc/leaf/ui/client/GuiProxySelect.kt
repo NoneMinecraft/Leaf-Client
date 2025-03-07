@@ -1,10 +1,10 @@
-package net.nonemc.leaf.ui.client
+﻿package net.nonemc.leaf.ui.client
 
+import net.nonemc.leaf.Leaf
+import net.nonemc.leaf.features.special.ProxyManager
 import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.GuiTextField
-import net.nonemc.leaf.Leaf
-import net.nonemc.leaf.features.special.ProxyManager
 import org.lwjgl.input.Keyboard
 import java.net.Proxy
 
@@ -47,15 +47,13 @@ class GuiProxySelect(private val prevGui: GuiScreen) : GuiScreen() {
                 ProxyManager.proxy = textField.text
                 mc.displayGuiScreen(prevGui)
             }
-
             1 -> {
-                when (ProxyManager.proxyType) {
+                when(ProxyManager.proxyType) {
                     Proxy.Type.SOCKS -> ProxyManager.proxyType = Proxy.Type.HTTP
                     Proxy.Type.HTTP -> ProxyManager.proxyType = Proxy.Type.SOCKS
                     else -> throw IllegalStateException("Proxy type is not supported!")
                 }
             }
-
             2 -> {
                 ProxyManager.isEnable = !ProxyManager.isEnable
             }

@@ -1,12 +1,13 @@
+﻿
 package net.nonemc.leaf.ui.client.altmanager.sub
 
 import me.liuli.elixir.manage.AccountSerializer
-import net.minecraft.client.gui.GuiButton
-import net.minecraft.client.gui.GuiScreen
-import net.minecraft.client.gui.GuiTextField
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.ui.client.altmanager.GuiAltManager
 import net.nonemc.leaf.ui.elements.GuiPasswordField
+import net.minecraft.client.gui.GuiButton
+import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.gui.GuiTextField
 import net.nonemc.leaf.ui.i18n.LanguageManager
 import org.lwjgl.input.Keyboard
 
@@ -34,30 +35,13 @@ class GuiAdd(private val prevGui: GuiAltManager) : GuiScreen() {
         username.drawTextBox()
         password.drawTextBox()
         if (username.text.isEmpty() && !username.isFocused) {
-            drawCenteredString(
-                mc.fontRendererObj,
-                "§7${LanguageManager.getAndFormat("ui.alt.loginUsername")}",
-                width / 2 - 55,
-                66,
-                0xffffff
-            )
+            drawCenteredString(mc.fontRendererObj, "§7${LanguageManager.getAndFormat("ui.alt.loginUsername")}", width / 2 - 55, 66, 0xffffff)
         }
         if (password.text.isEmpty() && !password.isFocused) {
-            drawCenteredString(
-                mc.fontRendererObj,
-                "§7${LanguageManager.getAndFormat("ui.alt.loginPassword")}",
-                width / 2 - 74,
-                91,
-                0xffffff
-            )
+            drawCenteredString(mc.fontRendererObj, "§7${LanguageManager.getAndFormat("ui.alt.loginPassword")}", width / 2 - 74, 91, 0xffffff)
         }
         "Add ms@ before your real username can login microsoft account without browser!".also {
-            mc.fontRendererObj.drawString(
-                it,
-                width - mc.fontRendererObj.getStringWidth(it),
-                height - mc.fontRendererObj.FONT_HEIGHT,
-                0xffffff
-            )
+            mc.fontRendererObj.drawString(it, width - mc.fontRendererObj.getStringWidth(it), height - mc.fontRendererObj.FONT_HEIGHT, 0xffffff)
         }
         super.drawScreen(mouseX, mouseY, partialTicks)
     }
@@ -71,16 +55,10 @@ class GuiAdd(private val prevGui: GuiAltManager) : GuiScreen() {
                     status = "§c${LanguageManager.getAndFormat("ui.alt.alreadyAdded")}"
                     return
                 }
-                Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts.add(
-                    AccountSerializer.accountInstance(
-                        username.text,
-                        password.text
-                    )
-                )
+                Leaf.fileManager.accountsConfig.altManagerMinecraftAccounts.add(AccountSerializer.accountInstance(username.text, password.text))
                 Leaf.fileManager.saveConfig(Leaf.fileManager.accountsConfig)
                 actionPerformed(buttonList.find { it.id == 0 }!!)
             }
-
             2 -> {
                 val args = getClipboardString().split(":")
                 username.text = args[0]
@@ -97,7 +75,6 @@ class GuiAdd(private val prevGui: GuiAltManager) : GuiScreen() {
                 mc.displayGuiScreen(prevGui)
                 return
             }
-
             Keyboard.KEY_RETURN -> {
                 actionPerformed(buttonList.find { it.id == 1 }!!)
                 return
