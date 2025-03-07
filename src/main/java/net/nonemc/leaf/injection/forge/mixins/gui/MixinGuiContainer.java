@@ -1,5 +1,13 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.event.KeyEvent;
+import net.nonemc.leaf.features.module.modules.client.Animations;
+
+import net.nonemc.leaf.features.module.modules.world.Stealer;
+import net.nonemc.leaf.ui.i18n.LanguageManager;
+import net.nonemc.leaf.utils.extensions.RendererExtensionKt;
+import net.nonemc.leaf.utils.render.EaseUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -8,13 +16,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.event.KeyEvent;
-import net.nonemc.leaf.features.module.modules.client.Animations;
-import net.nonemc.leaf.features.module.modules.world.Stealer;
-import net.nonemc.leaf.ui.i18n.LanguageManager;
-import net.nonemc.leaf.utils.extensions.RendererExtensionKt;
-import net.nonemc.leaf.utils.render.EaseUtils;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,21 +34,20 @@ public abstract class MixinGuiContainer extends MixinGuiScreen {
     @Shadow
     protected int guiTop;
 
-    private final long guiOpenTime = -1;
+    private long guiOpenTime = -1;
     private boolean translated = false;
-    @Shadow
-    private int dragSplittingButton;
-    @Shadow
-    private int dragSplittingRemnant;
 
     @Shadow
     protected abstract boolean checkHotbarKeys(int keyCode);
 
-    public void injectInitGui(CallbackInfo callbackInfo) {
+    @Shadow private int dragSplittingButton;
+    @Shadow private int dragSplittingRemnant;
+
+    public void injectInitGui(CallbackInfo callbackInfo){
         GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
         if (guiScreen instanceof GuiChest) {
-            buttonList.add(new GuiButton(114514, this.width / 2 - 100, this.guiTop - 30, 99, 20, LanguageManager.INSTANCE.getAndFormat("ui.chest.disable", "%module.KillAura.name%")));
-            buttonList.add(new GuiButton(1919810, this.width / 2 + 1, this.guiTop - 30, 99, 20, LanguageManager.INSTANCE.getAndFormat("ui.chest.disable", "%module.Stealer.name%")));
+            buttonList.add(new GuiButton(114514, this.width / 2 - 100, this.guiTop - 30, 99, 20, LanguageManager.INSTANCE.getAndFormat("ui.chest.disable","%module.KillAura.name%")));
+            buttonList.add(new GuiButton(1919810, this.width / 2 + 1, this.guiTop - 30, 99, 20, LanguageManager.INSTANCE.getAndFormat("ui.chest.disable","%module.Stealer.name%")));
         }
     }
 
@@ -60,7 +60,8 @@ public abstract class MixinGuiContainer extends MixinGuiScreen {
         Stealer stealer = Leaf.moduleManager.getModule(Stealer.class);
         Minecraft mc = Minecraft.getMinecraft();
         GuiScreen guiScreen = mc.currentScreen;
-        if (stealer.getState() && stealer.getSilentValue().get() && guiScreen instanceof GuiChest chest) {
+        if (stealer.getState() && stealer.getSilentValue().get() && guiScreen instanceof GuiChest) {
+            GuiChest chest = (GuiChest) guiScreen;
             if (!(stealer.getChestTitleValue().get() && (chest.lowerChestInventory == null || !chest.lowerChestInventory.getName().contains(new ItemStack(Item.itemRegistry.getObject(new ResourceLocation("minecraft:chest"))).getDisplayName())))) {
                 // mouse focus
                 mc.setIngameFocus();
@@ -136,7 +137,7 @@ public abstract class MixinGuiContainer extends MixinGuiScreen {
         try {
             if (stealer.getState() && stealer.getSilentTitleValue().get() && mc.currentScreen instanceof GuiChest)
                 Leaf.eventManager.callEvent(new KeyEvent(keyCode == 0 ? typedChar + 256 : keyCode));
-        } catch (Exception e) {
+        }catch (Exception e){
 
         }
     }

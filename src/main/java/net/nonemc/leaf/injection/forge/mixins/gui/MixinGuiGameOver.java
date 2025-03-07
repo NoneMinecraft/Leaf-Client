@@ -1,12 +1,12 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
+import net.nonemc.leaf.launch.data.modernui.GuiMainMenu;
+import net.nonemc.leaf.utils.StatisticsUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.resources.I18n;
-import net.nonemc.leaf.launch.data.modernui.GuiMainMenu;
-import net.nonemc.leaf.utils.StatisticsUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

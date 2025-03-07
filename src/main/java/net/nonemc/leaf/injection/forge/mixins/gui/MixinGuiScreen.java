@@ -1,5 +1,11 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.features.module.modules.client.HUD;
+import net.nonemc.leaf.features.special.GradientBackground;
+import net.nonemc.leaf.font.FontLoaders;
+import net.nonemc.leaf.ui.client.GuiBackground;
+import net.nonemc.leaf.utils.particles.ParticleUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -12,12 +18,6 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.features.module.modules.client.HUD;
-import net.nonemc.leaf.features.special.GradientBackground;
-import net.nonemc.leaf.font.FontLoaders;
-import net.nonemc.leaf.ui.client.GuiBackground;
-import net.nonemc.leaf.utils.particles.ParticleUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,12 +36,16 @@ public abstract class MixinGuiScreen {
 
     @Shadow
     public Minecraft mc;
-    @Shadow
-    public int width;
-    @Shadow
-    public int height;
+
     @Shadow
     protected List<GuiButton> buttonList;
+
+    @Shadow
+    public int width;
+
+    @Shadow
+    public int height;
+
     @Shadow
     protected FontRenderer fontRendererObj;
 
@@ -65,54 +69,53 @@ public abstract class MixinGuiScreen {
                 ParticleUtils.drawParticles(Mouse.getX() * width / mc.displayWidth, height - Mouse.getY() * height / mc.displayHeight - 1);
             }
 
-            if (mc.thePlayer != null) {
+            if(mc.thePlayer != null) {
                 int defaultHeight1 = (this.height);
                 int defaultWidth1 = (this.width);
                 GL11.glPushMatrix();
                 GL11.glPopMatrix();
                 GL11.glPushMatrix();
-                FontLoaders.F30.DisplayFont2(FontLoaders.F30, Leaf.CLIENT_NAME, defaultWidth1 - 12f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION) - FontLoaders.F30.DisplayFontWidths(FontLoaders.F30, Leaf.CLIENT_NAME), defaultHeight1 - 23.5f, new Color(255, 255, 255, 140).getRGB(), true);
-                FontLoaders.F30.DisplayFont2(FontLoaders.F14, Leaf.CLIENT_VERSION, defaultWidth1 - 10f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION), defaultHeight1 - 15f, new Color(255, 255, 255, 140).getRGB(), true);
+                FontLoaders.F30.DisplayFont2(FontLoaders.F30, Leaf.CLIENT_NAME,defaultWidth1 - 12f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION) - FontLoaders.F30.DisplayFontWidths(FontLoaders.F30, Leaf.CLIENT_NAME) ,defaultHeight1 - 23.5f,new Color(255,255,255,140).getRGB(),true);
+                FontLoaders.F30.DisplayFont2(FontLoaders.F14, Leaf.CLIENT_VERSION,defaultWidth1 - 10f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION) ,defaultHeight1 - 15f,new Color(255,255,255,140).getRGB(),true);
                 GL11.glPopMatrix();
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
-
     @Inject(method = "drawWorldBackground", at = @At("RETURN"), cancellable = true)
     private void drawWorldBackground2(final CallbackInfo callbackInfo) {
         try {
-            if (mc.thePlayer != null) {
+            if(mc.thePlayer != null) {
                 int defaultHeight1 = (this.height);
                 int defaultWidth1 = (this.width);
                 GL11.glPushMatrix();
                 GL11.glPopMatrix();
                 GL11.glPushMatrix();
-                FontLoaders.F30.DisplayFont2(FontLoaders.F30, Leaf.CLIENT_NAME, defaultWidth1 - 12f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION) - FontLoaders.F30.DisplayFontWidths(FontLoaders.F30, Leaf.CLIENT_NAME), defaultHeight1 - 23.5f, new Color(255, 255, 255, 140).getRGB(), true);
-                FontLoaders.F30.DisplayFont2(FontLoaders.F14, Leaf.CLIENT_VERSION, defaultWidth1 - 10f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION), defaultHeight1 - 15f, new Color(255, 255, 255, 140).getRGB(), true);
+                FontLoaders.F30.DisplayFont2(FontLoaders.F30, Leaf.CLIENT_NAME,defaultWidth1 - 12f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION) - FontLoaders.F30.DisplayFontWidths(FontLoaders.F30, Leaf.CLIENT_NAME) ,defaultHeight1 - 23.5f,new Color(255,255,255,140).getRGB(),true);
+                FontLoaders.F30.DisplayFont2(FontLoaders.F14, Leaf.CLIENT_VERSION,defaultWidth1 - 10f - FontLoaders.F14.DisplayFontWidths(FontLoaders.F14, Leaf.CLIENT_VERSION) ,defaultHeight1 - 15f,new Color(255,255,255,140).getRGB(),true);
                 GL11.glPopMatrix();
             }
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     @Inject(method = "drawScreen", at = @At("HEAD"), cancellable = true)
-    private void drawScreen(int p_drawScreen_1_, int p_drawScreen_2_, float p_drawScreen_3_, final CallbackInfo callbackInfo) {
+    private void drawScreen(int p_drawScreen_1_, int p_drawScreen_2_, float p_drawScreen_3_,final CallbackInfo callbackInfo) {
     }
 
     @ModifyVariable(method = "sendChatMessage(Ljava/lang/String;)V", at = @At("HEAD"))
-    private String sendChatMessage(String p_sendChatMessage_1_) {
-        if (p_sendChatMessage_1_.length() > 100) {
-            return p_sendChatMessage_1_.substring(0, 100);
+    private String sendChatMessage(String p_sendChatMessage_1_){
+        if(p_sendChatMessage_1_.length()>100){
+            return p_sendChatMessage_1_.substring(0,100);
         }
         return p_sendChatMessage_1_;
     }
 
     @Inject(method = "drawDefaultBackground", at = @At("HEAD"), cancellable = true)
-    private void drawDefaultBackground(final CallbackInfo callbackInfo) {
-        if (mc.currentScreen instanceof GuiContainer) {
+    private void drawDefaultBackground(final CallbackInfo callbackInfo){
+        if(mc.currentScreen instanceof GuiContainer){
             callbackInfo.cancel();
         }
     }
@@ -124,15 +127,15 @@ public abstract class MixinGuiScreen {
     private void drawClientBackground(final CallbackInfo callbackInfo) {
         GlStateManager.disableLighting();
         GlStateManager.disableFog();
-        if (GuiBackground.Companion.getEnabled()) {
+        if(GuiBackground.Companion.getEnabled()) {
             if (Leaf.INSTANCE.getBackground() == null) {
                 GradientBackground.INSTANCE.draw(width, height);
-            } else {
+            }else{
                 mc.getTextureManager().bindTexture(Leaf.INSTANCE.getBackground());
                 Gui.drawModalRectWithCustomSizedTexture(0, 0, 0f, 0f, width, height, width, height);
             }
-
-
+        
+            
             GlStateManager.resetColor();
             if (GuiBackground.Companion.getParticles())
                 ParticleUtils.drawParticles(Mouse.getX() * width / mc.displayWidth, height - Mouse.getY() * height / mc.displayHeight - 1);
@@ -141,7 +144,7 @@ public abstract class MixinGuiScreen {
 
     @Inject(method = "drawBackground", at = @At("RETURN"))
     private void drawParticles(final CallbackInfo callbackInfo) {
-        if (GuiBackground.Companion.getParticles())
+        if(GuiBackground.Companion.getParticles())
             ParticleUtils.drawParticles(Mouse.getX() * width / mc.displayWidth, height - Mouse.getY() * height / mc.displayHeight - 1);
     }
 

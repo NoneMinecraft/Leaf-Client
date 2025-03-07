@@ -1,10 +1,10 @@
 package net.nonemc.leaf.injection.forge.mixins.network;
 
+import net.nonemc.leaf.features.special.AntiForge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.handshake.client.C00Handshake;
-import net.nonemc.leaf.features.special.AntiForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,13 +13,16 @@ import org.spongepowered.asm.mixin.Shadow;
 public class MixinC00Handshake {
 
     @Shadow
-    public int port;
-    @Shadow
-    public String ip;
-    @Shadow
     private int protocolVersion;
+
+    @Shadow
+    public int port;
+
     @Shadow
     private EnumConnectionState requestedState;
+
+    @Shadow
+    public String ip;
 
     /**
      * @author CCBlueX

@@ -1,9 +1,9 @@
 package net.nonemc.leaf.injection.forge.mixins.render;
 
 
+import net.nonemc.leaf.features.module.modules.client.Animations;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityParticleEmitter;
-import net.nonemc.leaf.features.module.modules.client.Animations;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,10 +19,10 @@ import java.util.List;
 public abstract class MixinEffectRenderer {
 
     @Shadow
-    private List<EntityParticleEmitter> particleEmitters;
+    protected abstract void updateEffectLayer(int layer);
 
     @Shadow
-    protected abstract void updateEffectLayer(int layer);
+    private List<EntityParticleEmitter> particleEmitters;
 
     /**
      * @author Mojang
@@ -31,15 +31,15 @@ public abstract class MixinEffectRenderer {
     @Overwrite
     public void updateEffects() {
         try {
-            for (int i = 0; i < 4; ++i)
+            for(int i = 0; i < 4; ++i)
                 this.updateEffectLayer(i);
 
-            for (final Iterator<EntityParticleEmitter> it = this.particleEmitters.iterator(); it.hasNext(); ) {
+            for(final Iterator<EntityParticleEmitter> it = this.particleEmitters.iterator(); it.hasNext(); ) {
                 final EntityParticleEmitter entityParticleEmitter = it.next();
 
                 entityParticleEmitter.onUpdate();
 
-                if (entityParticleEmitter.isDead)
+                if(entityParticleEmitter.isDead)
                     it.remove();
             }
         } catch (final ConcurrentModificationException ignored) {
@@ -65,5 +65,5 @@ public abstract class MixinEffectRenderer {
     private void removeBlockBreakingParticles_Forge(CallbackInfo ci) {
         if (Animations.getNoBlockParticles().get())
             ci.cancel();
-    }
+}
 }

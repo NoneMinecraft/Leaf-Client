@@ -1,7 +1,7 @@
 package net.nonemc.leaf.injection.forge.mixins.client;
 
-import net.minecraft.item.ItemStack;
 import net.nonemc.leaf.injection.access.IItemStack;
+import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

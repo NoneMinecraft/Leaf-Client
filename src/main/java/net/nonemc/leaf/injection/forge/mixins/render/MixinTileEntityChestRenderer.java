@@ -1,8 +1,8 @@
 package net.nonemc.leaf.injection.forge.mixins.render;
 
-import net.minecraft.client.renderer.tileentity.TileEntityChestRenderer;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.features.module.modules.render.Chams;
+import net.minecraft.client.renderer.tileentity.TileEntityChestRenderer;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,10 +1,10 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
-import net.minecraft.client.gui.GuiSpectator;
-import net.minecraft.client.gui.ScaledResolution;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.event.Render2DEvent;
 import net.nonemc.leaf.injection.access.StaticStorage;
+import net.minecraft.client.gui.GuiSpectator;
+import net.minecraft.client.gui.ScaledResolution;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

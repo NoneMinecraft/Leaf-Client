@@ -1,5 +1,8 @@
 package net.nonemc.leaf.injection.forge.mixins.render;
 
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.features.module.modules.render.Chams;
+import net.nonemc.leaf.features.module.modules.render.ItemPhysics;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.entity.Render;
@@ -10,9 +13,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.features.module.modules.render.Chams;
-import net.nonemc.leaf.features.module.modules.render.ItemPhysics;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -52,26 +52,31 @@ public abstract class MixinRenderEntityItem extends Render<EntityItem> {
     }
 
     @Overwrite
-    private int func_177077_a(EntityItem itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_, float p_177077_8_, IBakedModel p_177077_9_) {
-        final ItemPhysics itemPhysics = Leaf.moduleManager.getModule(ItemPhysics.class);
+    private int func_177077_a(EntityItem itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_, float p_177077_8_, IBakedModel p_177077_9_)
+    {
+        final ItemPhysics itemPhysics = (ItemPhysics) Leaf.moduleManager.getModule(ItemPhysics.class);
         ItemStack itemstack = itemIn.getEntityItem();
         Item item = itemstack.getItem();
 
-        if (item == null || itemPhysics == null) {
+        if (item == null || itemPhysics == null)
+        {
             return 0;
-        } else {
+        }
+        else
+        {
             boolean flag = p_177077_9_.isGui3d();
             int i = this.func_177078_a(itemstack);
             float f = 0.25F;
-            float f1 = MathHelper.sin(((float) itemIn.getAge() + p_177077_8_) / 10.0F + itemIn.hoverStart) * 0.1F + 0.1F;
+            float f1 = MathHelper.sin(((float)itemIn.getAge() + p_177077_8_) / 10.0F + itemIn.hoverStart) * 0.1F + 0.1F;
             if (itemPhysics.getState()) {
                 f1 = 0.0f;
             }
             float f2 = p_177077_9_.getItemCameraTransforms().getTransform(ItemCameraTransforms.TransformType.GROUND).scale.y;
-            GlStateManager.translate((float) p_177077_2_, (float) p_177077_4_ + f1 + 0.25F * f2, (float) p_177077_6_);
+            GlStateManager.translate((float)p_177077_2_, (float)p_177077_4_ + f1 + 0.25F * f2, (float)p_177077_6_);
 
-            if (flag || this.renderManager.options != null) {
-                float f3 = (((float) itemIn.getAge() + p_177077_8_) / 20.0F + itemIn.hoverStart) * (180F / (float) Math.PI);
+            if (flag || this.renderManager.options != null)
+            {
+                float f3 = (((float)itemIn.getAge() + p_177077_8_) / 20.0F + itemIn.hoverStart) * (180F / (float)Math.PI);
                 if (itemPhysics.getState()) {
                     if (itemIn.onGround) {
                         GL11.glRotatef(itemIn.rotationYaw, 0.0f, 1.0f, 0.0f);
@@ -86,10 +91,11 @@ public abstract class MixinRenderEntityItem extends Render<EntityItem> {
                 }
             }
 
-            if (!flag) {
-                float f6 = -0.0F * (float) (i - 1) * 0.5F;
-                float f4 = -0.0F * (float) (i - 1) * 0.5F;
-                float f5 = -0.046875F * (float) (i - 1) * 0.5F;
+            if (!flag)
+            {
+                float f6 = -0.0F * (float)(i - 1) * 0.5F;
+                float f4 = -0.0F * (float)(i - 1) * 0.5F;
+                float f5 = -0.046875F * (float)(i - 1) * 0.5F;
                 GlStateManager.translate(f6, f4, f5);
             }
 

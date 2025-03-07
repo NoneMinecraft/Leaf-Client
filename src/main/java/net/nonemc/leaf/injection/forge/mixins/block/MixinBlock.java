@@ -1,5 +1,11 @@
 package net.nonemc.leaf.injection.forge.mixins.block;
 
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.event.BlockBBEvent;
+import net.nonemc.leaf.features.module.modules.combat.Criticals;
+import net.nonemc.leaf.features.module.modules.player.NoFall;
+import net.nonemc.leaf.features.module.modules.render.XRay;
+import net.nonemc.leaf.features.module.modules.world.NoSlowBreak;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;
@@ -12,12 +18,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.event.BlockBBEvent;
-import net.nonemc.leaf.features.module.modules.combat.Criticals;
-import net.nonemc.leaf.features.module.modules.player.NoFall;
-import net.nonemc.leaf.features.module.modules.render.XRay;
-import net.nonemc.leaf.features.module.modules.world.NoSlowBreak;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -32,12 +32,11 @@ import java.util.List;
 public abstract class MixinBlock {
 
     @Shadow
-    @Final
-    protected BlockState blockState;
-
-    @Shadow
     public abstract AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state);
 
+    @Shadow
+    @Final
+    protected BlockState blockState;
     @Shadow
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         return null;
@@ -49,7 +48,7 @@ public abstract class MixinBlock {
         final BlockBBEvent blockBBEvent = new BlockBBEvent(pos, blockState.getBlock(), axisalignedbb);
         Leaf.eventManager.callEvent(blockBBEvent);
         axisalignedbb = blockBBEvent.getBoundingBox();
-        if (axisalignedbb != null && mask.intersectsWith(axisalignedbb))
+        if(axisalignedbb != null && mask.intersectsWith(axisalignedbb))
             list.add(axisalignedbb);
     }
 
@@ -57,7 +56,7 @@ public abstract class MixinBlock {
     private void shouldSideBeRendered(CallbackInfoReturnable<Boolean> callbackInfoReturnable) {
         final XRay xray = Leaf.moduleManager.getModule(XRay.class);
 
-        if (xray.getState())
+        if(xray.getState())
             callbackInfoReturnable.setReturnValue(xray.getXrayBlocks().contains(this));
     }
 

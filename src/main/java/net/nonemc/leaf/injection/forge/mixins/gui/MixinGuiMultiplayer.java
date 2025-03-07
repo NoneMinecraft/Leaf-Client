@@ -1,13 +1,13 @@
 package net.nonemc.leaf.injection.forge.mixins.gui;
 
+import net.nonemc.leaf.ui.client.GuiProxySelect;
+import net.nonemc.leaf.ui.client.GuiServerSpoof;
+import net.nonemc.leaf.ui.elements.ToolDropdown;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatComponentText;
-import net.nonemc.leaf.ui.client.GuiProxySelect;
-import net.nonemc.leaf.ui.client.GuiServerSpoof;
-import net.nonemc.leaf.ui.elements.ToolDropdown;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinGuiMultiplayer extends MixinGuiScreen {
 
     private GuiButton toolButton;
-
     @Inject(method = "initGui", at = @At("RETURN"))
     private void initGui(CallbackInfo callbackInfo) {
         buttonList.add(toolButton = new GuiButton(997, 5, 8, 138, 20, "Tools"));
@@ -30,7 +29,7 @@ public abstract class MixinGuiMultiplayer extends MixinGuiScreen {
         if (button.id == 997)
             ToolDropdown.toggleState();
 
-        switch (button.id) {
+        switch(button.id) {
             case 998:
                 mc.displayGuiScreen(new GuiServerSpoof((GuiScreen) (Object) this));
                 break;
@@ -52,7 +51,7 @@ public abstract class MixinGuiMultiplayer extends MixinGuiScreen {
                 callbackInfo.cancel();
     }
 
-    @Inject(method = "connectToServer", at = @At(value = "HEAD"))
+    @Inject(method="connectToServer", at=@At(value="HEAD"))
     public void connectToServer(CallbackInfo callbackInfo) {
         Minecraft minecraft = Minecraft.getMinecraft();
         if (minecraft.getNetHandler() != null) {

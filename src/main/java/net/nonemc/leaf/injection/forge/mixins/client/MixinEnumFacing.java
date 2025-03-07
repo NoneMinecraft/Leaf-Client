@@ -1,7 +1,7 @@
 package net.nonemc.leaf.injection.forge.mixins.client;
 
-import net.minecraft.util.EnumFacing;
 import net.nonemc.leaf.injection.access.StaticStorage;
+import net.minecraft.util.EnumFacing;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -9,11 +9,16 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Random;
 
-@Mixin(value = EnumFacing.class)
+@Mixin(value=EnumFacing.class)
 public class MixinEnumFacing {
     @Shadow
     @Final
     private int opposite;
+
+    @Overwrite
+    public EnumFacing getOpposite() {
+        return StaticStorage.facings()[this.opposite];
+    }
 
     @Overwrite
     public static EnumFacing getFront(int n) {
@@ -30,7 +35,7 @@ public class MixinEnumFacing {
         EnumFacing enumFacing = EnumFacing.NORTH;
         float f4 = Float.MIN_VALUE;
         for (EnumFacing enumFacing2 : StaticStorage.facings()) {
-            float f5 = f * (float) enumFacing2.getDirectionVec().getX() + f2 * (float) enumFacing2.getDirectionVec().getY() + f3 * (float) enumFacing2.getDirectionVec().getZ();
+            float f5 = f * (float)enumFacing2.getDirectionVec().getX() + f2 * (float)enumFacing2.getDirectionVec().getY() + f3 * (float)enumFacing2.getDirectionVec().getZ();
             if (!(f5 > f4)) continue;
             f4 = f5;
             enumFacing = enumFacing2;
@@ -45,10 +50,5 @@ public class MixinEnumFacing {
             return enumFacing;
         }
         throw new IllegalArgumentException("No such direction: " + axisDirection + " " + axis);
-    }
-
-    @Overwrite
-    public EnumFacing getOpposite() {
-        return StaticStorage.facings()[this.opposite];
     }
 }
