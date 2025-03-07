@@ -1,19 +1,21 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.elements;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.util.ResourceLocation;
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.launch.options.modernuiLaunchOption;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 public class ModuleElement extends ButtonElement {
 
     private final Module module;
-    public int slowlySettingsYPos;
-    public int slowlyFade;
+
     private boolean showSettings;
     private float settingsWidth = 0F;
     private boolean wasPressed;
+
+    public int slowlySettingsYPos;
+    public int slowlyFade;
 
     public ModuleElement(final Module module) {
         super(null);
@@ -29,12 +31,12 @@ public class ModuleElement extends ButtonElement {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-        if (mouseButton == 0 && isHovering(mouseX, mouseY) && isVisible()) {
+        if(mouseButton == 0 && isHovering(mouseX, mouseY) && isVisible()) {
             module.toggle();
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
         }
 
-        if (mouseButton == 1 && isHovering(mouseX, mouseY) && isVisible()) {
+        if(mouseButton == 1 && isHovering(mouseX, mouseY) && isVisible()) {
             showSettings = !showSettings;
             mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
         }

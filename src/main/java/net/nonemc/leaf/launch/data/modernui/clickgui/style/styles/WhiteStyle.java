@@ -1,12 +1,5 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
 import net.nonemc.leaf.launch.data.modernui.clickgui.Panel;
 import net.nonemc.leaf.launch.data.modernui.clickgui.elements.ButtonElement;
 import net.nonemc.leaf.launch.data.modernui.clickgui.elements.ModuleElement;
@@ -17,11 +10,17 @@ import net.nonemc.leaf.ui.i18n.LanguageManager;
 import net.nonemc.leaf.utils.block.BlockUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.value.*;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 public class WhiteStyle extends Style {
@@ -42,7 +41,7 @@ public class WhiteStyle extends Style {
             double i = MathHelper.clamp_double(((double) mouseX - (double) x) / ((double) width - 3), 0, 1);
 
             BigDecimal bigDecimal = new BigDecimal(Double.toString((min + (max - min) * i)));
-            bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
+            bigDecimal = bigDecimal.setScale(2, 4);
             return bigDecimal.floatValue();
         }
 
@@ -57,26 +56,26 @@ public class WhiteStyle extends Style {
             RenderUtils.drawBorderedRect((float) panel.getX(), panel.getY() + 17 + panel.getFade(), (float) panel.getX() + panel.getWidth(), panel.getY() + 19 + panel.getFade() + 5, 3, new Color(217, 217, 217).getRGB(), new Color(217, 217, 217).getRGB());
         }
         GlStateManager.resetColor();
-        float textWidth = Fonts.font35.getStringWidth("§f" + StringUtils.stripControlCodes(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%", ""))));
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%", "")), (int) (panel.getX() - (textWidth - 100.0F) / 2F), panel.getY() + 7 - 3, Color.BLACK.getRGB());
+        float textWidth = Fonts.font35.getStringWidth("§f" + StringUtils.stripControlCodes(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%",""))));
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(panel.getName().replaceAll("%","")), (int) (panel.getX() - (textWidth - 100.0F) / 2F), panel.getY() + 7 - 3, Color.BLACK.getRGB());
     }
 
     @Override
     public void drawDescription(int mouseX, int mouseY, String text) {
-        int textWidth = Fonts.font35.getStringWidth(LanguageManager.INSTANCE.get(text.replaceAll("%", "")));
+        int textWidth = Fonts.font35.getStringWidth(LanguageManager.INSTANCE.get(text.replaceAll("%","")));
 
         RenderUtils.drawBorderedRect(mouseX + 9, mouseY, mouseX + textWidth + 14, mouseY + Fonts.font35.FONT_HEIGHT + 3, 3F, new Color(217, 217, 217).getRGB(), new Color(217, 217, 217).getRGB());
         GlStateManager.resetColor();
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(text.replaceAll("%", "")), mouseX + 12, mouseY + (Fonts.font35.FONT_HEIGHT / 2), Color.BLACK.getRGB());
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(text.replaceAll("%","")), mouseX + 12, mouseY + (Fonts.font35.FONT_HEIGHT / 2), Color.BLACK.getRGB());
     }
 
     @Override
     public void drawButtonElement(int mouseX, int mouseY, ButtonElement buttonElement) {
-        Gui.drawRect(buttonElement.getX() - 1, buttonElement.getY() - 1, buttonElement.getX() + buttonElement.getWidth() + 1, buttonElement.getY() + buttonElement.getHeight() + 1, hoverColor(buttonElement.getColor() != Integer.MAX_VALUE ? new Color(14, 159, 255) : new Color(217, 217, 217), buttonElement.hoverTime).getRGB());
+        Gui.drawRect(buttonElement.getX() - 1, buttonElement.getY() - 1, buttonElement.getX() + buttonElement.getWidth() + 1, buttonElement.getY() + buttonElement.getHeight() + 1, hoverColor(buttonElement.getColor() != Integer.MAX_VALUE ? new Color(14, 159, 255) : new Color(217,217,217), buttonElement.hoverTime).getRGB());
 
         GlStateManager.resetColor();
 
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(buttonElement.getDisplayName().replaceAll("%", "")), buttonElement.getX() + 5, buttonElement.getY() + 5, Color.BLACK.getRGB());
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(buttonElement.getDisplayName().replaceAll("%","")), buttonElement.getX() + 5, buttonElement.getY() + 5, Color.BLACK.getRGB());
     }
 
     /*public static boolean drawCheckbox(final boolean value, final int x, final int y, final int mouseX, final int mouseY, final Color color) {
@@ -91,10 +90,10 @@ public class WhiteStyle extends Style {
 
     @Override
     public void drawModuleElement(int mouseX, int mouseY, ModuleElement moduleElement) {
-        Gui.drawRect(moduleElement.getX() - 1, moduleElement.getY() - 1, moduleElement.getX() + moduleElement.getWidth() + 1, moduleElement.getY() + moduleElement.getHeight() + 1, hoverColor(new Color(255, 255, 255), moduleElement.hoverTime).getRGB());
-        Gui.drawRect(moduleElement.getX() - 1, moduleElement.getY() - 1, moduleElement.getX() + moduleElement.getWidth() + 1, moduleElement.getY() + moduleElement.getHeight() + 1, hoverColor(new Color(217, 217, 217, moduleElement.slowlyFade), moduleElement.hoverTime).getRGB());
+        Gui.drawRect(moduleElement.getX() - 1, moduleElement.getY() - 1, moduleElement.getX() + moduleElement.getWidth() + 1, moduleElement.getY() + moduleElement.getHeight() + 1, hoverColor(new Color(255,255,255), moduleElement.hoverTime).getRGB());
+        Gui.drawRect(moduleElement.getX() - 1, moduleElement.getY() - 1, moduleElement.getX() + moduleElement.getWidth() + 1, moduleElement.getY() + moduleElement.getHeight() + 1, hoverColor(new Color(217,217,217, moduleElement.slowlyFade), moduleElement.hoverTime).getRGB());
         GlStateManager.resetColor();
-        Fonts.font35.drawString(LanguageManager.INSTANCE.get(moduleElement.getDisplayName().replaceAll("%", "")), moduleElement.getX() + 5, moduleElement.getY() + 5, Color.BLACK.getRGB());
+        Fonts.font35.drawString(LanguageManager.INSTANCE.get(moduleElement.getDisplayName().replaceAll("%","")), moduleElement.getX() + 5, moduleElement.getY() + 5, Color.BLACK.getRGB());
 
         // Draw settings
         final List<Value<?>> moduleValues = moduleElement.getModule().getValues();
@@ -108,7 +107,7 @@ public class WhiteStyle extends Style {
 
                 moduleElement.slowlySettingsYPos = moduleElement.getY() + 6;
                 for (final Value value : moduleValues) {
-                    if (!value.getDisplayable())
+                    if(!value.getDisplayable())
                         continue;
 
                     if (value instanceof BoolValue) {
@@ -127,7 +126,8 @@ public class WhiteStyle extends Style {
 
                         Fonts.font35.drawString(text, moduleElement.getX() + moduleElement.getWidth() + 6, moduleElement.slowlySettingsYPos + 2, ((BoolValue) value).get() ? Color.BLACK.getRGB() : new Color(120, 120, 120).getRGB());
                         moduleElement.slowlySettingsYPos += 11;
-                    } else if (value instanceof ListValue listValue) {
+                    } else if (value instanceof ListValue) {
+                        final ListValue listValue = (ListValue) value;
 
                         final String text = value.getName();
                         final float textWidth = Fonts.font35.getStringWidth(text);
@@ -166,7 +166,8 @@ public class WhiteStyle extends Style {
                         if (!listValue.openList) {
                             moduleElement.slowlySettingsYPos += 1;
                         }
-                    } else if (value instanceof FloatValue floatValue) {
+                    } else if (value instanceof FloatValue) {
+                        final FloatValue floatValue = (FloatValue) value;
                         final String text = value.getName() + ": " + round(floatValue.get());
                         final float textWidth = Fonts.font35.getStringWidth(text);
 
@@ -180,7 +181,8 @@ public class WhiteStyle extends Style {
 
                         Fonts.font35.drawString(text, moduleElement.getX() + moduleElement.getWidth() + 6, moduleElement.slowlySettingsYPos + 3, 0xFF000000);
                         moduleElement.slowlySettingsYPos += 19;
-                    } else if (value instanceof IntegerValue integerValue) {
+                    } else if (value instanceof IntegerValue) {
+                        final IntegerValue integerValue = (IntegerValue) value;
                         final String text = value.getName() + ": " + (value instanceof BlockValue ? BlockUtils.getBlockName(integerValue.get()) + " (" + integerValue.get() + ")" : integerValue.get());
                         final float textWidth = Fonts.font35.getStringWidth(text);
 
@@ -194,12 +196,14 @@ public class WhiteStyle extends Style {
 
                         Fonts.font35.drawString(text, moduleElement.getX() + moduleElement.getWidth() + 6, moduleElement.slowlySettingsYPos + 3, 0xFF000000);
                         moduleElement.slowlySettingsYPos += 19;
-                    } else if (value instanceof FontValue fontValue) {
+                    } else if (value instanceof FontValue) {
+                        final FontValue fontValue = (FontValue) value;
                         final FontRenderer fontRenderer = fontValue.get();
 
                         String displayString = "Font: Unknown";
 
-                        if (fontRenderer instanceof GameFontRenderer liquidFontRenderer) {
+                        if (fontRenderer instanceof GameFontRenderer) {
+                            final GameFontRenderer liquidFontRenderer = (GameFontRenderer) fontRenderer;
 
                             displayString = "Font: " + liquidFontRenderer.getDefaultFont().getFont().getName() + " - " + liquidFontRenderer.getDefaultFont().getFont().getSize();
                         } else if (fontRenderer == Fonts.minecraftFont)
@@ -278,7 +282,7 @@ public class WhiteStyle extends Style {
 
     private BigDecimal round(final float v) {
         BigDecimal bigDecimal = new BigDecimal(Float.toString(v));
-        bigDecimal = bigDecimal.setScale(2, RoundingMode.HALF_UP);
+        bigDecimal = bigDecimal.setScale(2, 4);
         return bigDecimal;
     }
 

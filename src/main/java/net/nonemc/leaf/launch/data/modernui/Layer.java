@@ -1,12 +1,12 @@
 package net.nonemc.leaf.launch.data.modernui;
 
+import net.nonemc.leaf.Leaf;
+import net.nonemc.leaf.font.FontLoaders;
+import net.nonemc.leaf.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
-import net.nonemc.leaf.Leaf;
-import net.nonemc.leaf.font.FontLoaders;
-import net.nonemc.leaf.utils.render.RenderUtils;
 
 import java.awt.*;
 

@@ -1,17 +1,13 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+
 package net.nonemc.leaf.launch.data.modernui.clickgui.utils.render;
 
+import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.Animation;
+import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Utils;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.animations.Animation;
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Utils;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -19,8 +15,6 @@ import java.awt.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class DrRenderUtils implements Utils {
-    public static float zLevel;
-
     /**
      * Draws a textured rectangle at z = 0. Args: x, y, u, v, width, height, textureWidth, textureHeight
      */
@@ -30,22 +24,19 @@ public class DrRenderUtils implements Utils {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos((double) x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + height) * f1)).endVertex();
-        worldrenderer.pos((double) (x + width), (double) (y + height), 0.0D).tex((double) ((u + width) * f), (double) ((v + height) * f1)).endVertex();
-        worldrenderer.pos((double) (x + width), (double) y, 0.0D).tex((double) ((u + width) * f), (double) (v * f1)).endVertex();
+        worldrenderer.pos((double) x, (double) (y + height), 0.0D).tex((double) (u * f), (double) ((v + (float) height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) (y + height), 0.0D).tex((double) ((u + (float) width) * f), (double) ((v + (float) height) * f1)).endVertex();
+        worldrenderer.pos((double) (x + width), (double) y, 0.0D).tex((double) ((u + (float) width) * f), (double) (v * f1)).endVertex();
         worldrenderer.pos((double) x, (double) y, 0.0D).tex((double) (u * f), (double) (v * f1)).endVertex();
         tessellator.draw();
     }
-
     public static void drawGradientRect2(double x, double y, double width, double height, int startColor, int endColor) {
         drawGradientRect(x, y, x + width, y + height, startColor, endColor);
     }
-
     public static int fadeBetween(int startColour, int endColour, double progress) {
         if (progress > 1) progress = 1 - progress % 1;
         return fadeTo(startColour, endColour, progress);
     }
-
     public static int fadeTo(int startColour, int endColour, double progress) {
         double invert = 1.0 - progress;
         int r = (int) ((startColour >> 16 & 0xFF) * invert +
@@ -61,7 +52,6 @@ public class DrRenderUtils implements Utils {
                 ((g & 0xFF) << 8) |
                 (b & 0xFF);
     }
-
     public static void drawGradientRect(double left, double top, double right, double bottom, int startColor, int endColor) {
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;
@@ -90,6 +80,7 @@ public class DrRenderUtils implements Utils {
         GlStateManager.enableTexture2D();
     }
 
+    public static float zLevel;
     public static void drawGradientRectSideways2(double x, double y, double width, double height, int startColor, int endColor) {
         drawGradientRectSideways(x, y, x + width, y + height, startColor, endColor);
     }
@@ -121,7 +112,6 @@ public class DrRenderUtils implements Utils {
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
     }
-
     public static void scissor(double x, double y, double width, double height) {
         ScaledResolution sr = new ScaledResolution(mc);
         final double scale = sr.getScaleFactor();
@@ -131,7 +121,6 @@ public class DrRenderUtils implements Utils {
         double finalWidth = width * scale;
         glScissor((int) finalX, (int) (finalY - finalHeight), (int) finalWidth, (int) finalHeight);
     }
-
     public static int interpolateColor(int color1, int color2, float amount) {
         amount = Math.min(1, Math.max(0, amount));
         Color cColor1 = new Color(color1);
@@ -156,7 +145,6 @@ public class DrRenderUtils implements Utils {
                 Math.max((int) (color.getBlue() * FACTOR), 0),
                 color.getAlpha());
     }
-
     // Arrow for clickgui
     public static void drawClickGuiArrow(float x, float y, float size, Animation animation, int color) {
         glTranslatef(x, y, 0);
@@ -178,7 +166,6 @@ public class DrRenderUtils implements Utils {
         }));
         glTranslatef(-x, -y, 0);
     }
-
     public static Color interpolateColorC(Color color1, Color color2, float amount) {
         amount = Math.min(1, Math.max(0, amount));
         return new Color(interpolateInt(color1.getRed(), color2.getRed(), amount),
@@ -187,28 +174,24 @@ public class DrRenderUtils implements Utils {
                 interpolateInt(color1.getAlpha(), color2.getAlpha(), amount));
     }
 
-    public static int interpolateInt(int oldValue, int newValue, double interpolationValue) {
+    public static int interpolateInt(int oldValue, int newValue, double interpolationValue){
         return interpolate(oldValue, newValue, (float) interpolationValue).intValue();
     }
-
-    public static Double interpolate(double oldValue, double newValue, double interpolationValue) {
+    public static Double interpolate(double oldValue, double newValue, double interpolationValue){
         return (oldValue + (newValue - oldValue) * interpolationValue);
     }
 
     public static boolean isHovering(float x, float y, float width, float height, int mouseX, int mouseY) {
         return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
     }
-
     public static Color applyOpacity(Color color, float opacity) {
         opacity = Math.min(1, Math.max(0, opacity));
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (color.getAlpha() * opacity));
     }
-
     public static int applyOpacity(int color, float opacity) {
         Color old = new Color(color);
         return applyOpacity(old, opacity).getRGB();
     }
-
     // TODO: Replace this with a shader as GL_POINTS is not consistent with gui scales
     public static void drawGoodCircle(double x, double y, float radius, int color) {
         color(color);
@@ -219,7 +202,6 @@ public class DrRenderUtils implements Utils {
             GLUtil.render(GL_POINTS, () -> glVertex2d(x, y));
         });
     }
-
     // animation for sliders and stuff
     public static double animate(double endPoint, double current, double speed) {
         boolean shouldContinueAnimation = endPoint > current;
@@ -233,7 +215,6 @@ public class DrRenderUtils implements Utils {
         double factor = dif * speed;
         return current + (shouldContinueAnimation ? factor : -factor);
     }
-
     public static void fakeCircleGlow(float posX, float posY, float radius, Color color, float maxAlpha) {
         setAlphaLimit(0);
         glShadeModel(GL_SMOOTH);
@@ -276,7 +257,6 @@ public class DrRenderUtils implements Utils {
                 Math.min((int) (b / FACTOR), 255),
                 alpha);
     }
-
     // Scales the data that you put in the runnable
     public static void scale(float x, float y, float scale, Runnable data) {
         GL11.glPushMatrix();
@@ -302,7 +282,6 @@ public class DrRenderUtils implements Utils {
             GL11.glVertex2d(x + width, y);
         }));
     }
-
     // This method colors the next avalible texture with a specified alpha value ranging from 0-1
     public static void color(int color, float alpha) {
         float r = (float) (color >> 16 & 255) / 255.0F;

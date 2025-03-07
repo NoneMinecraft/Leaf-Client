@@ -1,8 +1,6 @@
+
 package net.nonemc.leaf.launch.data.modernui.clickgui;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.features.module.ModuleCategory;
@@ -18,6 +16,9 @@ import net.nonemc.leaf.ui.font.AWTFontRenderer;
 import net.nonemc.leaf.utils.render.ColorUtils;
 import net.nonemc.leaf.utils.render.EaseUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
@@ -57,11 +58,11 @@ public class ClickGui extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        final double scale = Leaf.moduleManager.getModule(ClickGUIModule.class).scaleValue.get();
+	final double scale = Leaf.moduleManager.getModule(ClickGUIModule.class).scaleValue.get();
         if (progress < 1) progress += 0.1 * (1 - partialTicks);
         else progress = 1;
 
-        switch (Objects.requireNonNull(Leaf.moduleManager.getModule(ClickGUIModule.class)).animationValue.get().toLowerCase()) {
+        switch (((ClickGUIModule) Objects.requireNonNull(Leaf.moduleManager.getModule(ClickGUIModule.class))).animationValue.get().toLowerCase()) {
             case "liquidbounce":
             case "ziul":
                 slide = EaseUtils.easeOutBack(progress);
@@ -103,7 +104,7 @@ public class ClickGui extends GuiScreen {
         int defaultHeight1 = (this.height);
         int defaultWidth1 = (this.width);
 
-        switch (Objects.requireNonNull(Leaf.moduleManager.getModule(ClickGUIModule.class)).animationValue.get().toLowerCase()) {
+        switch (((ClickGUIModule) Objects.requireNonNull(Leaf.moduleManager.getModule(ClickGUIModule.class))).animationValue.get().toLowerCase()) {
             case "bread":
                 GlStateManager.translate(0, (1.0 - slide) * height * 2.0, 0);
                 GlStateManager.scale(scale, scale + (1.0 - slide) * 2.0, scale);
@@ -133,7 +134,8 @@ public class ClickGui extends GuiScreen {
 
         for (final Panel panel : panels) {
             for (final Element element : panel.getElements()) {
-                if (element instanceof ModuleElement moduleElement) {
+                if (element instanceof ModuleElement) {
+                    final ModuleElement moduleElement = (ModuleElement) element;
 
                     if (mouseX != 0 && mouseY != 0 && moduleElement.isHovering(mouseX, mouseY) && moduleElement.isVisible() && element.getY() <= panel.getY() + panel.getFade())
                         style.drawDescription(mouseX, mouseY, moduleElement.getModule().getDescription());
@@ -144,21 +146,21 @@ public class ClickGui extends GuiScreen {
         if (Mouse.hasWheel()) {
             int wheel = Mouse.getDWheel();
             boolean handledScroll = false;
-
+            
             for (int i = panels.size() - 1; i >= 0; i--)
                 if (panels.get(i).handleScroll(mouseX, mouseY, wheel)) {
-                    handledScroll = true;
-                    break;
-                }
-
+			        handledScroll = true;
+			        break;
+		        }
+            
             if (!handledScroll)
-                handleScroll(wheel);
+		        handleScroll(wheel);
         }
 
         GlStateManager.disableLighting();
         RenderHelper.disableStandardItemLighting();
 
-        switch (Objects.requireNonNull(Leaf.moduleManager.getModule(ClickGUIModule.class)).animationValue.get().toLowerCase()) {
+        switch (((ClickGUIModule) Objects.requireNonNull(Leaf.moduleManager.getModule(ClickGUIModule.class))).animationValue.get().toLowerCase()) {
             case "bread":
             case "slide":
             case "liquidbounce":
@@ -177,13 +179,13 @@ public class ClickGui extends GuiScreen {
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
-
+    
     private void handleScroll(final int wheel) {
         if (wheel == 0)
             return;
-
-        for (final Panel panel : panels)
-            panel.setY(panel.getY() + wheel);
+		
+        for(final Panel panel : panels)
+	        panel.setY(panel.getY() + wheel);
     }
 
     @Override
@@ -231,7 +233,8 @@ public class ClickGui extends GuiScreen {
     public void updateScreen() {
         for (final Panel panel : panels) {
             for (final Element element : panel.getElements()) {
-                if (element instanceof ButtonElement buttonElement) {
+                if (element instanceof ButtonElement) {
+                    final ButtonElement buttonElement = (ButtonElement) element;
 
                     if (buttonElement.isHovering(mouseX, mouseY)) {
                         if (buttonElement.hoverTime < 7)

@@ -1,6 +1,5 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.novoline;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.nonemc.leaf.ui.font.Fonts;
 import net.nonemc.leaf.ui.font.GameFontRenderer;
 import net.nonemc.leaf.utils.render.RenderUtils;
@@ -8,6 +7,7 @@ import net.nonemc.leaf.value.BoolValue;
 import net.nonemc.leaf.value.IntegerValue;
 import net.nonemc.leaf.value.ListValue;
 import net.nonemc.leaf.value.Value;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
@@ -16,13 +16,13 @@ import java.util.List;
 
 
 public class ValueButton {
-    public static int valuebackcolor;
     public final Value value;
     public String name;
     public boolean custom;
     public boolean change;
     public int x;
     public float y;
+    public static int valuebackcolor;
 
 
     public ValueButton(Value value, int x, float y) {
@@ -36,8 +36,9 @@ public class ValueButton {
             change = (boolean) this.value.get();
         } else if (this.value instanceof ListValue) {
             name = String.valueOf(this.value.get());
-        } else if (value instanceof IntegerValue v) {
-            name = name + (v.getDisplayable() ? v.get().intValue() : v.get().doubleValue());
+        } else if (value instanceof IntegerValue) {
+            IntegerValue v = (IntegerValue) value;
+            name = name + (v.getDisplayable() ? ((Number) v.get()).intValue() : ((Number) v.get()).doubleValue());
         }
     }
 
@@ -48,8 +49,9 @@ public class ValueButton {
             change = (boolean) value.get();
         } else if (value instanceof ListValue) {
             name = String.valueOf(value.get()).toUpperCase();
-        } else if (value instanceof IntegerValue v) {
-            name = String.valueOf(v.get().doubleValue());
+        } else if (value instanceof IntegerValue) {
+            IntegerValue v = (IntegerValue) value;
+            name = String.valueOf(((Number) v.get()).doubleValue());
             if (mouseX > x - 9 && mouseX < x + 87 && mouseY > y - 4 && mouseY < y + font.FONT_HEIGHT + 4 && Mouse.isButtonDown(0)) {
                 final double min = v.getMinimum();
                 final double max = v.getMaximum();
@@ -59,10 +61,10 @@ public class ValueButton {
                 perc = Math.min(Math.max(0, perc), 1);
                 final double valRel = (max - min) * perc;
                 double val = min + valRel;
-                val = Math.round(val);
+                val = Math.round(val * (1 / inc)) / (1 / inc);
                 v.set((int) val);
             }
-            double number = 86 * (v.get().floatValue() - v.getMinimum()) / (v.getMaximum() - v.getMinimum());
+            double number = 86 * (((Number) v.get()).floatValue() - v.getMinimum()) / (v.getMaximum() - v.getMinimum());
             GlStateManager.pushMatrix();
             GlStateManager.translate(-9.0f, 1.0f, 0.0f);
             RenderUtils.drawRect(x + 1, y - 6, (x + 87.0f + parent.allX), y + font.FONT_HEIGHT + 6, new Color(29, 29, 29).getRGB());
@@ -99,12 +101,14 @@ public class ValueButton {
     }
 
     public void click(int mouseX, int mouseY, int button) {
-        if (!custom && mouseX > x - 9 && mouseX < x + 87 && mouseY > y - 4 && mouseY < y + Fonts.font35.FONT_HEIGHT + 4) {
-            if (value instanceof BoolValue m1) {
+        if (!custom && mouseX > x - 9 && mouseX < x + 87 && mouseY > y - 4 && mouseY < y +Fonts.font35.FONT_HEIGHT + 4) {
+            if (value instanceof BoolValue) {
+                BoolValue m1 = (BoolValue) value;
                 m1.set(!(Boolean) m1.get());
                 return;
             }
-            if (value instanceof ListValue m) {
+            if (value instanceof ListValue) {
+                ListValue m = (ListValue) value;
                 if ((button == 0 || button == 1)) {
                     List<String> options = Arrays.asList(m.getValues());
                     //noinspection SuspiciousMethodCalls

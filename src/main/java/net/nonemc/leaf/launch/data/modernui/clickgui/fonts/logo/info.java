@@ -1,3 +1,4 @@
+
 package net.nonemc.leaf.launch.data.modernui.clickgui.fonts.logo;
 
 import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.api.FontManager;
@@ -9,10 +10,11 @@ public class info {
 
     public static String version = "";
     public static String username;
-    public static FontManager fontManager = SimpleFontManager.create();
-    private static info INSTANCE;
     private final SideGui sideGui = new SideGui();
-
+    private static info INSTANCE;
+    public  SideGui getSideGui() {
+        return sideGui;
+    }
     public static info getInstance() {
         try {
             if (INSTANCE == null) INSTANCE = new info();
@@ -21,12 +23,8 @@ public class info {
             throw t;
         }
     }
-
+    public static FontManager fontManager = SimpleFontManager.create();
     public static FontManager getFontManager() {
         return fontManager;
-    }
-
-    public SideGui getSideGui() {
-        return sideGui;
     }
 }

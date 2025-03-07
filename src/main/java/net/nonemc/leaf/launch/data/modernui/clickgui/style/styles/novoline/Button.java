@@ -1,13 +1,13 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.novoline;
 
 
-import net.minecraft.client.Minecraft;
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
 import net.nonemc.leaf.ui.font.Fonts;
 import net.nonemc.leaf.ui.font.GameFontRenderer;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.value.Value;
+import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -23,10 +23,7 @@ public class Button {
     public double opacity;
     public ArrayList<ValueButton> buttons = new ArrayList<>();
     public boolean expand;
-    public long rticks;
     boolean hover;
-    int smoothalpha;
-    float animationsize;
 
     public Button(Module cheat, int x, int y) {
         this.cheat = cheat;
@@ -39,11 +36,15 @@ public class Button {
         }
     }
 
+    int smoothalpha;
+    float animationsize;
+
     public float processFPS(float fps, float defF, float defV) {
         return defV / (fps / defF);
     }
 
-    public void render(int mouseX, int mouseY, int x11, int y11, int x22, int y22) {
+    public long rticks;
+    public void render(int mouseX, int mouseY, int x11,int y11,int x22,int y22) {
         final GameFontRenderer font = Fonts.font35;
         float y2 = y + 15;
         buttons.clear();
@@ -106,12 +107,12 @@ public class Button {
         //if(HUD.Breathinglamp.get()){
 
         Color Ranbow = new Color(Color.HSBtoRGB(
-                (float) ((double) Minecraft.getMinecraft().thePlayer.ticksExisted / 50.0 + Math.sin(1.6))
+                (float) ((double) Minecraft.getMinecraft().thePlayer.ticksExisted / 50.0 + Math.sin((double) 50 / 50.0 * 1.6))
                         % 1.0f,
                 0.5f, 1.0f));
-        return cheat.getState() ? Ranbow.getRGB() : new Color(40, 40, 40).getRGB();
+        return cheat.getState() ? Ranbow.getRGB() : new Color(40,40,40).getRGB();
         //} else {
-        //return new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue(), smoothalpha).getRGB();
+            //return new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue(), smoothalpha).getRGB();
         //}
     }
 

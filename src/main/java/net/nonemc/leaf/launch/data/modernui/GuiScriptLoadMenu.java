@@ -1,8 +1,5 @@
 package net.nonemc.leaf.launch.data.modernui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.nonemc.leaf.Leaf;
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.font.CFontRenderer;
@@ -17,6 +14,9 @@ import net.nonemc.leaf.utils.render.EaseUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.utils.render.SmoothRenderUtils;
 import net.nonemc.leaf.utils.timer.MSTimer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class GuiScriptLoadMenu extends GuiScreen {
-    public static boolean isClickSub = false;
     public MSTimer timer1 = new MSTimer();
     public MSTimer timer2 = new MSTimer();
     public int x = 20;
@@ -38,11 +37,10 @@ public class GuiScriptLoadMenu extends GuiScreen {
     public ScriptMenuType menuType = ScriptMenuType.Main;
     public boolean drag;
     public int dragY;
+
     public int scroll;
     public int scrollTo;
     public int scrollVelocity;
-    private long guiOpenTime = -1;
-    private boolean translated = false;
 
     @Override
     public void initGui() {
@@ -52,6 +50,8 @@ public class GuiScriptLoadMenu extends GuiScreen {
         guiOpenTime = System.currentTimeMillis();
 
     }
+
+    public static boolean isClickSub = false;
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
@@ -206,6 +206,10 @@ public class GuiScriptLoadMenu extends GuiScreen {
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         super.keyTyped(typedChar, keyCode);
     }
+
+    private long guiOpenTime = -1;
+
+    private boolean translated = false;
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {

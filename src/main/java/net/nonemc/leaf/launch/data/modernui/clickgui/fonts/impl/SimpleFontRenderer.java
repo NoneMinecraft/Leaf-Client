@@ -1,8 +1,8 @@
 package net.nonemc.leaf.launch.data.modernui.clickgui.fonts.impl;
 
+import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.api.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.nonemc.leaf.launch.data.modernui.clickgui.fonts.api.FontRenderer;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -54,70 +54,6 @@ final class SimpleFontRenderer implements FontRenderer {
 
     public static FontRenderer create(Font font) {
         return create(font, true, true);
-    }
-
-    //region shit
-    private static int[] setupMinecraftColorCodes() {
-        int[] colorCodes = new int[32];
-
-        for (int i = 0; i < 32; i++) {
-            int noClue = (i >> 3 & 0x1) * 85;
-            int red = (i >> 2 & 0x1) * 170 + noClue;
-            int green = (i >> 1 & 0x1) * 170 + noClue;
-            int blue = (i & 0x1) * 170 + noClue;
-
-            if (i == 6) {
-                red += 85;
-            }
-
-            if (i >= 16) {
-                red >>= 2; // divide by 4
-                green >>= 2;
-                blue >>= 2;
-            }
-
-            colorCodes[i] = (red & 0xFF) << 16 | (green & 0xFF) << 8 | blue & 0xFF;
-        }
-
-        return colorCodes;
-    }
-
-    //endregion
-    //region rendering
-    private static void drawChar(CharData[] chars, char c, float x, float y) {
-        drawQuad(x, y, chars[c].width, chars[c].height, chars[c].storedX, chars[c].storedY, chars[c].width, chars[c].height);
-    }
-
-    private static void drawQuad(float x, float y, float width, float height, float srcX, float srcY, float srcWidth, float srcHeight) {
-        float renderSRCX = srcX / IMG_SIZE;
-        float renderSRCY = srcY / IMG_SIZE;
-        float renderSRCWidth = srcWidth / IMG_SIZE;
-        float renderSRCHeight = srcHeight / IMG_SIZE;
-
-
-        GL11.glTexCoord2f(renderSRCX + renderSRCWidth, renderSRCY);
-        GL11.glVertex2d(x + width, y);
-        GL11.glTexCoord2f(renderSRCX, renderSRCY);
-        GL11.glVertex2d(x, y);
-        GL11.glTexCoord2f(renderSRCX, renderSRCY + renderSRCHeight);
-        GL11.glVertex2d(x, y + height);
-        GL11.glTexCoord2f(renderSRCX, renderSRCY + renderSRCHeight);
-        GL11.glVertex2d(x, y + height);
-        GL11.glTexCoord2f(renderSRCX + renderSRCWidth, renderSRCY + renderSRCHeight);
-        GL11.glVertex2d(x + width, y + height);
-        GL11.glTexCoord2f(renderSRCX + renderSRCWidth, renderSRCY);
-        GL11.glVertex2d(x + width, y);
-    }
-    //endregion
-
-    private static void drawLine(double x, double y, double x1, double y1, float width) {
-        GL11.glDisable(GL_TEXTURE_2D);
-        GL11.glLineWidth(width);
-        GL11.glBegin(1);
-        GL11.glVertex2d(x, y);
-        GL11.glVertex2d(x1, y1);
-        GL11.glEnd();
-        GL11.glEnable(GL_TEXTURE_2D);
     }
 
     private DynamicTexture setupTexture(Font font, boolean antiAlias, boolean fractionalMetrics, CharData[] chars) {
@@ -187,6 +123,7 @@ final class SimpleFontRenderer implements FontRenderer {
         this.textureItalic = setupTexture(awtFont.deriveFont(Font.ITALIC), antiAlias, fractionalMetrics, italicChars);
         this.textureItalicBold = setupTexture(awtFont.deriveFont(Font.BOLD | Font.ITALIC), antiAlias, fractionalMetrics, boldItalicChars);
     }
+    //endregion
 
     @Override
     public float drawString(CharSequence text, double x, double y, int color, boolean dropShadow) {
@@ -197,7 +134,6 @@ final class SimpleFontRenderer implements FontRenderer {
             return drawStringInternal(text, x, y, color, false);
         }
     }
-
     @Override
     public float drawString(CharSequence text, float x, float y, int color, boolean dropShadow) {
         if (dropShadow) {
@@ -207,7 +143,6 @@ final class SimpleFontRenderer implements FontRenderer {
             return drawStringInternal(text, x, y, color, false);
         }
     }
-
     @SuppressWarnings("OverlyComplexMethod")
     private float drawStringInternal(CharSequence text, double x, double y, int color, boolean shadow) {
         x -= 1;
@@ -345,6 +280,8 @@ final class SimpleFontRenderer implements FontRenderer {
         return (float) x / 2.0F;
     }
 
+
+
     @Override
     public String trimStringToWidth(CharSequence text, int width, boolean reverse) {
         StringBuilder builder = new StringBuilder();
@@ -430,12 +367,86 @@ final class SimpleFontRenderer implements FontRenderer {
     }
 
     @Override
-    public float charWidth(char s) {
+    public float charWidth(char s){
         return (charData[s].width - 8) / 2;
     }
 
     public CharData[] getCharData() {
         return charData;
+    }
+
+    //region shit
+    private static int[] setupMinecraftColorCodes() {
+        int[] colorCodes = new int[32];
+
+        for (int i = 0; i < 32; i++) {
+            int noClue = (i >> 3 & 0x1) * 85;
+            int red = (i >> 2 & 0x1) * 170 + noClue;
+            int green = (i >> 1 & 0x1) * 170 + noClue;
+            int blue = (i & 0x1) * 170 + noClue;
+
+            if (i == 6) {
+                red += 85;
+            }
+
+            if (i >= 16) {
+                red >>= 2; // divide by 4
+                green >>= 2;
+                blue >>= 2;
+            }
+
+            colorCodes[i] = (red & 0xFF) << 16 | (green & 0xFF) << 8 | blue & 0xFF;
+        }
+
+        return colorCodes;
+    }
+
+    private static class CharData {
+
+        private int width;
+        private int height;
+        private int storedX;
+        private int storedY;
+
+        private CharData() {
+        }
+    }
+
+    //endregion
+    //region rendering
+    private static void drawChar(CharData[] chars, char c, float x, float y) {
+        drawQuad(x, y, chars[c].width, chars[c].height, chars[c].storedX, chars[c].storedY, chars[c].width, chars[c].height);
+    }
+
+    private static void drawQuad(float x, float y, float width, float height, float srcX, float srcY, float srcWidth, float srcHeight) {
+        float renderSRCX = srcX / IMG_SIZE;
+        float renderSRCY = srcY / IMG_SIZE;
+        float renderSRCWidth = srcWidth / IMG_SIZE;
+        float renderSRCHeight = srcHeight / IMG_SIZE;
+
+
+        GL11.glTexCoord2f(renderSRCX + renderSRCWidth, renderSRCY);
+        GL11.glVertex2d(x + width, y);
+        GL11.glTexCoord2f(renderSRCX, renderSRCY);
+        GL11.glVertex2d(x, y);
+        GL11.glTexCoord2f(renderSRCX, renderSRCY + renderSRCHeight);
+        GL11.glVertex2d(x, y + height);
+        GL11.glTexCoord2f(renderSRCX, renderSRCY + renderSRCHeight);
+        GL11.glVertex2d(x, y + height);
+        GL11.glTexCoord2f(renderSRCX + renderSRCWidth, renderSRCY + renderSRCHeight);
+        GL11.glVertex2d(x + width, y + height);
+        GL11.glTexCoord2f(renderSRCX + renderSRCWidth, renderSRCY);
+        GL11.glVertex2d(x + width, y);
+    }
+
+    private static void drawLine(double x, double y, double x1, double y1, float width) {
+        GL11.glDisable(GL_TEXTURE_2D);
+        GL11.glLineWidth(width);
+        GL11.glBegin(1);
+        GL11.glVertex2d(x, y);
+        GL11.glVertex2d(x1, y1);
+        GL11.glEnd();
+        GL11.glEnable(GL_TEXTURE_2D);
     }
 
     //endregion
@@ -458,17 +469,6 @@ final class SimpleFontRenderer implements FontRenderer {
     @Override
     public boolean isFractionalMetrics() {
         return fractionalMetrics;
-    }
-
-    private static class CharData {
-
-        private int width;
-        private int height;
-        private int storedX;
-        private int storedY;
-
-        private CharData() {
-        }
     }
     //endregion
 }

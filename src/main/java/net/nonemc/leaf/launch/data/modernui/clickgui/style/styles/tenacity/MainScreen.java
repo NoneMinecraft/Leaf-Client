@@ -1,7 +1,8 @@
+
 package net.nonemc.leaf.launch.data.modernui.clickgui.style.styles.tenacity;
 
-import net.minecraft.client.gui.ScaledResolution;
 import net.nonemc.leaf.Leaf;
+
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.features.module.ModuleCategory;
 import net.nonemc.leaf.launch.data.modernui.ClickGUIModule;
@@ -15,6 +16,7 @@ import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Screen;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.DrRenderUtils;
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.StencilUtil;
 import net.nonemc.leaf.utils.math.MathUtils;
+import net.minecraft.client.gui.ScaledResolution;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -96,7 +98,7 @@ public class MainScreen implements Screen {
         Fonts.ICONFONT.ICONFONT_20.ICONFONT_20.drawString(l, x + rectWidth - (Fonts.ICONFONT.ICONFONT_20.ICONFONT_20.stringWidth(l) + 5),
                 y + Fonts.ICONFONT.ICONFONT_20.ICONFONT_20.getMiddleOfBox(categoryRectHeight), textColor);
 
-        if (category.name().equalsIgnoreCase("World")) {
+        if (category.name().equalsIgnoreCase("World")){
             Fonts.CheckFont.CheckFont_20.CheckFont_20.drawString("b", x + rectWidth - (Fonts.CheckFont.CheckFont_20.CheckFont_20.stringWidth("b") + 5),
                     y + Fonts.ICONFONT.ICONFONT_20.ICONFONT_20.getMiddleOfBox(categoryRectHeight), textColor);
         }
@@ -104,7 +106,7 @@ public class MainScreen implements Screen {
         //     ClickGuiMod clickGUIMod = (ClickGuiMod) Tenacity.INSTANCE.getModuleCollection().get(ClickGuiMod.class);
 
         if (ClickGUIModule.scrollMode.get().equals("Value")) {
-            Main.allowedClickGuiHeight = ClickGUIModule.clickHeight.get().floatValue();
+            Main.allowedClickGuiHeight =  ClickGUIModule.clickHeight.get().floatValue();
         } else {
             ScaledResolution sr = new ScaledResolution(mc);
             Main.allowedClickGuiHeight = 2 * sr.getScaledHeight() / 3f;
