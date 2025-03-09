@@ -1,13 +1,12 @@
 # Leaf Client
 A free mixin-based injection hacked-client for Minecraft using Minecraft Forge based on LiquidBounce.
 
+You must add the java virtual machine parameter: -noverify before starting
+
 QQ Group: 882340360
 
-You are allowed to:
-- use
-- share
-- modify
+# What is Leaf Client?
+Leaf Client 是适用于强反绕过和Fr33styler MCGO的作弊客户端
 
-Do the above and share your source code with everyone; just like we do!
+是首个最先进的Fr33styler MCGO客户端
 
-You must add the java virtual machine parameter: -noverify before starting
