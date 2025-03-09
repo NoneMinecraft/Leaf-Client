@@ -8,5 +8,5 @@ QQ Group: 882340360
 # What is Leaf Client?
 Leaf Client 是适用于强反绕过和Fr33styler MCGO的作弊客户端
 
-是首个最先进的Fr33styler MCGO客户端
+是首个最先进的MCGO客户端
 
