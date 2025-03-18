@@ -1,8 +1,8 @@
 ﻿package net.nonemc.leaf.features.module.modules.rage.rage.utils
 
+import net.nonemc.leaf.utils.Rotation
 import net.minecraft.util.MathHelper
 import net.minecraft.util.Vec3
-import net.nonemc.leaf.utils.Rotation
 
 fun getRotationTo(from: Vec3, to: Vec3): Rotation {
     val diffX = to.xCoord - from.xCoord

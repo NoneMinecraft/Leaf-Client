@@ -3,7 +3,7 @@
 import net.nonemc.leaf.features.module.modules.rage.RageBot
 import net.nonemc.leaf.features.module.modules.rage.rage.control.fired
 
-fun handleSpreadAction(action: () -> Unit, reset: () -> Unit) {
+ fun handleSpreadAction(action: () -> Unit, reset: () -> Unit) {
     if (RageBot.noSpreadTriggerMode.get() == "Fired") {
         if (fired()) action() else reset()
     } else {
@@ -17,7 +17,7 @@ fun handleSpreadAction(action: () -> Unit, reset: () -> Unit) {
     }
 }
 
-fun handleSwitchAction() {
+ fun handleSwitchAction() {
     handleSpreadAction({
         switch()
     }, {
@@ -25,7 +25,7 @@ fun handleSwitchAction() {
     })
 }
 
-fun handlePacketAction() {
+ fun handlePacketAction() {
     handleSpreadAction({
         packetSwitch()
     }, {
@@ -33,7 +33,7 @@ fun handlePacketAction() {
     })
 }
 
-fun handleSwitchOffsetsAction() {
+ fun handleSwitchOffsetsAction() {
     handleSpreadAction({
         switch()
         RageBot.offsetPitch = RageBot.noSpreadSwitchOffsetsPitchTick1.get()
@@ -45,7 +45,7 @@ fun handleSwitchOffsetsAction() {
     })
 }
 
-fun handlePacketOffsetsAction() {
+ fun handlePacketOffsetsAction() {
     handleSpreadAction({
         packetSwitch()
         RageBot.offsetPitch = RageBot.noSpreadSwitchOffsetsPitchTick1.get()

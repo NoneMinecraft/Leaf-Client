@@ -5,14 +5,6 @@
  */
 package net.nonemc.leaf.features.module.modules.rage
 
-import net.minecraft.client.audio.PositionedSoundRecord
-import net.minecraft.client.settings.GameSettings
-import net.minecraft.entity.effect.EntityLightningBolt
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.network.play.client.C0BPacketEntityAction
-import net.minecraft.network.play.server.S2CPacketSpawnGlobalEntity
-import net.minecraft.network.play.server.S2DPacketOpenWindow
-import net.minecraft.util.*
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.MainLib.ChatPrint
 import net.nonemc.leaf.features.module.Module
@@ -20,9 +12,6 @@ import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.features.module.modules.rage.rage.TargetPart
 import net.nonemc.leaf.features.module.modules.rage.rage.WeaponType
-import net.nonemc.leaf.features.module.modules.rage.rage.entity.AxisAlignedBB.Companion.serverBoundingBox
-import net.nonemc.leaf.features.module.modules.rage.rage.entity.getCenter
-import net.nonemc.leaf.features.module.modules.rage.rage.entity.setMaxY
 import net.nonemc.leaf.features.module.modules.rage.rage.handle.*
 import net.nonemc.leaf.features.module.modules.rage.rage.math.vs
 import net.nonemc.leaf.features.module.modules.rage.rage.render.render3DLine
@@ -35,6 +24,17 @@ import net.nonemc.leaf.utils.Rotation
 import net.nonemc.leaf.utils.RotationUtils
 import net.nonemc.leaf.utils.extensions.getDistanceToEntityBox
 import net.nonemc.leaf.value.*
+import net.minecraft.client.audio.PositionedSoundRecord
+import net.minecraft.client.settings.GameSettings
+import net.minecraft.entity.effect.EntityLightningBolt
+import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.network.play.client.C0BPacketEntityAction
+import net.minecraft.network.play.server.S2CPacketSpawnGlobalEntity
+import net.minecraft.network.play.server.S2DPacketOpenWindow
+import net.minecraft.util.*
+import net.nonemc.leaf.features.module.modules.rage.rage.entity.AxisAlignedBB.Companion.serverBoundingBox
+import net.nonemc.leaf.features.module.modules.rage.rage.entity.getCenter
+import net.nonemc.leaf.features.module.modules.rage.rage.entity.setMaxY
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 import kotlin.math.cos
@@ -50,45 +50,34 @@ object RageBot : Module() {
     private val feetAimOffset = FloatValue("FeetAimOffset", 0F, -1F, 1F)
 
     //Pos
-    val getPosMode = ListValue("TargetPosMode", arrayOf("Pos", "ServerPos", "Custom"), "ServerPos")
+    val getPosMode = ListValue("TargetPosMode", arrayOf("Pos", "ServerPos","Custom"), "ServerPos")
     val getPlayerPosMode = ListValue("PlayerPosMode", arrayOf("Pos", "ServerPos"), "ServerPos")
-    val getVelocityMode = ListValue(
-        "VelocityMode",
-        arrayOf("Pos", "ServerPos", "MixServerPosAndPrevPos", "MixPosAndLastTickPos", "PracticalityMix", "Custom"),
-        "Pos"
-    )
+    val getVelocityMode = ListValue("VelocityMode", arrayOf("Pos", "ServerPos","MixServerPosAndPrevPos","MixPosAndLastTickPos","PracticalityMix","Custom"), "Pos")
     val scriptEngineMode = ListValue("ScriptEngineMode", arrayOf("JavaScript"), "JavaScript")
-    val getPosModeCustomCode =
-        TextValue("CustomTargetPosCode", "serverPos").displayable { getPosMode.get() == "Custom" }
-    val getVelocityModeCustomCode =
-        TextValue("CustomVelocityCode", "serverPos - lastTickPos").displayable { getVelocityMode.get() == "Custom" }
+    val getPosModeCustomCode = TextValue("CustomTargetPosCode","serverPos").displayable { getPosMode.get() == "Custom" }
+    val getVelocityModeCustomCode = TextValue("CustomVelocityCode","serverPos - lastTickPos").displayable { getVelocityMode.get() == "Custom" }
 
     //Range
     private val range = FloatValue("MaxRange", 70F, 50F, 200F)
     private val autoRange = BoolValue("AutoRange", true)
-    private val akRange = FloatValue("AutoRange-CustomRange-AKRange", 50F, 20F, 100F).displayable { autoRange.get() }
-    private val m4Range = FloatValue("AutoRange-CustomRange-M4Range", 50F, 20F, 100F).displayable { autoRange.get() }
-    private val awpRange = FloatValue("AutoRange-CustomRange-AWPRange", 70F, 20F, 100F).displayable { autoRange.get() }
-    private val mp7Range = FloatValue("AutoRange-CustomRange-MP7Range", 45F, 20F, 100F).displayable { autoRange.get() }
-    private val p250Range =
-        FloatValue("AutoRange-CustomRange-P250Range", 35F, 20F, 100F).displayable { autoRange.get() }
-    private val deagleRange =
-        FloatValue("AutoRange-CustomRange-DeagleRange", 40F, 20F, 100F).displayable { autoRange.get() }
-    private val shotgunRange =
-        FloatValue("AutoRange-CustomRange-ShotGunRange", 20F, 20F, 100F).displayable { autoRange.get() }
+    private val akRange = FloatValue("AutoRange-CustomRange-AKRange", 50F, 20F, 100F).displayable {autoRange.get()}
+    private val m4Range = FloatValue("AutoRange-CustomRange-M4Range", 50F, 20F, 100F).displayable {autoRange.get()}
+    private val awpRange = FloatValue("AutoRange-CustomRange-AWPRange", 70F, 20F, 100F).displayable {autoRange.get()}
+    private val mp7Range = FloatValue("AutoRange-CustomRange-MP7Range", 45F, 20F, 100F).displayable {autoRange.get()}
+    private val p250Range = FloatValue("AutoRange-CustomRange-P250Range", 35F, 20F, 100F).displayable {autoRange.get()}
+    private val deagleRange = FloatValue("AutoRange-CustomRange-DeagleRange", 40F, 20F, 100F).displayable {autoRange.get()}
+    private val shotgunRange = FloatValue("AutoRange-CustomRange-ShotGunRange", 20F, 20F, 100F).displayable {autoRange.get()}
 
     //Predict
     private val targetPredict = BoolValue("TargetPredict", true)
+    private val predictMode = ListValue("PredictMode", arrayOf("Velocity","Test"),"Velocity")
     val targetPredictSize = FloatValue("TargetPredictSize", 4.3F, 0F, 10F).displayable { targetPredict.get() }
-    private val targetPredictMaxVelocity =
-        FloatValue("TargetPredictMaxVelocity", 10.0F, 0.01F, 10F).displayable { targetPredict.get() }
-    private val targetPredictMinVelocity =
-        FloatValue("TargetPredictMinVelocity", 0.01F, 0.01F, 10F).displayable { targetPredict.get() }
+    val targetPredictTick = IntegerValue("TargetPredictTick", 2, 1, 5).displayable { targetPredict.get() }
+    private val targetPredictMaxVelocity = FloatValue("TargetPredictMaxVelocity", 10.0F, 0.01F, 10F).displayable { targetPredict.get() }
+    private val targetPredictMinVelocity = FloatValue("TargetPredictMinVelocity", 0.01F, 0.01F, 10F).displayable { targetPredict.get() }
     private val targetVisibilityPredict = BoolValue("TargetVisibilityPredict", true)
-    private val targetVisibilityPredictSize =
-        FloatValue("TargetVisibilityPredictSize", 1.5F, 1F, 10F).displayable { targetVisibilityPredict.get() }
-    private val targetThroughWallPredictFire =
-        BoolValue("TargetVisibilityPredictFire", true).displayable { targetPredict.get() }
+    private val targetVisibilityPredictSize = FloatValue("TargetVisibilityPredictSize", 1.5F, 1F, 10F).displayable { targetVisibilityPredict.get() }
+    private val targetThroughWallPredictFire = BoolValue("TargetVisibilityPredictFire", true).displayable { targetPredict.get() }
     private val playerPredict = BoolValue("PlayerPredict", false)
     private val playerPredictSize = FloatValue("PlayerPredictSize", 4.3F, 0F, 10F).displayable { playerPredict.get() }
 
@@ -96,10 +85,8 @@ object RageBot : Module() {
     val visibilitySensitivityTick = IntegerValue("VisibilitySensitivityTick", 0, 0, 10)
     val enableAccumulation = BoolValue("EnableSensitivityAccumulation", true)
     private val boundingBox = BoolValue("BoundingBoxDetection", true)
-    private val size =
-        FloatValue("BoundingBoxDetection-SizeReductionValue", 0F, -1F, 1F).displayable { boundingBox.get() }
-    private val boundingBoxStep =
-        FloatValue("BoundingBoxDetection-Step", 0.15F, 0.05F, 0.5F).displayable { boundingBox.get() }
+    private val size = FloatValue("BoundingBoxDetection-SizeReductionValue", 0F, -1F, 1F).displayable { boundingBox.get() }
+    private val boundingBoxStep = FloatValue("BoundingBoxDetection-Step", 0.15F, 0.05F, 0.5F).displayable { boundingBox.get() }
 
     //Fire
     val fireMode = ListValue("FireMode", arrayOf("Legit", "Packet"), "Packet")
@@ -107,55 +94,39 @@ object RageBot : Module() {
 
     //NoSpread
     private val noSpreadValue = BoolValue("NoSpread", true)
-    private val noSpreadMode = ListValue(
-        "NoSpreadMode",
-        arrayOf("Switch", "Packet", "SwitchOffsets", "PacketOffsets"),
-        "Switch"
-    ).displayable { noSpreadValue.get() }
-    val noSpreadTriggerMode =
-        ListValue("NoSpreadTriggerMode", arrayOf("Fired", "Tick"), "Tick").displayable { noSpreadValue.get() }
-    val noSpreadSwitchOffsetsPitchTick1 =
-        FloatValue("noSpreadSwitchOffsetsPitchTick1", 0.1F, -1F, 1F).displayable { noSpreadValue.get() }
-    val noSpreadSwitchOffsetsPitchTick2 =
-        FloatValue("noSpreadSwitchOffsetsPitchTick2", 0.0F, -1F, 1F).displayable { noSpreadValue.get() }
-    val noSpreadSwitchOffsetsYawTick1 =
-        FloatValue("noSpreadSwitchOffsetsYawTick1", 0.0F, -2F, 2F).displayable { noSpreadValue.get() }
-    val noSpreadSwitchOffsetsYawTick2 =
-        FloatValue("noSpreadSwitchOffsetsYawTick2", 0.0F, -2F, 2F).displayable { noSpreadValue.get() }
-    val noSpreadTick = IntegerValue("NoSpreadBaseTick", 2, 0, 5).displayable { noSpreadValue.get() }
+    private val noSpreadMode = ListValue("NoSpreadMode", arrayOf("Switch", "Packet","SwitchOffsets","PacketOffsets"), "Switch").displayable {noSpreadValue.get()}
+    val noSpreadTriggerMode = ListValue("NoSpreadTriggerMode", arrayOf("Fired", "Tick"), "Tick").displayable {noSpreadValue.get()}
+    val noSpreadSwitchOffsetsPitchTick1 = FloatValue("noSpreadSwitchOffsetsPitchTick1", 0.1F, -1F, 1F).displayable {noSpreadValue.get()}
+    val noSpreadSwitchOffsetsPitchTick2 = FloatValue("noSpreadSwitchOffsetsPitchTick2", 0.0F, -1F, 1F).displayable {noSpreadValue.get()}
+    val noSpreadSwitchOffsetsYawTick1 = FloatValue("noSpreadSwitchOffsetsYawTick1", 0.0F, -2F, 2F).displayable {noSpreadValue.get()}
+    val noSpreadSwitchOffsetsYawTick2 = FloatValue("noSpreadSwitchOffsetsYawTick2", 0.0F, -2F, 2F).displayable {noSpreadValue.get()}
+    val noSpreadTick = IntegerValue("NoSpreadBaseTick", 2, 0, 5).displayable {noSpreadValue.get()}
 
     //FireLimit
     private val fireLimit = BoolValue("FireLimit", false)
     private val posYValue = FloatValue("FireLimit-TargetRiseVelocityY", 0.8F, -1F, 1F).displayable { fireLimit.get() }
     private val fallValue = FloatValue("FireLimit-TargetFallVelocity", 0.8F, -1F, 1F).displayable { fireLimit.get() }
-    private val timeLimitedPrediction =
-        BoolValue("FireLimit-TimeLimitedPrediction", false).displayable { fireLimit.get() }
-    private val timeLimitedPredictionTicksValue =
-        IntegerValue("FireLimit-TimeLimitedPredictionTicks", 5, 0, 40).displayable { fireLimit.get() }
+    private val timeLimitedPrediction = BoolValue("FireLimit-TimeLimitedPrediction", false).displayable { fireLimit.get() }
+    private val timeLimitedPredictionTicksValue = IntegerValue("FireLimit-TimeLimitedPredictionTicks", 5, 0, 40).displayable { fireLimit.get() }
     private val maxRandomRange = IntegerValue("FireLimit-MaxRandomRange", 5, 0, 40).displayable { fireLimit.get() }
     private val minRandomRange = IntegerValue("FireLimit-MinRandomRange", 1, 0, 40).displayable { fireLimit.get() }
     private val timeLimitedAwpOnly = BoolValue("FireLimit-AwpOnly", true).displayable { fireLimit.get() }
 
     //DistanceOffset
     private val distanceOffsetValue = BoolValue("DistanceOffset", true)
-    private val distanceOffsetMultiplier =
-        FloatValue("DistanceOffset-Multiplier", 0.1F, 0.01F, 2F).displayable { distanceOffsetValue.get() }
-    private val distanceOffsetMaxRange =
-        FloatValue("DistanceOffset-MaxRange", 75F, 1F, 100F).displayable { distanceOffsetValue.get() }
+    private val distanceOffsetMultiplier = FloatValue("DistanceOffset-Multiplier", 0.1F, 0.01F, 2F).displayable { distanceOffsetValue.get() }
+    private val distanceOffsetMaxRange = FloatValue("DistanceOffset-MaxRange", 75F, 1F, 100F).displayable { distanceOffsetValue.get() }
 
     //Sneak
     private val autoSneak = BoolValue("AutoSneak", true)
-    private val autoSneakMode =
-        ListValue("AutoSneakMode", arrayOf("Legit", "Packet"), "Packet").displayable { autoSneak.get() }
-    private val autoSneakTriggerMode =
-        ListValue("AutoSneakTriggerMode", arrayOf("Always", "OnlyFire"), "OnlyFire").displayable { autoSneak.get() }
-    private val autoSneakOnlyAwp = BoolValue("AutoSneakOnlyAwp", true).displayable { autoSneak.get() }
+    private val autoSneakMode = ListValue("AutoSneakMode", arrayOf("Legit", "Packet"), "Packet").displayable {autoSneak.get()}
+    private val autoSneakTriggerMode = ListValue("AutoSneakTriggerMode", arrayOf("Always", "OnlyFire"), "OnlyFire").displayable {autoSneak.get()}
+    private val autoSneakOnlyAwp = BoolValue("AutoSneakOnlyAwp", true).displayable {autoSneak.get()}
 
     //delayControl
     private val delayControl = BoolValue("DelayControl", true)
     private val delayControlPrediction = BoolValue("DelayControlPrediction", true).displayable { delayControl.get() }
-    private val delayControlPredictionModeMinDelayValue =
-        IntegerValue("DelayControlPredictionModeMinDelayValue", 150, 1, 800).displayable { delayControl.get() }
+    private  val delayControlPredictionModeMinDelayValue = IntegerValue("DelayControlPredictionModeMinDelayValue", 150, 1, 800).displayable { delayControl.get() }
 
     //Jitter
     private val jitter = BoolValue("Jitter", false)
@@ -189,8 +160,7 @@ object RageBot : Module() {
 
     //Render
     private val hitEffect = BoolValue("HitEffect", true)
-    private val hitEffectMode =
-        ListValue("HitEffectMode", arrayOf("Lighting", "Critical", "Fire"), "Lighting").displayable { hitEffect.get() }
+    private val hitEffectMode = ListValue("HitEffectMode", arrayOf("Lighting", "Critical","Fire"), "Lighting").displayable { hitEffect.get() }
     private val lightingSoundValue = BoolValue("LightingSound", true).displayable { hitEffectMode.get() == "Lighting" }
     private val circleValue = BoolValue("Circle", true)
     private val circleRange = FloatValue("CircleRange", 2F, 0.1F, 100F).displayable { circleValue.get() }
@@ -208,7 +178,7 @@ object RageBot : Module() {
     private val lineThicknessValue = FloatValue("LineThickness", 2F, 1F, 5F).displayable { lineValue.get() }
 
 
-    private var part: TargetPart = TargetPart.HEAD
+    private var part:TargetPart = TargetPart.HEAD
     private var ac = 0
     private var tick = 0
     private var ticks = 0
@@ -252,14 +222,7 @@ object RageBot : Module() {
             GL11.glDisable(GL11.GL_TEXTURE_2D)
             GL11.glDisable(GL11.GL_DEPTH_TEST)
             GL11.glDepthMask(false)
-            rageBotTargetPlayer?.let {
-                render3DLine(
-                    it,
-                    Color(lineRedValue.get(), lineGreenValue.get(), lineBlueValue.get()),
-                    lineAlphaValue.get(),
-                    lineYOffset.get().toDouble()
-                )
-            }
+            rageBotTargetPlayer?.let { render3DLine(it, Color(lineRedValue.get(), lineGreenValue.get(), lineBlueValue.get()),lineAlphaValue.get(), lineYOffset.get().toDouble()) }
             rageBotTargetPlayer?.let {
                 render3DLine(
                     it, Color(lineRedValue.get(), lineGreenValue.get(), lineBlueValue.get()), lineAlphaValue.get(),
@@ -307,7 +270,6 @@ object RageBot : Module() {
             GL11.glPopMatrix()
         }
     }
-
     @EventTarget
     fun onStrafe(event: StrafeEvent) {
         if (strictStrafe.get()) {
@@ -357,27 +319,24 @@ object RageBot : Module() {
         rageBotTargetPlayer = mc.theWorld.playerEntities
             .filterIsInstance<EntityPlayer>()
             .filter { it != player && EntityUtils.isSelected(it, true) }
-            .filter {
-                (!autoRange.get() && it.getDistanceToEntityBox(player) <= range.get())
-                        || (autoRange.get() && it.getDistanceToEntityBox(player) <= range.get() &&
-                        (hasWeapon(WeaponType.AK) && it.getDistanceToEntityBox(player) <= akRange.get()
-                                || hasWeapon(WeaponType.M4) && it.getDistanceToEntityBox(player) <= m4Range.get()
-                                || hasWeapon(WeaponType.MP7) && it.getDistanceToEntityBox(player) <= mp7Range.get()
-                                || hasWeapon(WeaponType.P250) && !hasWeapon(WeaponType.RIFLE) && !hasWeapon(WeaponType.SNIPER) && it.getDistanceToEntityBox(
-                            player
-                        ) <= p250Range.get()
-                                || hasWeapon(WeaponType.DEAGLE) && !hasWeapon(WeaponType.RIFLE) && !hasWeapon(WeaponType.SNIPER) && it.getDistanceToEntityBox(
-                            player
-                        ) <= deagleRange.get()
-                                || hasWeapon(WeaponType.SHOTGUN) && it.getDistanceToEntityBox(player) <= shotgunRange.get()
-                                || hasWeapon(WeaponType.SNIPER) && it.getDistanceToEntityBox(player) <= awpRange.get()))
-            }
+            .filter { (!autoRange.get() && it.getDistanceToEntityBox(player) <= range.get())
+                    || (autoRange.get() && it.getDistanceToEntityBox(player) <= range.get()&&
+                    (hasWeapon(WeaponType.AK)  && it.getDistanceToEntityBox(player) <= akRange.get()
+                            || hasWeapon(WeaponType.M4)  && it.getDistanceToEntityBox(player) <= m4Range.get()
+                            || hasWeapon(WeaponType.MP7)  && it.getDistanceToEntityBox(player) <= mp7Range.get()
+                            || hasWeapon(WeaponType.P250)  &&!hasWeapon(WeaponType.RIFLE) && !hasWeapon(WeaponType.SNIPER) && it.getDistanceToEntityBox(player) <= p250Range.get()
+                            ||hasWeapon(WeaponType.DEAGLE)  &&!hasWeapon(WeaponType.RIFLE) && !hasWeapon(WeaponType.SNIPER) && it.getDistanceToEntityBox(player) <= deagleRange.get()
+                            || hasWeapon(WeaponType.SHOTGUN) && it.getDistanceToEntityBox(player) <= shotgunRange.get()
+                            || hasWeapon(WeaponType.SNIPER) && it.getDistanceToEntityBox(player) <= awpRange.get()))}
             .firstOrNull {
-                vs(canSeePlayer(player, it, part).first)
+               vs(canSeePlayer(player, it, part).first)
             }
         rageBotTargetPlayer?.let {
+            var predictX = 0.0
+            var predictY = 0.0
+            var predictZ = 0.0
             handleNoSpreadMode()
-            handleFire(player, it)
+            handleFire(player,it)
             resetSprint()
             displayHitEffect(it)
             displayDebug(it)
@@ -385,22 +344,28 @@ object RageBot : Module() {
             handleSneak(player)
 
             val result = canSeePlayer(player, it, part).second
-            val size =
-                if (delayControl.get() && delayControlPrediction.get() && ping() > delayControlPredictionModeMinDelayValue.get()) ping() / 200 else 0
-            val targetVecX =
-                if (targetPredict.get() && velocityABSX(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get()) {
-                    result.xCoord + velocityX(it) * (targetPredictSize.get() + size)
-                } else result.xCoord
+            val size = if (delayControl.get() && delayControlPrediction.get() && ping() > delayControlPredictionModeMinDelayValue.get()) ping() / 200 else 0
 
-            val targetVecY =
-                if (targetPredict.get() && velocityABSY(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get()) {
-                    result.yCoord + velocityY(it) * (targetPredictSize.get() + size)
-                } else result.yCoord
+            if (targetPredict.get() && velocityABSX(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get()
+                && velocityABSY(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get()
+                && velocityABSZ(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get()) {
+                when(predictMode.get()) {
+                    "Velocity" -> {
+                        predictX = velocityX(it) * (targetPredictSize.get() + size)
+                        predictY = velocityY(it) * (targetPredictSize.get() + size)
+                        predictZ = velocityZ(it) * (targetPredictSize.get() + size)
+                    }
+                }
+            }else{
+                predictX = 0.0
+                predictY = 0.0
+                predictZ = 0.0
+            }
 
-            val targetVecZ =
-                if (targetPredict.get() && velocityABSZ(it) in targetPredictMinVelocity.get()..targetPredictMaxVelocity.get()) {
-                    result.zCoord + velocityZ(it) * (targetPredictSize.get() + size)
-                } else result.zCoord
+            val targetVecX= result.xCoord + predictX
+            val targetVecY= result.yCoord + predictY
+            val targetVecZ= result.zCoord + predictZ
+
 
             val playerVecX = if (playerPredict.get()) {
                 playerPosX() + velocityX(it) * playerPredictSize.get()
@@ -415,11 +380,7 @@ object RageBot : Module() {
             } else playerPosZ()
 
             val offset = if (distanceOffsetValue.get()) {
-                distanceOffset(
-                    it.getDistanceToEntityBox(player),
-                    distanceOffsetMultiplier.get().toDouble(),
-                    distanceOffsetMaxRange.get().toDouble()
-                )
+                distanceOffset(it.getDistanceToEntityBox(player), distanceOffsetMultiplier.get().toDouble(), distanceOffsetMaxRange.get().toDouble())
             } else 0.0
 
             val targetVec = Vec3(targetVecX, targetVecY, targetVecZ)
@@ -427,10 +388,11 @@ object RageBot : Module() {
             val rotation = getRotationTo(playerVec, targetVec)
             val yaw = rotation.yaw + jitterValue2
             val pitch = rotation.pitch + pitchOffset.get() + offsetPitch + jitterValue + offset.toFloat()
-            if (rotateValue.get()) {
+            if (rotateValue.get()){
                 RotationUtils.setTargetRotation(Rotation(yaw, pitch))
-            } else {
-                mc.thePlayer.rotationYaw = yaw; mc.thePlayer.rotationPitch = pitch
+            }else{
+                mc.thePlayer.rotationYaw = yaw;
+                mc.thePlayer.rotationPitch = pitch
             }
         } ?: run {
             resetValue(player)
@@ -438,115 +400,68 @@ object RageBot : Module() {
         updateSneak(player)
     }
 
-
-    private fun updateSneak(player: EntityPlayer) {
+    private fun updateSneak(player:EntityPlayer){
         if (!autoSneakOnlyAwp.get() || hasWeapon(WeaponType.SNIPER)) {
             if (autoSneak.get() && autoSneakTriggerMode.get() == "Always") {
                 when (autoSneakMode.get()) {
-                    "Packet" -> mc.netHandler.addToSendQueue(
-                        C0BPacketEntityAction(
-                            player,
-                            C0BPacketEntityAction.Action.START_SNEAKING,
-                            0
-                        )
-                    )
-
+                    "Packet" -> mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.START_SNEAKING, 0))
                     else -> mc.gameSettings.keyBindSneak.pressed = true
                 }
             }
         }
     }
-
-    private fun resetSprint() {
+    private fun resetSprint(){
         mc.thePlayer.isSprinting = sprint.get() && !mc.thePlayer.isSprinting
     }
 
-    private fun displayDebug(it: EntityPlayer) {
+    private fun displayDebug(it:EntityPlayer){
         if (targetDebug.get() && it.hurtTime in targetDebugMinHurtTime.get()..targetDebugMaxHurtTime.get()) ChatPrint("§f[§bHit§f] Name:${it.name} Health:${it.health}")
-        if (posDebug.get()) ChatPrint("PosX:${posX(it)} PosY:${posY(it)} PosZ:${posZ(it)}")
-        if (velocityDebug.get()) ChatPrint(
-            "VelocityX:${velocityABSX(it)} VelocityY:${velocityABSY(it)} VelocityZ:${
-                velocityABSZ(
-                    it
-                )
-            }"
-        )
-        if (spreadDebug.get()) ChatPrint("SpreadTick:$noSpreadTicks")
+        if(posDebug.get()) ChatPrint("PosX:${posX(it)} PosY:${posY(it)} PosZ:${posZ(it)}")
+        if(velocityDebug.get()) ChatPrint("VelocityX:${velocityABSX(it)} VelocityY:${velocityABSY(it)} VelocityZ:${velocityABSZ(it)}")
+        if(spreadDebug.get()) ChatPrint("SpreadTick:$noSpreadTicks")
     }
-
-    private fun updatePart() {
-        part = when (priority.get().lowercase()) {
+    private fun updatePart(){
+        part = when(priority.get().lowercase()){
             "head" -> TargetPart.HEAD
             "chest" -> TargetPart.CHEST
             "feet" -> TargetPart.FEET
             else -> TargetPart.HEAD
         }
     }
-
-    private fun displayHitEffect(it: EntityPlayer) {
+    private fun displayHitEffect(it:EntityPlayer){
         if (hitEffect.get() && it.hurtTime == 10) {
-            when (hitEffectMode.get().lowercase()) {
+            when(hitEffectMode.get().lowercase()) {
                 "lighting" -> {
-                    mc.netHandler.handleSpawnGlobalEntity(
-                        S2CPacketSpawnGlobalEntity(
-                            EntityLightningBolt(
-                                mc.theWorld,
-                                it.posX,
-                                it.posY,
-                                it.posZ
-                            )
-                        )
-                    )
-                    if (lightingSoundValue.get()) {
-                        mc.soundHandler.playSound(
-                            PositionedSoundRecord.create(
-                                ResourceLocation("random.explode"),
-                                1.0f
-                            )
-                        )
-                        mc.soundHandler.playSound(
-                            PositionedSoundRecord.create(
-                                ResourceLocation("ambient.weather.thunder"),
-                                1.0f
-                            )
-                        )
+                    mc.netHandler.handleSpawnGlobalEntity(S2CPacketSpawnGlobalEntity(EntityLightningBolt(mc.theWorld, it.posX, it.posY, it.posZ)))
+                    if(lightingSoundValue.get()) {
+                        mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("random.explode"), 1.0f))
+                        mc.soundHandler.playSound(PositionedSoundRecord.create(ResourceLocation("ambient.weather.thunder"), 1.0f))
                     }
                 }
-
                 "fire" -> mc.effectRenderer.emitParticleAtEntity(it, EnumParticleTypes.LAVA)
                 "critical" -> mc.effectRenderer.emitParticleAtEntity(it, EnumParticleTypes.CRIT)
             }
         }
     }
-
-    private fun resetValue(player: EntityPlayer) {
+    private fun resetValue(player:EntityPlayer){
         if (fireMode.get() == "Legit") mc.gameSettings.keyBindUseItem.pressed = false
         if (autoSneakMode.get() == "Packet") {
             mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.STOP_SNEAKING, 0))
-        } else {
+        }
+        else {
             stopSneak()
         }
         ticks = 0
         tick = 0
         time = 0
     }
-
-    private fun handleFire(player: EntityPlayer, it: EntityPlayer) {
+    private fun handleFire(player:EntityPlayer,it:EntityPlayer){
         when (fireMode.get()) {
             "Packet" -> {
                 if (timeLimitedAwpOnly.get() && hasWeapon(WeaponType.SNIPER)) {
                     if (it.onGround && timeLimitedPrediction.get()) {
-                        time = if (time < timeLimitedPredictionTicksValue.get() + Random.nextInt(
-                                minRandomRange.get(),
-                                maxRandomRange.get()
-                            )
-                        ) time + 1 else 0
-                        if (time == 0) if (targetThroughWallPredictFire.get() || canSeePlayer(
-                                player,
-                                it,
-                                TargetPart.HEAD
-                            ).first
-                        )
+                        time = if (time < timeLimitedPredictionTicksValue.get() + Random.nextInt(minRandomRange.get(), maxRandomRange.get())) time + 1 else 0
+                        if (time == 0) if (targetThroughWallPredictFire.get() || canSeePlayer(player, it, TargetPart.HEAD).first)
                             fire()
                     } else if (!fireLimit.get() || (!it.onGround && (it.posY - it.prevPosY) in fallValue.get()..posYValue.get()))
                         if (targetThroughWallPredictFire.get() || canSeePlayer(player, it, part).first)
@@ -560,8 +475,7 @@ object RageBot : Module() {
             }
         }
     }
-
-    private fun setJitterValue() {
+    private fun setJitterValue(){
         if (jitterPitch.get() && jitter.get()) jitterValue =
             if (jitterTick++ < jitterFrequency.get()) -jitterAmplitude.get() else {
                 jitterTick = 0; jitterAmplitude.get()
@@ -571,27 +485,16 @@ object RageBot : Module() {
                 jitterTick2 = 0; jitterAmplitude.get()
             }
     }
-
-    private fun handleSneak(player: EntityPlayer) {
-        if (autoSneak.get() && autoSneakTriggerMode.get() == "OnlyFire" && (!autoSneakOnlyAwp.get() || hasWeapon(
-                WeaponType.SNIPER
-            ))
-        ) {
+    private fun handleSneak(player: EntityPlayer){
+        if (autoSneak.get() && autoSneakTriggerMode.get() == "OnlyFire" && (!autoSneakOnlyAwp.get() || hasWeapon(WeaponType.SNIPER))) {
             if (autoSneakMode.get() == "Packet") {
-                mc.netHandler.addToSendQueue(
-                    C0BPacketEntityAction(
-                        player,
-                        C0BPacketEntityAction.Action.START_SNEAKING,
-                        0
-                    )
-                )
-            } else {
+                mc.netHandler.addToSendQueue(C0BPacketEntityAction(player, C0BPacketEntityAction.Action.START_SNEAKING, 0))
+            }else {
                 mc.gameSettings.keyBindSneak.pressed = true
             }
         }
     }
-
-    private fun handleNoSpreadMode() {
+    private fun handleNoSpreadMode(){
         if (noSpreadValue.get() && !hasWeapon(WeaponType.SNIPER)) {
             when (noSpreadMode.get()) {
                 "Packet" -> handlePacketAction()
@@ -601,7 +504,6 @@ object RageBot : Module() {
             }
         }
     }
-
     private fun canSeePlayer(
         player: EntityPlayer,
         target: EntityPlayer,
@@ -611,7 +513,7 @@ object RageBot : Module() {
         val playerEyePos = Vec3(playerPosX(), playerPosY() + player.eyeHeight, playerPosZ())
         val size = size.get().toDouble()
 
-        val baseBox = when (getPosMode.get()) {
+        val baseBox = when(getPosMode.get()){
             "ServerPos" -> serverBoundingBox(target)
             "Pos" -> target.entityBoundingBox
             else -> target.entityBoundingBox
@@ -632,13 +534,13 @@ object RageBot : Module() {
                 .setMaxY(baseBox.minY + totalHeight * 0.25)
         )
 
-        val checkOrder = when (priority) {
+        val checkOrder = when(priority) {
             TargetPart.HEAD -> listOf(TargetPart.HEAD, TargetPart.CHEST, TargetPart.FEET)
             TargetPart.CHEST -> listOf(TargetPart.CHEST, TargetPart.HEAD, TargetPart.FEET)
             TargetPart.FEET -> listOf(TargetPart.FEET, TargetPart.CHEST, TargetPart.HEAD)
         }
 
-        val (predictX, predictZ) = if (targetVisibilityPredict.get()) {
+        val (predictX, predictZ) = if(targetVisibilityPredict.get()) {
             velocityX(target) * targetVisibilityPredictSize.get() to
                     velocityZ(target) * targetVisibilityPredictSize.get()
         } else 0.0 to 0.0
@@ -651,20 +553,18 @@ object RageBot : Module() {
                 .expand(size, 0.0, size)
             for (layer in 0 until 3) {
                 val step = boundingBoxStep.get() * (1 shl layer)
-                var y = currentBox.maxY - step / 2
+                var y = currentBox.maxY - step/2
                 while (y >= currentBox.minY) {
-                    var x = currentBox.minX + step / 2
+                    var x = currentBox.minX + step/2
                     while (x <= currentBox.maxX) {
-                        var z = currentBox.minZ + step / 2
+                        var z = currentBox.minZ + step/2
                         while (z <= currentBox.maxZ) {
                             val point = Vec3(x, y, z)
-                            if (world.rayTraceBlocks(
-                                    playerEyePos, point,
+                            if (world.rayTraceBlocks(playerEyePos, point,
                                     stopOnLiquid.get(),
                                     ignoreBlockWithoutBoundingBox.get(),
                                     returnLastUncollidableBlock.get()
-                                )?.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK
-                            ) {
+                                )?.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
 
                                 val center = currentBox.getCenter()
                                 val distanceScore = point.squareDistanceTo(center)
@@ -693,36 +593,29 @@ object RageBot : Module() {
 
     private fun confirm(point: Vec3, part: TargetPart, box: AxisAlignedBB): Vec3 {
         val verticalRatio = (point.yCoord - box.minY) / (box.maxY - box.minY)
-        return when (part) {
+        return when(part) {
             TargetPart.HEAD -> point.addVector(
                 0.0,
                 headAimOffset.get().toDouble() * (1 - verticalRatio),
                 0.0
             )
-
             TargetPart.CHEST -> point.addVector(
                 0.0,
                 chestAimOffset.get().toDouble() * verticalRatio,
                 0.0
             )
-
             TargetPart.FEET -> point.addVector(
                 0.0,
                 feetAimOffset.get().toDouble() * (1 - verticalRatio),
                 0.0
             )
         }.also {
-            if (mc.theWorld.rayTraceBlocks(
-                    Vec3(playerPosX(), playerPosY() + mc.thePlayer.eyeHeight, playerPosZ()),
-                    it
-                )?.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK
-            ) {
+            if (mc.theWorld.rayTraceBlocks(Vec3(playerPosX(), playerPosY() + mc.thePlayer.eyeHeight, playerPosZ()), it)?.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                 return@confirm point
             }
         }
     }
-
-    private fun stopSneak() {
+    private fun stopSneak(){
         mc.gameSettings.keyBindSneak.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSneak)
         mc.netHandler.addToSendQueue(C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.STOP_SNEAKING, 0))
     }

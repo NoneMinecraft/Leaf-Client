@@ -1,9 +1,6 @@
+﻿
 package net.nonemc.leaf.features.module.modules.world
 
-import net.minecraft.init.Blocks
-import net.minecraft.network.play.client.C07PacketPlayerDigging
-import net.minecraft.util.BlockPos
-import net.minecraft.util.EnumFacing
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.MotionEvent
 import net.nonemc.leaf.event.PacketEvent
@@ -12,6 +9,10 @@ import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.utils.PacketUtils.sendPacketNoEvent
 import net.nonemc.leaf.value.FloatValue
+import net.minecraft.init.Blocks
+import net.minecraft.network.play.client.C07PacketPlayerDigging
+import net.minecraft.util.BlockPos
+import net.minecraft.util.EnumFacing
 
 @ModuleInfo(name = "SpeedMine", category = ModuleCategory.WORLD)
 class SpeedMine : Module() {
@@ -20,7 +21,6 @@ class SpeedMine : Module() {
     private var pos: BlockPos? = null
     private var boost = false
     private var damage = 0f
-
     @EventTarget
     fun onMotion(e: MotionEvent) {
         if (e.isPre()) {
