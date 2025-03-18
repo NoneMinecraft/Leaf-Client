@@ -1,13 +1,13 @@
-package net.nonemc.leaf.features.special
+﻿package net.nonemc.leaf.features.special
 
-import net.minecraft.entity.EntityLivingBase
-import net.minecraft.entity.player.EntityPlayer
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.utils.EntityUtils
 import net.nonemc.leaf.utils.MinecraftInstance
 import net.nonemc.leaf.utils.MovementUtils
 import net.nonemc.leaf.utils.timer.MSTimer
+import net.minecraft.entity.EntityLivingBase
+import net.minecraft.entity.player.EntityPlayer
 
 class CombatManager : Listenable, MinecraftInstance() {
     private val lastAttackTimer = MSTimer()

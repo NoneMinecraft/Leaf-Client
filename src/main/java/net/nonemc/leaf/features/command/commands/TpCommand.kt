@@ -1,8 +1,4 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 package net.nonemc.leaf.features.command.commands
 
 import net.nonemc.leaf.features.command.Command
@@ -19,8 +15,8 @@ class TpCommand : Command("tp", emptyArray()) {
 
             // Get target player data
             val targetPlayer = mc.theWorld.playerEntities
-                .filter { !AntiBot.isBot(it) && it.name.equals(theName, true) }
-                .firstOrNull()
+                    .filter { !AntiBot.isBot(it) && it.name.equals(theName, true) }
+                    .firstOrNull()
 
             // Attempt to teleport to player's position.
             if (targetPlayer != null) {
@@ -31,7 +27,8 @@ class TpCommand : Command("tp", emptyArray()) {
                 chat("§7We couldn't find any player in the current world with that name.")
                 return
             }
-        } else if (args.size == 4) {
+        }
+        else if (args.size == 4) {
             try {
                 val posX = if (args[1].equals("~", true)) mc.thePlayer.posX else args[1].toDouble()
                 val posY = if (args[2].equals("~", true)) mc.thePlayer.posY else args[2].toDouble()
@@ -56,10 +53,9 @@ class TpCommand : Command("tp", emptyArray()) {
 
         return when (args.size) {
             1 -> mc.theWorld.playerEntities
-                .filter { !AntiBot.isBot(it) && it.name.startsWith(pref, true) }
-                .map { it.name }
-                .toList()
-
+                    .filter { !AntiBot.isBot(it) && it.name.startsWith(pref, true) }
+                    .map { it.name }
+                    .toList()
             else -> emptyList()
         }
     }

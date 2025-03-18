@@ -1,8 +1,4 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 package net.nonemc.leaf.features.command.commands
 
 import net.nonemc.leaf.features.command.Command
@@ -54,7 +50,6 @@ class TargetCommand : Command("target", emptyArray()) {
         return when (args.size) {
             1 -> listOf("players", "mobs", "animals", "invisible")
                 .filter { it.startsWith(args[0], true) }
-
             else -> emptyList()
         }
     }

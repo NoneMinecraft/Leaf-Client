@@ -1,6 +1,5 @@
-package net.nonemc.leaf.features.special
+﻿package net.nonemc.leaf.features.special
 
-import net.minecraft.network.play.server.S08PacketPlayerPosLook
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Listenable
@@ -10,6 +9,7 @@ import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.features.module.EnumTriggerType
 import net.nonemc.leaf.ui.client.hud.element.elements.Notification
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
+import net.minecraft.network.play.server.S08PacketPlayerPosLook
 
 object AutoDisable : Listenable {
     private const val name = "AutoDisable"
@@ -20,14 +20,7 @@ object AutoDisable : Listenable {
             .filter { it.state && it.autoDisable == EnumAutoDisableType.RESPAWN && it.triggerType == EnumTriggerType.TOGGLE }
             .forEach { module ->
                 module.state = false
-                Leaf.hud.addNotification(
-                    Notification(
-                        this.name,
-                        "Disabled ${module.name} due world Changed.",
-                        NotifyType.WARNING,
-                        2000
-                    )
-                )
+                Leaf.hud.addNotification(Notification(this.name, "Disabled ${module.name} due world Changed.", NotifyType.WARNING, 2000))
             }
     }
 
@@ -38,14 +31,7 @@ object AutoDisable : Listenable {
                 .filter { it.state && it.autoDisable == EnumAutoDisableType.FLAG && it.triggerType == EnumTriggerType.TOGGLE }
                 .forEach { module ->
                     module.state = false
-                    Leaf.hud.addNotification(
-                        Notification(
-                            this.name,
-                            "Disabled ${module.name} due flags.",
-                            NotifyType.WARNING,
-                            2000
-                        )
-                    )
+                    Leaf.hud.addNotification(Notification(this.name, "Disabled ${module.name} due flags.", NotifyType.WARNING, 2000))
                 }
         }
     }
@@ -55,14 +41,7 @@ object AutoDisable : Listenable {
             .filter { it.state && it.autoDisable == EnumAutoDisableType.GAME_END }
             .forEach { module ->
                 module.state = false
-                Leaf.hud.addNotification(
-                    Notification(
-                        this.name,
-                        "Disabled ${module.name} due to game end.",
-                        NotifyType.WARNING,
-                        2000
-                    )
-                )
+                Leaf.hud.addNotification(Notification(this.name, "Disabled ${module.name} due to game end.", NotifyType.WARNING, 2000))
             }
     }
 

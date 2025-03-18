@@ -1,12 +1,8 @@
-/*
- * LiquidBounce+ Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/WYSI-Foundation/LiquidBouncePlus/
- */
+﻿
 package net.nonemc.leaf.features.command.commands
 
-import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.nonemc.leaf.features.command.Command
+import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 
 class DamageCommand : Command("damage", arrayOf("hurt")) {
     /**

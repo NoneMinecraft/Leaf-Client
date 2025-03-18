@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.macro
+﻿package net.nonemc.leaf.features.macro
 
 import net.nonemc.leaf.Leaf
 

@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.command.commands
+﻿package net.nonemc.leaf.features.command.commands
 
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.features.command.Command
@@ -29,7 +29,7 @@ class AutoDisableCommand : Command("autodisable", arrayOf("ad")) {
             return
         }
 
-        chatSyntax("autodisable <module> [${StringUtils.toCompleteString(modes, 0, ",")}]")
+        chatSyntax("autodisable <module> [${StringUtils.toCompleteString(modes,0,",")}]")
     }
 
     override fun tabComplete(args: Array<String>): List<String> {

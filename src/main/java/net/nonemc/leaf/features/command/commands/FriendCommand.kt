@@ -1,8 +1,4 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 package net.nonemc.leaf.features.command.commands
 
 import net.nonemc.leaf.Leaf
@@ -29,11 +25,7 @@ class FriendCommand : Command("friend", arrayOf("friends")) {
                             return
                         }
 
-                        if (if (args.size > 3) friendsConfig.addFriend(
-                                name,
-                                StringUtils.toCompleteString(args, 3)
-                            ) else friendsConfig.addFriend(name)
-                        ) {
+                        if (if (args.size > 3) friendsConfig.addFriend(name, StringUtils.toCompleteString(args, 3)) else friendsConfig.addFriend(name)) {
                             Leaf.fileManager.saveConfig(friendsConfig)
                             alert("§a§l$name§3 was added to your friend list.")
                             playEdit()
@@ -47,50 +39,50 @@ class FriendCommand : Command("friend", arrayOf("friends")) {
                 }
 
                 args[1].equals("addall", ignoreCase = true) -> {
-                    if (args.size == 3) {
-                        val regex = args[2]
-                        val coloredRegex = ColorUtils.translateAlternateColorCodes(regex)
+                     if (args.size == 3) {
+                         val regex = args[2]
+                         val coloredRegex = ColorUtils.translateAlternateColorCodes(regex)
 
-                        var added = 0
+                         var added = 0
 
-                        mc.theWorld.playerEntities
-                            .filter { !AntiBot.isBot(it) && it.displayName.formattedText.contains(coloredRegex, false) }
-                            .forEach {
-                                if (friendsConfig.addFriend(it.name)) {
-                                    added++
-                                }
-                            }
+                         mc.theWorld.playerEntities
+                             .filter { !AntiBot.isBot(it) && it.displayName.formattedText.contains(coloredRegex, false) }
+                             .forEach {
+                                 if (friendsConfig.addFriend(it.name)) {
+                                     added++
+                                 }
+                             }
 
-                        alert("Added §a§l$added §3players matching the same regex to your friend list.")
-                        playEdit()
-                        return
-                    }
-                    chatSyntax("friend addall <colored regex>")
-                    return
-                }
+                         alert("Added §a§l$added §3players matching the same regex to your friend list.")
+                         playEdit()
+                         return
+                     }
+                     chatSyntax("friend addall <colored regex>")
+                     return
+                 }
 
-                args[1].equals("removeall", ignoreCase = true) -> {
-                    if (args.size == 3) {
-                        val regex = args[2]
+                 args[1].equals("removeall", ignoreCase = true) -> {
+                     if (args.size == 3) {
+                         val regex = args[2]
 
-                        var remove = 0
+                         var remove = 0
 
-                        friendsConfig.friends
-                            .map { it.playerName }
-                            .filter { it.contains(regex, false) }
-                            .forEach {
-                                if (friendsConfig.removeFriend(it)) {
-                                    remove++
-                                }
-                            }
+                         friendsConfig.friends
+                             .map { it.playerName }
+                             .filter { it.contains(regex, false) }
+                             .forEach {
+                                 if (friendsConfig.removeFriend(it)) {
+                                     remove++
+                                 }
+                             }
 
-                        alert("Removed §a§l$remove §3players matching the same regex from your friend list.")
-                        playEdit()
-                        return
-                    }
-                    chatSyntax("friend removeall <regex>")
-                    return
-                }
+                         alert("Removed §a§l$remove §3players matching the same regex from your friend list.")
+                         playEdit()
+                         return
+                     }
+                     chatSyntax("friend removeall <regex>")
+                     return
+                 }
 
                 args[1].equals("remove", ignoreCase = true) -> {
                     if (args.size > 2) {
@@ -144,16 +136,14 @@ class FriendCommand : Command("friend", arrayOf("friends")) {
                             .map { it.name }
                             .filter { it.startsWith(args[1], true) }
                     }
-
                     "remove" -> {
                         return Leaf.fileManager.friendsConfig.friends
-                            .map { it.playerName }
-                            .filter { it.startsWith(args[1], true) }
+                                .map { it.playerName }
+                                .filter { it.startsWith(args[1], true) }
                     }
                 }
                 return emptyList()
             }
-
             else -> emptyList()
         }
     }

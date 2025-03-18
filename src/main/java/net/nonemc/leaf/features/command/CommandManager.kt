@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.command
+﻿package net.nonemc.leaf.features.command
 
 import net.nonemc.leaf.utils.ClassUtils
 import net.nonemc.leaf.utils.ClientUtils

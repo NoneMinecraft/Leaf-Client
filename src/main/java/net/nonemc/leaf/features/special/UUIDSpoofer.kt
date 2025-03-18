@@ -1,3 +1,5 @@
+﻿
+
 package net.nonemc.leaf.features.special
 
 import net.nonemc.leaf.utils.MinecraftInstance

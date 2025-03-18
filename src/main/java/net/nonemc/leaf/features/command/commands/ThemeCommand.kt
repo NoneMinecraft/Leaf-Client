@@ -1,15 +1,11 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 
 package net.nonemc.leaf.features.command.commands
 
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.features.command.Command
-import net.nonemc.leaf.ui.client.hud.Config
 import net.nonemc.leaf.ui.client.hud.element.elements.Notification
+import net.nonemc.leaf.ui.client.hud.Config
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
 import java.io.File
 import java.io.IOException
@@ -35,13 +31,7 @@ class ThemeCommand : Command("theme", arrayOf("thememanager", "tm", "themes")) {
                                 Leaf.hud = Config(theme).toHUD()
                                 Leaf.isStarting = false
                                 chat("§6Theme applied successfully.")
-                                Leaf.hud.addNotification(
-                                    Notification(
-                                        "theme",
-                                        "Updated HUD Theme.",
-                                        NotifyType.SUCCESS
-                                    )
-                                )
+                                Leaf.hud.addNotification(Notification("theme", "Updated HUD Theme.", NotifyType.SUCCESS))
                                 playEdit()
                             } catch (e: IOException) {
                                 e.printStackTrace()
@@ -74,7 +64,7 @@ class ThemeCommand : Command("theme", arrayOf("thememanager", "tm", "themes")) {
                             chat("§6Theme saved successfully.")
                         } catch (throwable: Throwable) {
                             chat("§cFailed to create local theme config: §3${throwable.message}")
-                            println("Failed to create local theme config.")
+                           println("Failed to create local theme config.")
                         }
                         return
                     }
@@ -132,7 +122,6 @@ class ThemeCommand : Command("theme", arrayOf("thememanager", "tm", "themes")) {
                 }
                 return emptyList()
             }
-
             else -> emptyList()
         }
     }

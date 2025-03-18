@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.command.commands
+﻿package net.nonemc.leaf.features.command.commands
 
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.features.command.Command
@@ -48,10 +48,9 @@ class BindCommand : Command("bind", emptyArray()) {
 
         return when (args.size) {
             1 -> Leaf.moduleManager.modules
-                .map { it.name }
-                .filter { it.startsWith(moduleName, true) }
-                .toList()
-
+                    .map { it.name }
+                    .filter { it.startsWith(moduleName, true) }
+                    .toList()
             else -> emptyList()
         }
     }

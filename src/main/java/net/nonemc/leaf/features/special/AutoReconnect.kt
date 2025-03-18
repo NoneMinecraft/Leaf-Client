@@ -1,3 +1,4 @@
+﻿
 package net.nonemc.leaf.features.special
 
 object AutoReconnect {

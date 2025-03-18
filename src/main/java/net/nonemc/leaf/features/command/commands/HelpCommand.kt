@@ -1,8 +1,4 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
+﻿
 package net.nonemc.leaf.features.command.commands
 
 import joptsimple.internal.Strings
@@ -51,14 +47,7 @@ class HelpCommand : Command("help", emptyArray()) {
         while (i < 8 * page && i < commands.size) {
             val command = commands[i]
 
-            ClientUtils.displayChatMessage(
-                "§6> §7${Leaf.commandManager.prefix}${command.command}${
-                    if (command.alias.isEmpty()) "" else " §7(§8" + Strings.join(
-                        command.alias,
-                        "§7, §8"
-                    ) + "§7)"
-                }"
-            )
+            ClientUtils.displayChatMessage("§6> §7${Leaf.commandManager.prefix}${command.command}${if (command.alias.isEmpty()) "" else " §7(§8" + Strings.join(command.alias, "§7, §8") + "§7)"}")
             i++
         }
 
