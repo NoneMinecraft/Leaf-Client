@@ -1,3 +1,4 @@
+﻿
 package net.nonemc.leaf.features.module
 
 import net.nonemc.leaf.Leaf
@@ -19,9 +20,8 @@ import net.nonemc.leaf.value.Value
 import org.lwjgl.input.Keyboard
 
 open class Module : MinecraftInstance(), Listenable {
-    // Module information
-    val translate = Translate(0F, 0F)
-    val tab = Translate(0f, 0f)
+    val translate = Translate(0F,0F)
+    val tab = Translate(0f , 0f)
     var expanded: Boolean = false
     val animation: AnimationHelper
     var name: String
@@ -52,10 +52,6 @@ open class Module : MinecraftInstance(), Listenable {
     val moduleInfo = javaClass.getAnnotation(ModuleInfo::class.java)!!
     var splicedName = ""
         get() {
-//            val translatedName=LanguageManager.replace(localizedName)
-//            if(field.replace(" ","") != translatedName){
-//                field=StringUtils.toCompleteString(RegexUtils.match(translatedName, "[A-Z][a-z]*"))
-//            }
             if (field.isEmpty()) {
                 val sb = StringBuilder()
                 val arr = name.toCharArray()
@@ -85,7 +81,7 @@ open class Module : MinecraftInstance(), Listenable {
     }
 
     open fun onLoad() {
-        localizedName = if (LanguageManager.getAndFormat("module.$name.name") == "module.$name.name") {
+        localizedName = if(LanguageManager.getAndFormat("module.$name.name") == "module.$name.name") {
             name
         } else {
             LanguageManager.getAndFormat("module.$name.name")
@@ -104,22 +100,10 @@ open class Module : MinecraftInstance(), Listenable {
             if (!Leaf.isStarting) {
                 if (value) {
                     SoundModule.playSound(true)
-                    Leaf.hud.addNotification(
-                        Notification(
-                            LanguageManager.getAndFormat("notify.module.title"),
-                            LanguageManager.getAndFormat("notify.module.enable", localizedName),
-                            NotifyType.SUCCESS
-                        )
-                    )
+                    Leaf.hud.addNotification(Notification(LanguageManager.getAndFormat("notify.module.title"), LanguageManager.getAndFormat("notify.module.enable", localizedName), NotifyType.SUCCESS))
                 } else {
                     SoundModule.playSound(false)
-                    Leaf.hud.addNotification(
-                        Notification(
-                            "%notify.module.title%",
-                            LanguageManager.getAndFormat("notify.module.disable", localizedName),
-                            NotifyType.ERROR
-                        )
-                    )
+                    Leaf.hud.addNotification(Notification("%notify.module.title%", LanguageManager.getAndFormat("notify.module.disable", localizedName), NotifyType.ERROR))
                 }
             }
 
@@ -154,13 +138,7 @@ open class Module : MinecraftInstance(), Listenable {
         }
         set(value) {
             if (slideAnimation == null || (slideAnimation != null && slideAnimation!!.to != value.toDouble())) {
-                slideAnimation = Animation(
-                    EaseUtils.EnumEasingType.valueOf(HUD.arraylistXAxisAnimTypeValue.get()),
-                    EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistXAxisAnimOrderValue.get()),
-                    field.toDouble(),
-                    value.toDouble(),
-                    HUD.arraylistXAxisAnimSpeedValue.get() * 30L
-                ).start()
+                slideAnimation = Animation(EaseUtils.EnumEasingType.valueOf(HUD.arraylistXAxisAnimTypeValue.get()), EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistXAxisAnimOrderValue.get()), field.toDouble(), value.toDouble(), HUD.arraylistXAxisAnimSpeedValue.get() * 30L).start()
             }
         }
     var yPosAnimation: Animation? = null
@@ -176,13 +154,7 @@ open class Module : MinecraftInstance(), Listenable {
         }
         set(value) {
             if (yPosAnimation == null || (yPosAnimation != null && yPosAnimation!!.to != value.toDouble())) {
-                yPosAnimation = Animation(
-                    EaseUtils.EnumEasingType.valueOf(HUD.arraylistYAxisAnimTypeValue.get()),
-                    EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistYAxisAnimOrderValue.get()),
-                    field.toDouble(),
-                    value.toDouble(),
-                    HUD.arraylistYAxisAnimSpeedValue.get() * 30L
-                ).start()
+                yPosAnimation = Animation(EaseUtils.EnumEasingType.valueOf(HUD.arraylistYAxisAnimTypeValue.get()), EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistYAxisAnimOrderValue.get()), field.toDouble(), value.toDouble(), HUD.arraylistYAxisAnimSpeedValue.get() * 30L).start()
             }
         }
 

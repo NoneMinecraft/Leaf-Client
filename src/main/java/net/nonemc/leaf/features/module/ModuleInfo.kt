@@ -1,8 +1,9 @@
+﻿
 package net.nonemc.leaf.features.module
 
 import org.lwjgl.input.Keyboard
 
-@Retention(AnnotationRetention.RUNTIME)
+@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
 annotation class ModuleInfo(
     val name: String,
     val category: ModuleCategory,
