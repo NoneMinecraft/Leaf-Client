@@ -4,17 +4,7 @@ import jdk.nashorn.api.scripting.JSObject
 import jdk.nashorn.api.scripting.ScriptUtils
 import net.nonemc.leaf.features.*
 import net.nonemc.leaf.value.*
-
-/**
- * Object used by the script API to provide an idiomatic way of creating module values.
- */
 object Setting {
-
-    /**
-     * Creates a boolean value.
-     * @param settingInfo JavaScript object containing information about the value.
-     * @return An instance of [BoolValue]
-     */
     @JvmStatic
     fun boolean(settingInfo: JSObject): BoolValue {
         val name = settingInfo.getMember("name") as String
@@ -22,12 +12,6 @@ object Setting {
 
         return BoolValue(name, default)
     }
-
-    /**
-     * Creates an integer value.
-     * @param settingInfo JavaScript object containing information about the value.
-     * @return An instance of [IntegerValue]
-     */
     @JvmStatic
     fun integer(settingInfo: JSObject): IntegerValue {
         val name = settingInfo.getMember("name") as String
@@ -37,12 +21,6 @@ object Setting {
 
         return IntegerValue(name, default, min, max)
     }
-
-    /**
-     * Creates a float value.
-     * @param settingInfo JavaScript object containing information about the value.
-     * @return An instance of [FloatValue]
-     */
     @JvmStatic
     fun float(settingInfo: JSObject): FloatValue {
         val name = settingInfo.getMember("name") as String
@@ -52,12 +30,6 @@ object Setting {
 
         return FloatValue(name, default, min, max)
     }
-
-    /**
-     * Creates a text value.
-     * @param settingInfo JavaScript object containing information about the value.
-     * @return An instance of [TextValue]
-     */
     @JvmStatic
     fun text(settingInfo: JSObject): TextValue {
         val name = settingInfo.getMember("name") as String
@@ -65,12 +37,6 @@ object Setting {
 
         return TextValue(name, default)
     }
-
-    /**
-     * Creates a block value.
-     * @param settingInfo JavaScript object containing information about the value.
-     * @return An instance of [BlockValue]
-     */
     @JvmStatic
     fun block(settingInfo: JSObject): BlockValue {
         val name = settingInfo.getMember("name") as String
@@ -78,12 +44,6 @@ object Setting {
 
         return BlockValue(name, default)
     }
-
-    /**
-     * Creates a list value.
-     * @param settingInfo JavaScript object containing information about the value.
-     * @return An instance of [ListValue]
-     */
     @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun list(settingInfo: JSObject): ListValue {

@@ -5,7 +5,6 @@ import net.nonemc.leaf.ui.client.hud.element.elements.Notification
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
 
 object Notifications {
-
     @Suppress("unused")
     @JvmStatic
     fun create(name: String, content: String, notify: String, time: Int) {
