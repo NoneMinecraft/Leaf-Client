@@ -10,15 +10,11 @@ open class NumberValue(name: String, value: Double, val minimum: Double = 0.0, v
     fun set(newValue: Number) {
         set(newValue.toDouble())
     }
-
     override fun toJson() = JsonPrimitive(value)
 
     override fun fromJson(element: JsonElement) {
         if (element.isJsonPrimitive)
             value = element.asDouble
-    }
-    open fun getDouble(): Double {
-        return ((this.get() as Number).toDouble() / this.inc).roundToInt() * this.inc
     }
 
     fun append(o: Double): NumberValue {

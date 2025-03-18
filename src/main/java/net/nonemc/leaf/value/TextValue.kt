@@ -12,9 +12,9 @@ open class TextValue(name: String, value: String) : Value<String>(name, value) {
         }
 
     }
+
     fun append(o: Any): TextValue {
         set(get() + o)
         return this
     }
-
-    }
+}

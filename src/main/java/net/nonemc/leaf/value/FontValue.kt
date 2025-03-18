@@ -4,10 +4,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import net.nonemc.leaf.ui.font.Fonts
 import net.minecraft.client.gui.FontRenderer
-
-/**
- * Font value represents a value with a font
- */
 class FontValue(valueName: String, value: FontRenderer) : Value<FontRenderer>(valueName, value) {
 
     override fun toJson(): JsonElement {

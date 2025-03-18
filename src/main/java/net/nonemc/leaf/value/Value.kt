@@ -51,9 +51,6 @@ abstract class Value<T>(val name: String, var value: T) {
 
     protected open fun onChange(oldValue: T, newValue: T) {}
     protected open fun onChanged(oldValue: T, newValue: T) {}
-
-    // this is better api for ListValue and TextValue
-
     open class ColorValue(name: String, value: Int, canDisplay: () -> Boolean) : Value<Int>(name, value) {
         val minimum: Int = -10000000
         val maximum: Int = 1000000
@@ -66,7 +63,6 @@ abstract class Value<T>(val name: String, var value: T) {
                 value = element.asInt
         }
     }
-
     override fun equals(other: Any?): Boolean {
         other ?: return false
         if (value is String && other is String) {

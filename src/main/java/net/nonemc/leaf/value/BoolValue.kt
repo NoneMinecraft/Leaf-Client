@@ -3,12 +3,7 @@
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import net.nonemc.leaf.utils.AnimationHelper
-
-/**
- * Bool value represents a value with a boolean
- */
 open class BoolValue(name: String, value: Boolean) : Value<Boolean>(name, value) {
-
     val animation = AnimationHelper(this)
     override fun toJson() = JsonPrimitive(value)
 
@@ -23,5 +18,4 @@ open class BoolValue(name: String, value: Boolean) : Value<Boolean>(name, value)
     open fun toggle(){
         this.value = !this.value
     }
-
 }
