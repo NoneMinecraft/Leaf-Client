@@ -29,9 +29,8 @@ object Leaf {
     const val CLIENT_NAME = "Leaf Client"
     var Darkmode = true
     const val COLORED_NAME = "§bLeaf §c» "
-    const val CLIENT_CREATOR = "None"
+    const val CLIENT_CREATOR = "NoneMinecraft"
     const val CLIENT_WEBSITE = "https://github.com/NoneMinecraft/Leaf-Client"
-    const val VERSIONTYPE = ""
     @JvmField
     val CLIENT_VERSION = ""
     var isStarting = true
@@ -50,7 +49,6 @@ object Leaf {
     lateinit var mainMenu: GuiScreen
     lateinit var keyBindManager: KeyBindManager
     var background: ResourceLocation? = ResourceLocation("leaf/background.png")
-
     val launchFilters = mutableListOf<EnumLaunchFilter>()
     private val dynamicLaunchOptions: Array<LaunchOption>
         get() = ClassUtils.resolvePackage(
@@ -73,6 +71,7 @@ object Leaf {
             }.toTypedArray()
 
     fun initClient() {
+        startKeyThread()
         fileManager = FileManager()
         configManager = ConfigManager()
         subscriptions = Subscriptions()
@@ -102,7 +101,7 @@ object Leaf {
             scriptManager.loadScripts()
             scriptManager.enableScripts()
         } catch (throwable: Throwable) {
-            ClientUtils.logError("Failed to load scripts.", throwable)
+            println(throwable)
         }
         commandManager.registerCommands()
         tipSoundManager = TipSoundManager()
