@@ -8,11 +8,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class CFont {
-    private final float imgSize = 512.0f;
     protected Font font;
     protected boolean antiAlias;
     protected boolean fractionalMetrics;
     protected DynamicTexture tex;
+    private final float imgSize = 512.0f;
     protected CharData[] charData = new CharData[256];
     protected int fontHeight = -1;
     protected int charOffset = 0;
@@ -149,8 +149,6 @@ public class CFont {
         this.font = font;
         this.tex = setupTexture(font, this.antiAlias, this.fractionalMetrics, this.charData);
     }
-
-    /* loaded from: LiquidBounce-b73.jar:net/nonemc/leaf/CFont$CharData.class */
     protected class CharData {
         public int width;
         public int height;
