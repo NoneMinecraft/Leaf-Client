@@ -31,18 +31,11 @@ class FileManager : MinecraftInstance() {
     val specialConfig = SpecialConfig(File(dir, "special.json"))
     val backgroundFile = File(dir, "background.png")
 
-    /**
-     * Setup everything important
-     */
     init {
         setupFolder()
         loadBackground()
-        // TODO: delete legacy caches due to use vector font renderer
     }
 
-    /**
-     * Setup folder
-     */
     fun setupFolder() {
         if (!dir.exists()) {
             dir.mkdir()
