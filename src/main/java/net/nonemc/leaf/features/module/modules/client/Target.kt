@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.client
+﻿package net.nonemc.leaf.features.module.modules.client
 
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory

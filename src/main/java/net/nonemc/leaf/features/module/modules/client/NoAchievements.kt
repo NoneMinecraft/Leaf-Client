@@ -1,3 +1,4 @@
+﻿
 package net.nonemc.leaf.features.module.modules.client
 
 import net.nonemc.leaf.event.EventTarget

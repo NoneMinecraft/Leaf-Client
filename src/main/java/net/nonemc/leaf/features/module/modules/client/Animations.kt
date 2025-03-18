@@ -1,3 +1,4 @@
+﻿
 package net.nonemc.leaf.features.module.modules.client
 
 import net.nonemc.leaf.features.module.Module
@@ -13,32 +14,7 @@ import net.nonemc.leaf.value.ListValue
 @ModuleInfo(name = "Animations", category = ModuleCategory.CLIENT, canEnable = false)
 object Animations : Module() {
     val blockingModeValue = ListValue(
-        "BlockingMode",
-        arrayOf(
-            "Akrien",
-            "Avatar",
-            "ETB",
-            "Exhibition",
-            "Push",
-            "Reverse",
-            "Shield",
-            "SigmaNew",
-            "SigmaOld",
-            "Slide",
-            "SlideDown",
-            "HSlide",
-            "Swong",
-            "VisionFX",
-            "Swank",
-            "Jello",
-            "Rotate",
-            "Liquid",
-            "Yeet",
-            "Yeet2",
-            "None"
-        ),
-        "Rotate"
-    )
+        "BlockingMode", arrayOf("Akrien", "Avatar", "ETB", "Exhibition", "Push", "Reverse", "Shield", "SigmaNew", "SigmaOld", "Slide", "SlideDown", "HSlide", "Swong", "VisionFX", "Swank", "Jello", "Rotate", "Liquid", "Yeet", "Yeet2", "None"), "Rotate")
 
     val invModeValue = ListValue("InvMode", arrayOf("None", "Slide", "Zoom"), "Zoom")
     val invEaseModeValue = EaseUtils.getEnumEasingList("InvEase")
@@ -62,7 +38,6 @@ object Animations : Module() {
     val swingAnimValue = BoolValue("SwingAnim", false)
     val swingSpeedValue = FloatValue("SwingSpeed", 1f, 0.5f, 5.0f)
     val anythingBlockValue = BoolValue("AnythingBlock", false)
-
     @JvmStatic
     val noBlockParticles = BoolValue("NoBlockParticles", false)
 

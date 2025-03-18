@@ -1,13 +1,14 @@
+﻿
 package net.nonemc.leaf.features.module.modules.client
 
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.render.Animation
-import net.nonemc.leaf.utils.render.EaseUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
+import net.nonemc.leaf.utils.render.EaseUtils
+import net.nonemc.leaf.utils.render.Animation
 
 @ModuleInfo(name = "Hotbar", category = ModuleCategory.CLIENT, array = false, defaultOn = true)
 object HotbarSettings : Module() {
@@ -15,10 +16,8 @@ object HotbarSettings : Module() {
     val hotbarAlphaValue = IntegerValue("HotbarAlpha", 70, 0, 255)
     val hotbarEaseValue = BoolValue("HotbarEase", false)
     private val hotbarAnimSpeedValue = IntegerValue("HotbarAnimSpeed", 10, 5, 20).displayable { hotbarEaseValue.get() }
-    private val hotbarAnimTypeValue =
-        EaseUtils.getEnumEasingList("HotbarAnimType").displayable { hotbarEaseValue.get() }
-    private val hotbarAnimOrderValue =
-        EaseUtils.getEnumEasingOrderList("HotbarAnimOrder").displayable { hotbarEaseValue.get() }
+    private val hotbarAnimTypeValue = EaseUtils.getEnumEasingList("HotbarAnimType").displayable { hotbarEaseValue.get() }
+    private val hotbarAnimOrderValue = EaseUtils.getEnumEasingOrderList("HotbarAnimOrder").displayable { hotbarEaseValue.get() }
 
     private var easeAnimation: Animation? = null
     private var easingValue = 0
@@ -48,6 +47,5 @@ object HotbarSettings : Module() {
         easingValue = x
         return easingValue
     }
-
     private var hotBarX = 0F
 }

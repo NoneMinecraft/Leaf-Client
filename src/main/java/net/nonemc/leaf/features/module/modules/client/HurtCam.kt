@@ -1,6 +1,6 @@
+﻿
 package net.nonemc.leaf.features.module.modules.client
 
-import net.minecraft.network.play.server.S19PacketEntityStatus
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.Render2DEvent
@@ -12,8 +12,8 @@ import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
+import net.minecraft.network.play.server.S19PacketEntityStatus
 import java.awt.Color
-
 @ModuleInfo(name = "HurtCam", category = ModuleCategory.CLIENT, canEnable = false)
 class HurtCam : Module() {
     val modeValue = ListValue("Mode", arrayOf("Vanilla", "Cancel", "FPS"), "Vanilla")
@@ -61,13 +61,7 @@ class HurtCam : Module() {
     }
 
     private fun getColor(alpha: Int): Color {
-        return if (colorRainbow.get()) ColorUtils.reAlpha(ColorUtils.rainbow(), alpha) else Color(
-            colorRedValue.get(),
-            colorGreenValue.get(),
-            colorBlueValue.get(),
-            alpha
-        )
+        return if (colorRainbow.get()) ColorUtils.reAlpha(ColorUtils.rainbow(), alpha) else Color(colorRedValue.get(), colorGreenValue.get(), colorBlueValue.get(), alpha)
     }
-
     override fun handleEvents() = true
 }

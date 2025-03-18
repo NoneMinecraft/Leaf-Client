@@ -10,8 +10,8 @@ import net.nonemc.leaf.value.BoolValue;
 
 @ModuleInfo(name = "Wings", category = ModuleCategory.CLIENT, array = false)
 public class Wings extends Module {
-
-    private final BoolValue onlyThirdPerson = new BoolValue("OnlyThirdPerson", true);
+    
+    private final BoolValue onlyThirdPerson = new BoolValue("OnlyThirdPerson",true);
 
     @EventTarget
     public void onRenderPlayer(Render3DEvent event) {
