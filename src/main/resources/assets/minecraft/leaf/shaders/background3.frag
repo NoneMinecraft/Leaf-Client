@@ -67,9 +67,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 	vec2 seed2 = p2.xy * 2.0;
 	seed2 = floor(seed2 * iResolution.x);
 	vec3 rnd2 = nrand3( seed2 );
-	starcolor += vec4(pow(rnd2.y,40.0));
 
-	fragColor = mix(freqs[3]-.3, 1., v) * vec4(1.5*freqs[2] * t * t* t , 1.2*freqs[1] * t * t, freqs[3]*t, 1.0)+c2+starcolor;
+	fragColor = mix(freqs[3]-.3, 1., v) * vec4(1.5*freqs[2] * t * t* t , 1.2*freqs[1] * t * t, freqs[3]*t, 1.0)+c2;
 }
 
 void main() {

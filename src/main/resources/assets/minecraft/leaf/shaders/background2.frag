@@ -3,87 +3,67 @@
 uniform float iTime;
 uniform vec2 iResolution;
 
-float field(in vec3 p,float s) {
-	float strength = 7. + .03 * log(1.e-6 + fract(sin(iTime) * 4373.11));
-	float accum = s/4.;
-	float prev = 0.;
-	float tw = 0.;
-	for (int i = 0; i < 26; ++i) {
-		float mag = dot(p, p);
-		p = abs(p) / mag + vec3(-.5, -.4, -1.5);
-		float w = exp(-float(i) / 7.);
-		accum += w * exp(-strength * pow(abs(mag - prev), 2.2));
-		tw += w;
-		prev = mag;
+// 改进的噪声函数 (替换iChannel0依赖)
+float hash(float n) {
+	return fract(sin(n)*43758.5453);
+}
+
+float noise(vec3 x) {
+	vec3 p = floor(x);
+	vec3 f = fract(x);
+	f = f*f*(3.0-2.0*f);
+	float n = p.x + p.y*57.0 + 113.0*p.z;
+
+	return mix(
+	mix(
+	mix(hash(n + 0.0), hash(n + 1.0), f.x
+	),
+	mix(
+	mix(hash(n + 57.0), hash(n + 58.0), f.x
+	),
+	f.y
+	)));
+}
+
+// 优化后的场函数
+float field(in vec3 p) {
+	float strength = 7.0;
+	float accum = 0.0;
+	float prev = 0.0;
+
+	for(int i = 0; i < 12; ++i) {
+		float noiseVal = noise(p*0.25 + vec3(iTime*0.2));
+		accum += exp(-strength * abs(noiseVal - prev));
+		prev = noiseVal;
+		p = abs(p)/dot(p,p)*2.0 - 1.0;
 	}
-	return max(0., 5. * accum / tw - .7);
+	return accum * 0.5;
 }
 
-float field2(in vec3 p, float s) {
-	float strength = 7. + .03 * log(1.e-6 + fract(sin(iTime) * 4373.11));
-	float accum = s/4.;
-	float prev = 0.;
-	float tw = 0.;
-	for (int i = 0; i < 18; ++i) {
-		float mag = dot(p, p);
-		p = abs(p) / mag + vec3(-.5, -.4, -1.5);
-		float w = exp(-float(i) / 7.);
-		accum += w * exp(-strength * pow(abs(mag - prev), 2.2));
-		tw += w;
-		prev = mag;
-	}
-	return max(0., 5. * accum / tw - .7);
-}
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+	vec2 uv = (2.0*fragCoord.xy - iResolution.xy)/iResolution.y;
 
-vec3 nrand3( vec2 co ) {
-	vec3 a = fract( cos( co.x*8.3e-3 + co.y )*vec3(1.3e5, 4.7e5, 2.9e5) );
-	vec3 b = fract( sin( co.x*0.3e-3 + co.y )*vec3(8.1e5, 1.0e5, 0.1e5) );
-	vec3 c = mix(a, b, 0.5);
-	return c;
-}
+	// 动态参数
+	float time = iTime * 0.5;
+	vec3 rd = normalize(vec3(uv, 1.0));
 
+	// 生成过程式云层
+	vec3 p = vec3(uv*2.0, time*0.5);
+	float cloud = field(p);
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-	vec2 uv = 2. * fragCoord.xy / iResolution.xy - 1.;
-	vec2 uvs = uv * iResolution.xy / max(iResolution.x, iResolution.y);
-	vec3 p = vec3(uvs / 4., 0) + vec3(1., -1.3, 0.);
-	p += .2 * vec3(sin(iTime / 16.), sin(iTime / 12.),  sin(iTime / 128.));
+	// 颜色生成
+	vec3 skyColor = mix(vec3(0.5,0.7,1.0), vec3(0.1,0.2,0.4), length(uv));
+	vec3 cloudColor = mix(vec3(1.0,0.9,0.8), vec3(0.6,0.6,0.7), cloud);
 
-	float freqs[4];
-	// TODO: Add music support for liquidbounce
-	// https://github.com/CCBlueX/LiquidBounce-Issues/issues/3932
-	freqs[0] = 0.0;
-	//yello
-	freqs[1] = 0.30;
-	//red
-	freqs[2] = 0.90;
-	freqs[3] = 0.30;
+	// 添加动态星光
+	float stars = pow(hash(uv.x*123.4 + hash(uv.y*567.8)), 256.0);
+	cloudColor += stars * vec3(1.0);
 
-	float t = field(p,freqs[2]);
-	float v = (1. - exp((abs(uv.x) - 1.) * 6.)) * (1. - exp((abs(uv.y) - 1.) * 6.));
-
-	//Second Layer
-	vec3 p2 = vec3(uvs / (4.+sin(iTime*0.11)*0.2+0.2+sin(iTime*0.15)*0.3+0.4), 1.5) + vec3(2., -1.3, -1.);
-	p2 += 0.25 * vec3(sin(iTime / 16.), sin(iTime / 12.),  sin(iTime / 128.));
-	float t2 = field2(p2,freqs[3]);
-	vec4 c2 = mix(.4, 0.5, v) * vec4(0.8 * t2 * t2 * t2 , 1.5 * t2 * t2 , 1.5 * t2, t2);
-
-
-	//Let's add some stars
-	vec2 seed = p.xy * 2.0;
-	seed = floor(seed * iResolution.x);
-	vec3 rnd = nrand3( seed );
-	vec4 starcolor = vec4(pow(rnd.y,40.0));
-
-	//Second Layer
-	vec2 seed2 = p2.xy * 2.0;
-	seed2 = floor(seed2 * iResolution.x);
-	vec3 rnd2 = nrand3( seed2 );
-	starcolor += vec4(pow(rnd2.y,40.0));
-
-	fragColor = mix(freqs[3]-.3, 1., v) * vec4(1.5*freqs[2] * t * t* t , 1.2*freqs[1] * t * t, freqs[3]*t, 1.0)+c2+starcolor;
+	// 最终混合
+	vec3 col = mix(skyColor, cloudColor, smoothstep(0.3,0.7,cloud));
+	fragColor = vec4(col,1.0);
 }
 
 void main() {
-    mainImage(gl_FragColor, gl_FragCoord.xy);
+	mainImage(gl_FragColor, gl_FragCoord.xy);
 }
