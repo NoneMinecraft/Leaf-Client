@@ -47,17 +47,20 @@ public class ModernGuiMainMenu extends GuiScreen {
                 String fragShader;
 
                 switch (mode) {
-                    case "Old":
+                    case "Classic-Old":
                         fragShader = "background.frag";
                         break;
-                    case "New":
+                    case "Classic-New":
                         fragShader = "background2.frag";
+                        break;
+                    case "Classic-NoStar":
+                        fragShader = "background3.frag";
                         break;
                     case "Other":
                         fragShader = "background4.frag";
                         break;
-                    case "NoStar":
-                        fragShader = "background3.frag";
+                    case "Modern":
+                        fragShader = "background5.frag";
                         break;
                     default:
                         throw new IllegalArgumentException("Unknown background mode: " + mode);
@@ -93,50 +96,62 @@ public class ModernGuiMainMenu extends GuiScreen {
     private void drawShaderBackground() {
         if (backgroundShader == null) return;
 
-        framebuffer.bindFramebuffer(true);
-        GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+        try {
+            framebuffer.bindFramebuffer(true);
+            GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
+            GlStateManager.matrixMode(GL11.GL_PROJECTION);
+            GlStateManager.pushMatrix();
+            GlStateManager.loadIdentity();
+            GlStateManager.ortho(0.0, mc.displayWidth, mc.displayHeight, 0.0, -1.0, 1.0);
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0.0, mc.displayWidth, mc.displayHeight, 0.0, -1.0, 1.0);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        GL11.glPushMatrix();
-        GL11.glLoadIdentity();
-        backgroundShader.use();
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+            GlStateManager.pushMatrix();
+            GlStateManager.loadIdentity();
 
-        int resLoc = GL20.glGetUniformLocation(backgroundShader.getProgramId(), "iResolution");
-        int timeLoc = GL20.glGetUniformLocation(backgroundShader.getProgramId(), "iTime");
-        GL20.glUniform2f(resLoc, mc.displayWidth, mc.displayHeight);
-        GL20.glUniform1f(timeLoc, (System.currentTimeMillis() - startTime) / 1000.0f);
+            backgroundShader.use();
 
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
-        worldRenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldRenderer.pos(0, mc.displayHeight, 0).endVertex();
-        worldRenderer.pos(mc.displayWidth, mc.displayHeight, 0).endVertex();
-        worldRenderer.pos(mc.displayWidth, 0, 0).endVertex();
-        worldRenderer.pos(0, 0, 0).endVertex();
-        tessellator.draw();
+            int resLoc = GL20.glGetUniformLocation(backgroundShader.getProgramId(), "iResolution");
+            int timeLoc = GL20.glGetUniformLocation(backgroundShader.getProgramId(), "iTime");
+            GL20.glUniform2f(resLoc, mc.displayWidth, mc.displayHeight);
+            GL20.glUniform1f(timeLoc, (System.currentTimeMillis() - startTime) / 1000.0f);
 
-        backgroundShader.release();
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+            worldRenderer.begin(7, DefaultVertexFormats.POSITION);
+            worldRenderer.pos(0, mc.displayHeight, 0).endVertex();
+            worldRenderer.pos(mc.displayWidth, mc.displayHeight, 0).endVertex();
+            worldRenderer.pos(mc.displayWidth, 0, 0).endVertex();
+            worldRenderer.pos(0, 0, 0).endVertex();
+            tessellator.draw();
 
-        GL11.glPopMatrix();
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glPopMatrix();
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+            backgroundShader.release();
+        } finally {
+            GlStateManager.matrixMode(GL11.GL_PROJECTION);
+            GlStateManager.popMatrix();
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+            GlStateManager.popMatrix();
 
-        framebuffer.unbindFramebuffer();
-        GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
-        framebuffer.framebufferRender(mc.displayWidth, mc.displayHeight);
+            framebuffer.unbindFramebuffer();
+            GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
+            framebuffer.framebufferRender(mc.displayWidth, mc.displayHeight);
+
+            GlStateManager.popAttrib();
+            GlStateManager.popMatrix();
+        }
     }
     private void updateResolution() {
         if (framebuffer == null) {
             framebuffer = new Framebuffer(mc.displayWidth, mc.displayHeight, true);
+        } else {
+            if (framebuffer.framebufferWidth != mc.displayWidth
+                    || framebuffer.framebufferHeight != mc.displayHeight) {
+                framebuffer.deleteFramebuffer();
+                framebuffer.createFramebuffer(mc.displayWidth, mc.displayHeight);
+            }
         }
-        if (framebuffer.framebufferWidth != mc.displayWidth || framebuffer.framebufferHeight != mc.displayHeight) {
-            framebuffer.createFramebuffer(mc.displayWidth, mc.displayHeight);
-        }
+        framebuffer.setFramebufferColor(0.0F, 0.0F, 0.0F, 0.0F);
         res = new ScaledResolution(mc);
     }
 
@@ -171,11 +186,13 @@ public class ModernGuiMainMenu extends GuiScreen {
         if (!isAlternativeLayout) {
             GlStateManager.popMatrix();
         }
+
         drawBan(mouseX , mouseY);
         GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (!MainValue.Companion.getCanRun()) return;
@@ -188,19 +205,25 @@ public class ModernGuiMainMenu extends GuiScreen {
         private final int programId;
 
         public ShaderProgram(String vertPath, String fragPath) throws IOException {
-            int vertShader = createShader(vertPath, GL20.GL_VERTEX_SHADER);
-            int fragShader = createShader(fragPath, GL20.GL_FRAGMENT_SHADER);
+            int vertShader = 0;
+            int fragShader = 0;
+            try {
+                vertShader = createShader(vertPath, GL20.GL_VERTEX_SHADER);
+                fragShader = createShader(fragPath, GL20.GL_FRAGMENT_SHADER);
 
-            programId = GL20.glCreateProgram();
-            GL20.glAttachShader(programId, vertShader);
-            GL20.glAttachShader(programId, fragShader);
-            GL20.glLinkProgram(programId);
+                programId = GL20.glCreateProgram();
+                GL20.glAttachShader(programId, vertShader);
+                GL20.glAttachShader(programId, fragShader);
+                GL20.glLinkProgram(programId);
 
-            if (GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
-                throw new RuntimeException("Shader linking failed: " + GL20.glGetProgramInfoLog(programId, 1024));
+                if (GL20.glGetProgrami(programId, GL20.GL_LINK_STATUS) == GL11.GL_FALSE) {
+                    throw new RuntimeException(GL20.glGetProgramInfoLog(programId, 1024));
+                }
+            } finally {
+                if (vertShader != 0) GL20.glDeleteShader(vertShader);
+                if (fragShader != 0) GL20.glDeleteShader(fragShader);
             }
         }
-
         private int createShader(String path, int type) throws IOException {
             int shader = GL20.glCreateShader(type);
             String source = readShaderFile(path);
@@ -208,7 +231,7 @@ public class ModernGuiMainMenu extends GuiScreen {
             GL20.glCompileShader(shader);
 
             if (GL20.glGetShaderi(shader, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
-                throw new RuntimeException("Shader compilation failed: " + GL20.glGetShaderInfoLog(shader, 1024));
+                throw new RuntimeException(GL20.glGetShaderInfoLog(shader, 1024));
             }
             return shader;
         }
