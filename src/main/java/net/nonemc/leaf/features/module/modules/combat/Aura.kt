@@ -33,8 +33,10 @@ import net.nonemc.leaf.utils.EntityUtils.isFriend
 import net.nonemc.leaf.utils.extensions.getDistanceToEntityBox
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.*
+import org.lwjgl.input.Mouse
 import org.lwjgl.opengl.GL11
 import java.awt.Color
+import java.util.Random
 import kotlin.math.*
 
 @ModuleInfo(name = "Aura", category = ModuleCategory.COMBAT)
@@ -380,6 +382,7 @@ object Aura : Module() {
         }
     }
     override fun onDisable() {
+        adTime.reset()
         blocking = false
         switchDelayValue.reset()
         randomPosTimer.reset()
@@ -804,6 +807,7 @@ object Aura : Module() {
     }
 
     private fun resetValue() {
+        adTime.reset()
         allowStrictStrafe = false
         abReset()
         sprintValue = true
@@ -978,9 +982,19 @@ object Aura : Module() {
             else -> if (backwardSteps < forwardSteps) -1 else 1
         }
     }
+
+    private val basicSimulationAdjustMinDelta = FloatValue("BasicSimulation-AdjustMinDelta", 10f, 0f, 180f).displayable { rotationMode.get() == "BasicSimulation" }
+    private val basicSimulationAdjustMaxDelta = FloatValue("BasicSimulation-AdjustMaxDelta", 20f, 0f, 180f).displayable { rotationMode.get() == "BasicSimulation" }
+    private val basicSimulationAdjustTime = IntegerValue("BasicSimulation-AdjustTime", 1000, 1, 5000).displayable { rotationMode.get() == "BasicSimulation" }
+
+private val adTime = MSTimer()
+
     private fun calculateYaw(currentYaw: Float, targetYaw: Float, speed: Float, targetPlayer: EntityPlayer): Float {
         when (rotationMode.get()) {
             "BasicSimulation" -> {
+
+
+
                 val delta = MathHelper.wrapAngleTo180_float(targetYaw - currentYaw)
                 val currentTime = System.currentTimeMillis()
                 val dt = if (basicSimulationLastUpdateTime == 0L) {
@@ -1051,6 +1065,12 @@ object Aura : Module() {
                 basicSimulationCurrentSpeed *= fatigueFactor
                 basicSimulationLastError = error
                 basicSimulationLastUpdateTime = currentTime
+                if (delta in basicSimulationAdjustMinDelta.get()..basicSimulationAdjustMaxDelta.get()){
+                    if (adTime.hasTimePassed(basicSimulationAdjustTime.get().toLong())){
+                        newYaw = targetYaw + kotlin.random.Random.nextDouble(-0.5,0.5).toFloat()
+                        adTime.reset()
+                    }
+                }
                 return newYaw
             }
             "AdvancedSimulation" -> {
@@ -1169,7 +1189,7 @@ object Aura : Module() {
                 val step = calculateOptimalStep(currentIndex, targetIndex, realDelta)
                 val newIndex = (currentIndex + step + YawData2.size) % YawData2.size
                 val newYaw = YawData2[newIndex].toFloat()
-                return newYaw
+                return currentYaw + MathHelper.wrapAngleTo180_float((newYaw - MathHelper.wrapAngleTo180_float(currentYaw)))
 
             }
         }

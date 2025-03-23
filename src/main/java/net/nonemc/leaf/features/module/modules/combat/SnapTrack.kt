@@ -66,6 +66,7 @@ class SnapTrack : Module() {
         val player = mc.thePlayer ?: return
         val world = mc.theWorld ?: return
         val packet = event.packet
+
         if (packet is S14PacketEntity){
             if (canCancel && packet.getEntity(world) == targetPlayer && s14.get()) event.cancelEvent()
         }
