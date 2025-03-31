@@ -1,6 +1,6 @@
-﻿
-package net.nonemc.leaf.features.module
+﻿package net.nonemc.leaf.features.module
 
+import net.minecraft.client.Minecraft
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.KeyEvent
@@ -9,10 +9,9 @@ import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.special.AutoDisable
 import net.nonemc.leaf.ui.client.hud.element.elements.Notification
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
-import net.nonemc.leaf.utils.ClassUtils
-import net.nonemc.leaf.utils.ClientUtils
-import net.minecraft.client.Minecraft
+import net.nonemc.leaf.utils.misc.ClassUtils
 import org.lwjgl.input.Keyboard
+import java.util.*
 
 class ModuleManager : Listenable {
 
@@ -25,27 +24,14 @@ class ModuleManager : Listenable {
         Leaf.eventManager.registerListener(this)
     }
 
-    /**
-     * Register all modules
-     */
     fun registerModules() {
-        ClientUtils.logInfo("[ModuleManager] Loading modules...")
-
         ClassUtils.resolvePackage("${this.javaClass.`package`.name}.modules", Module::class.java)
             .forEach(this::registerModule)
 
         modules.forEach { it.onInitialize() }
-
         modules.forEach { it.onLoad() }
-
         Leaf.eventManager.registerListener(AutoDisable)
-
-        ClientUtils.logInfo("[ModuleManager] Loaded ${modules.size} modules.")
     }
-
-    /**
-     * Register [module]
-     */
     fun registerModule(module: Module) {
         modules += module
         moduleClassMap[module.javaClass] = module
@@ -66,7 +52,7 @@ class ModuleManager : Listenable {
             // this module is a kotlin object
             registerModule(ClassUtils.getObjectInstance(moduleClass) as Module)
         } catch (e: Throwable) {
-            ClientUtils.logError("Failed to load module: ${moduleClass.name} (${e.javaClass.name}: ${e.message})")
+            println("Failed to load module: ${moduleClass.name} (${e.javaClass.name}: ${e.message})")
         }
     }
 
@@ -97,7 +83,7 @@ class ModuleManager : Listenable {
     }
 
     fun getModulesByName(name: String): List<Module> {
-        return this.modules.filter { it.name.toLowerCase().contains(name.toLowerCase()) }
+        return this.modules.filter { it.name.lowercase(Locale.getDefault()).contains(name.lowercase(Locale.getDefault())) }
     }
 
     /**
@@ -126,11 +112,17 @@ class ModuleManager : Listenable {
     @EventTarget
     private fun onKey(event: KeyEvent) {
         if (pendingBindModule == null) {
-            modules.toMutableList().filter { it.triggerType == EnumTriggerType.TOGGLE && it.keyBind == event.key }.forEach { it.toggle() }
+            modules.toMutableList().filter { it.triggerType == EnumTriggerType.TOGGLE && it.keyBind == event.key }
+                .forEach { it.toggle() }
         } else {
             pendingBindModule!!.keyBind = event.key
-            ClientUtils.displayAlert("Bound module §a§l${pendingBindModule!!.name}§3 to key §a§l${Keyboard.getKeyName(event.key)}§3.")
-            Leaf.hud.addNotification(Notification("KeyBind", "Bound ${pendingBindModule!!.name} to ${Keyboard.getKeyName(event.key)}.", NotifyType.INFO))
+            Leaf.hud.addNotification(
+                Notification(
+                    "KeyBind",
+                    "Bound ${pendingBindModule!!.name} to ${Keyboard.getKeyName(event.key)}.",
+                    NotifyType.INFO
+                )
+            )
             pendingBindModule = null
         }
     }

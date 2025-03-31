@@ -1,9 +1,8 @@
-﻿
-package net.nonemc.leaf.features.module
+﻿package net.nonemc.leaf.features.module
 
 import org.lwjgl.input.Keyboard
 
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class ModuleInfo(
     val name: String,
     val category: ModuleCategory,
@@ -13,8 +12,7 @@ annotation class ModuleInfo(
     val autoDisable: EnumAutoDisableType = EnumAutoDisableType.NONE,
     val moduleCommand: Boolean = true,
     val defaultOn: Boolean = false,
-    val forceNoSound: Boolean = false,
-    val triggerType: EnumTriggerType = EnumTriggerType.TOGGLE
+    val triggerType: EnumTriggerType = EnumTriggerType.TOGGLE,
 )
 
 enum class EnumAutoDisableType {

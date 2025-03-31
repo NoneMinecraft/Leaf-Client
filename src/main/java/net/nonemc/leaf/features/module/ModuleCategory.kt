@@ -1,5 +1,4 @@
-﻿
-package net.nonemc.leaf.features.module
+﻿package net.nonemc.leaf.features.module
 
 import lombok.Getter
 import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Main
@@ -16,7 +15,7 @@ enum class ModuleCategory(val displayName: String, val configName: String, val h
     MISC("Misc", "Misc", "&#xe5d3;"),
     Rage("Rage", "Rage", "&#xe5d9;"),
     DEBUG("Debug", "Debug", "&#xe5d8;"),
-    EXPLOIT("%module.category.exploit%", "Exploit", "&#xe868;");
+    EXPLOIT("Exploit", "Exploit", "&#xe868;");
 
     var namee: String? = null
     var posX = 0

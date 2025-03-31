@@ -1,16 +1,16 @@
-﻿
-package net.nonemc.leaf.features.module
+﻿package net.nonemc.leaf.features.module
 
 import net.nonemc.leaf.Leaf
+import net.nonemc.leaf.Leaf.displayAlert
+import net.nonemc.leaf.Leaf.displayChatMessage
 import net.nonemc.leaf.event.Listenable
 import net.nonemc.leaf.features.module.modules.client.HUD
 import net.nonemc.leaf.features.module.modules.client.SoundModule
 import net.nonemc.leaf.ui.client.hud.element.elements.Notification
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
-import net.nonemc.leaf.ui.i18n.LanguageManager
-import net.nonemc.leaf.utils.AnimationHelper
-import net.nonemc.leaf.utils.ClassUtils
-import net.nonemc.leaf.utils.ClientUtils
+import net.nonemc.leaf.ui.language.LanguageManager
+import net.nonemc.leaf.utils.render.AnimationHelper
+import net.nonemc.leaf.utils.misc.ClassUtils
 import net.nonemc.leaf.utils.MinecraftInstance
 import net.nonemc.leaf.utils.render.Animation
 import net.nonemc.leaf.utils.render.ColorUtils.stripColor
@@ -20,8 +20,8 @@ import net.nonemc.leaf.value.Value
 import org.lwjgl.input.Keyboard
 
 open class Module : MinecraftInstance(), Listenable {
-    val translate = Translate(0F,0F)
-    val tab = Translate(0f , 0f)
+    val translate = Translate(0F, 0F)
+    val tab = Translate(0f, 0f)
     var expanded: Boolean = false
     val animation: AnimationHelper
     var name: String
@@ -81,7 +81,7 @@ open class Module : MinecraftInstance(), Listenable {
     }
 
     open fun onLoad() {
-        localizedName = if(LanguageManager.getAndFormat("module.$name.name") == "module.$name.name") {
+        localizedName = if (LanguageManager.getAndFormat("module.$name.name") == "module.$name.name") {
             name
         } else {
             LanguageManager.getAndFormat("module.$name.name")
@@ -100,10 +100,22 @@ open class Module : MinecraftInstance(), Listenable {
             if (!Leaf.isStarting) {
                 if (value) {
                     SoundModule.playSound(true)
-                    Leaf.hud.addNotification(Notification(LanguageManager.getAndFormat("notify.module.title"), LanguageManager.getAndFormat("notify.module.enable", localizedName), NotifyType.SUCCESS))
+                    Leaf.hud.addNotification(
+                        Notification(
+                            LanguageManager.getAndFormat("notify.module.title"),
+                            LanguageManager.getAndFormat("notify.module.enable", localizedName),
+                            NotifyType.SUCCESS
+                        )
+                    )
                 } else {
                     SoundModule.playSound(false)
-                    Leaf.hud.addNotification(Notification("%notify.module.title%", LanguageManager.getAndFormat("notify.module.disable", localizedName), NotifyType.ERROR))
+                    Leaf.hud.addNotification(
+                        Notification(
+                            "%notify.module.title%",
+                            LanguageManager.getAndFormat("notify.module.disable", localizedName),
+                            NotifyType.ERROR
+                        )
+                    )
                 }
             }
 
@@ -138,7 +150,13 @@ open class Module : MinecraftInstance(), Listenable {
         }
         set(value) {
             if (slideAnimation == null || (slideAnimation != null && slideAnimation!!.to != value.toDouble())) {
-                slideAnimation = Animation(EaseUtils.EnumEasingType.valueOf(HUD.arraylistXAxisAnimTypeValue.get()), EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistXAxisAnimOrderValue.get()), field.toDouble(), value.toDouble(), HUD.arraylistXAxisAnimSpeedValue.get() * 30L).start()
+                slideAnimation = Animation(
+                    EaseUtils.EnumEasingType.valueOf(HUD.arraylistXAxisAnimTypeValue.get()),
+                    EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistXAxisAnimOrderValue.get()),
+                    field.toDouble(),
+                    value.toDouble(),
+                    HUD.arraylistXAxisAnimSpeedValue.get() * 30L
+                ).start()
             }
         }
     var yPosAnimation: Animation? = null
@@ -154,7 +172,13 @@ open class Module : MinecraftInstance(), Listenable {
         }
         set(value) {
             if (yPosAnimation == null || (yPosAnimation != null && yPosAnimation!!.to != value.toDouble())) {
-                yPosAnimation = Animation(EaseUtils.EnumEasingType.valueOf(HUD.arraylistYAxisAnimTypeValue.get()), EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistYAxisAnimOrderValue.get()), field.toDouble(), value.toDouble(), HUD.arraylistYAxisAnimSpeedValue.get() * 30L).start()
+                yPosAnimation = Animation(
+                    EaseUtils.EnumEasingType.valueOf(HUD.arraylistYAxisAnimTypeValue.get()),
+                    EaseUtils.EnumEasingOrder.valueOf(HUD.arraylistYAxisAnimOrderValue.get()),
+                    field.toDouble(),
+                    value.toDouble(),
+                    HUD.arraylistYAxisAnimSpeedValue.get() * 30L
+                ).start()
             }
         }
 
@@ -180,12 +204,12 @@ open class Module : MinecraftInstance(), Listenable {
     /**
      * Print [msg] to chat as alert
      */
-    protected fun alert(msg: String) = ClientUtils.displayAlert(msg)
+    protected fun alert(msg: String) = displayAlert(msg)
 
     /**
      * Print [msg] to chat as plain text
      */
-    protected fun chat(msg: String) = ClientUtils.displayChatMessage(msg)
+    protected fun chat(msg: String) = displayChatMessage(msg)
 
     /**
      * Called when module toggled
