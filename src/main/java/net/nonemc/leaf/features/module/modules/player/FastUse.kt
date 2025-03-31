@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.player
+﻿package net.nonemc.leaf.features.module.modules.player
 
 import net.minecraft.item.ItemBucketMilk
 import net.minecraft.item.ItemFood

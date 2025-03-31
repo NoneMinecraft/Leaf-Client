@@ -1,9 +1,4 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
-package net.nonemc.leaf.features.module.modules.player
+﻿package net.nonemc.leaf.features.module.modules.player
 
 import net.minecraft.client.gui.inventory.GuiInventory
 import net.minecraft.enchantment.Enchantment
@@ -11,6 +6,9 @@ import net.minecraft.init.Blocks
 import net.minecraft.item.*
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
 import net.minecraft.network.play.client.C09PacketHeldItemChange
+import net.minecraft.network.play.client.C0DPacketCloseWindow
+import net.minecraft.network.play.client.C16PacketClientStatus
+import net.minecraft.potion.Potion
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.UpdateEvent
@@ -18,12 +16,11 @@ import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.injection.access.IItemStack
-import net.nonemc.leaf.utils.ClientUtils
-import net.nonemc.leaf.utils.InventoryUtils
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.inventory.InventoryUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.utils.item.ArmorPiece
 import net.nonemc.leaf.utils.item.ItemUtils
-import net.nonemc.leaf.utils.misc.RandomUtils
+import net.nonemc.leaf.utils.math.RandomUtils
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.utils.timer.TimeUtils
 import net.nonemc.leaf.value.BoolValue
@@ -112,9 +109,9 @@ class InvManager : Module() {
         set(value) {
             if (value != field) {
                 if (value) {
-                    InventoryUtils.openPacket()
+                    openPacket()
                 } else {
-                    InventoryUtils.closePacket()
+                    closePacket()
                 }
             }
             field = value
@@ -238,12 +235,14 @@ class InvManager : Module() {
         }
     }
 
-    /**
-     * Checks if the item is useful
-     *
-     * @param slot Slot id of the item. If the item isn't in the inventory -1
-     * @return Returns true when the item is useful
-     */
+    fun openPacket() {
+        mc.netHandler.addToSendQueue(C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT))
+    }
+
+    fun closePacket() {
+        mc.netHandler.addToSendQueue(C0DPacketCloseWindow())
+    }
+
     fun isUseful(itemStack: ItemStack, slot: Int): Boolean {
         return try {
             val item = itemStack.item
@@ -328,16 +327,37 @@ class InvManager : Module() {
                 (nbtItemNotGarbage.get() && ItemUtils.hasNBTGoal(itemStack, goal)) ||
                         item is ItemFood || itemStack.unlocalizedName == "item.arrow" ||
                         (item is ItemBlock && !InventoryUtils.isBlockListBlock(item)) ||
-                        item is ItemBed || (item is ItemPotion && (!onlyPositivePotionValue.get() || InventoryUtils.isPositivePotion(
+                        item is ItemBed || (item is ItemPotion && (!onlyPositivePotionValue.get() || isPositivePotion(
                     item,
                     itemStack
                 ))) ||
                         item is ItemEnderPearl || item is ItemBucket || ignoreVehiclesValue.get() && (item is ItemBoat || item is ItemMinecart)
             }
         } catch (ex: Exception) {
-            ClientUtils.logError("(InvManager) Failed to check item: ${itemStack.unlocalizedName}.", ex)
+            println("(InvManager) Failed to check item: ${itemStack.unlocalizedName}.")
             true
         }
+    }
+
+
+    private fun isPositivePotionEffect(id: Int): Boolean {
+        return id == Potion.regeneration.id || id == Potion.moveSpeed.id ||
+                id == Potion.heal.id || id == Potion.nightVision.id ||
+                id == Potion.jump.id || id == Potion.invisibility.id ||
+                id == Potion.resistance.id || id == Potion.waterBreathing.id ||
+                id == Potion.absorption.id || id == Potion.digSpeed.id ||
+                id == Potion.damageBoost.id || id == Potion.healthBoost.id ||
+                id == Potion.fireResistance.id
+    }
+
+    fun isPositivePotion(item: ItemPotion, stack: ItemStack): Boolean {
+        item.getEffects(stack).forEach {
+            if (isPositivePotionEffect(it.potionID)) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun findBestArmor(): Array<ArmorPiece?> {

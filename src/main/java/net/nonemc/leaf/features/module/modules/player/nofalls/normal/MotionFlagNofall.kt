@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.player.nofalls.normal
+﻿package net.nonemc.leaf.features.module.modules.player.nofalls.normal
 
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode

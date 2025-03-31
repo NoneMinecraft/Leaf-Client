@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -6,6 +6,7 @@ package net.nonemc.leaf.features.module.modules.player
 
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.init.Items
+import net.minecraft.item.Item
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement
 import net.minecraft.network.play.client.C09PacketHeldItemChange
@@ -19,7 +20,6 @@ import net.nonemc.leaf.event.WorldEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.InventoryUtils
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
@@ -73,7 +73,7 @@ class Gapple : Module() {
         if (tryHeal) {
             when (modeValue.get().lowercase()) {
                 "auto" -> {
-                    val gappleInHotbar = InventoryUtils.findItem(36, 45, Items.golden_apple)
+                    val gappleInHotbar = findItem(36, 45, Items.golden_apple)
                     if (gappleInHotbar != -1) {
                         mc.netHandler.addToSendQueue(C09PacketHeldItemChange(gappleInHotbar - 36))
                         mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem))
@@ -92,7 +92,7 @@ class Gapple : Module() {
 
                 "legitauto" -> {
                     if (eating == -1) {
-                        val gappleInHotbar = InventoryUtils.findItem(36, 45, Items.golden_apple)
+                        val gappleInHotbar = findItem(36, 45, Items.golden_apple)
                         if (gappleInHotbar == -1) {
                             tryHeal = false
                             return
@@ -109,7 +109,7 @@ class Gapple : Module() {
                 }
 
                 "head" -> {
-                    val headInHotbar = InventoryUtils.findItem(36, 45, Items.skull)
+                    val headInHotbar = findItem(36, 45, Items.skull)
                     if (headInHotbar != -1) {
                         mc.netHandler.addToSendQueue(C09PacketHeldItemChange(headInHotbar - 36))
                         mc.netHandler.addToSendQueue(C08PacketPlayerBlockPlacement(mc.thePlayer.heldItem))
@@ -142,6 +142,16 @@ class Gapple : Module() {
                 return
             tryHeal = true
         }
+    }
+
+    fun findItem(startSlot: Int, endSlot: Int, item: Item): Int {
+        for (i in startSlot until endSlot) {
+            val stack = mc.thePlayer.inventoryContainer.getSlot(i).stack
+            if (stack != null && stack.item === item) {
+                return i
+            }
+        }
+        return -1
     }
 
     override val tag: String

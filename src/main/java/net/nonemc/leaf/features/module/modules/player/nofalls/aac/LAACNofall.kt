@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.player.nofalls.aac
+﻿package net.nonemc.leaf.features.module.modules.player.nofalls.aac
 
 import net.nonemc.leaf.event.JumpEvent
 import net.nonemc.leaf.event.MoveEvent

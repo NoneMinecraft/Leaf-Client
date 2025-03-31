@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.player
+﻿package net.nonemc.leaf.features.module.modules.player
 
 import net.minecraft.util.BlockPos
 import net.nonemc.leaf.event.ClickBlockEvent

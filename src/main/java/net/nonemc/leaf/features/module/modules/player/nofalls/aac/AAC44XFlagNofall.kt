@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.player.nofalls.aac
+﻿package net.nonemc.leaf.features.module.modules.player.nofalls.aac
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.server.S12PacketEntityVelocity

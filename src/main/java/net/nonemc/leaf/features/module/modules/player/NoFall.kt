@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -14,7 +14,7 @@ import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.features.module.modules.player.nofalls.NoFallMode
 import net.nonemc.leaf.features.module.modules.render.FreeCam
-import net.nonemc.leaf.utils.ClassUtils
+import net.nonemc.leaf.utils.misc.ClassUtils
 import net.nonemc.leaf.utils.block.BlockUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.ListValue
@@ -26,7 +26,7 @@ class NoFall : Module() {
         .sortedBy { it.modeName }
 
     val mode: NoFallMode
-        get() = modes.find { modeValue.equals(it.modeName) } ?: throw NullPointerException() // this should not happen
+        get() = modes.find { modeValue.equals(it.modeName) } ?: throw NullPointerException()
 
     private val modeValue: ListValue = object : ListValue("Mode", modes.map { it.modeName }.toTypedArray(), "Vanilla") {
         override fun onChange(oldValue: String, newValue: String) {

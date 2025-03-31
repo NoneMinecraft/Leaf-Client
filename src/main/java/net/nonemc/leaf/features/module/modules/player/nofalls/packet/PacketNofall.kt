@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.player.nofalls.packet
+﻿package net.nonemc.leaf.features.module.modules.player.nofalls.packet
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.UpdateEvent
