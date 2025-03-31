@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -10,7 +10,7 @@ import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
 
@@ -155,6 +155,6 @@ class NoWeb : Module() {
         mc.timer.timerSpeed = 1.0F
     }
 
-    override val tag: String?
+    override val tag: String
         get() = modeValue.get()
 }

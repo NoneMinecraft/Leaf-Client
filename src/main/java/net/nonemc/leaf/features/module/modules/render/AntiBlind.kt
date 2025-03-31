@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.potion.Potion
 import net.minecraft.potion.PotionEffect

@@ -1,9 +1,9 @@
-package net.nonemc.leaf.features.module.modules.movement.flys.ncp
+﻿package net.nonemc.leaf.features.module.modules.movement.flys.ncp
 
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.flys.FlyMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.value.FloatValue
 import kotlin.math.cos
 import kotlin.math.sin

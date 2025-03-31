@@ -1,7 +1,7 @@
-package net.nonemc.leaf.features.module.modules.movement.speeds.other
+﻿package net.nonemc.leaf.features.module.modules.movement.speeds.other
 
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 
 class GroundStrafeHop : SpeedMode("GroundStrafeHop") {
     override fun onPreMotion() {

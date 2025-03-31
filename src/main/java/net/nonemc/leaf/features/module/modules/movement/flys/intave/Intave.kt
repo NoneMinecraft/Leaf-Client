@@ -1,11 +1,11 @@
-package net.nonemc.leaf.features.module.modules.movement.flys.intave
+﻿package net.nonemc.leaf.features.module.modules.movement.flys.intave
 
 import net.minecraft.client.settings.GameSettings
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.flys.FlyMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 
 class Intave : FlyMode("Intave") {
     private var ticks = 0

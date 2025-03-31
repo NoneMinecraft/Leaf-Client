@@ -1,7 +1,10 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher
-import net.minecraft.tileentity.*
+import net.minecraft.tileentity.TileEntity
+import net.minecraft.tileentity.TileEntityDispenser
+import net.minecraft.tileentity.TileEntityFurnace
+import net.minecraft.tileentity.TileEntityHopper
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render2DEvent
 import net.nonemc.leaf.event.Render3DEvent

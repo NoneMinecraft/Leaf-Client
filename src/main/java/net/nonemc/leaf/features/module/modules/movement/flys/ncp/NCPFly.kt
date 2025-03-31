@@ -1,11 +1,11 @@
-package net.nonemc.leaf.features.module.modules.movement.flys.ncp
+﻿package net.nonemc.leaf.features.module.modules.movement.flys.ncp
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.flys.FlyMode
-import net.nonemc.leaf.utils.MovementUtils.strafe
+import net.nonemc.leaf.utils.entity.MovementUtils.strafe
 import net.nonemc.leaf.value.FloatValue
 
 class NCPFly : FlyMode("NCP") {

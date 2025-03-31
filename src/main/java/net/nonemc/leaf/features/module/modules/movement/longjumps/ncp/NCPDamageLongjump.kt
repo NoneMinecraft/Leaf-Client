@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.movement.longjumps.ncp
+﻿package net.nonemc.leaf.features.module.modules.movement.longjumps.ncp
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.Leaf
@@ -8,8 +8,8 @@ import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.longjumps.LongJumpMode
 import net.nonemc.leaf.ui.client.hud.element.elements.Notification
 import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.PacketUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
+import net.nonemc.leaf.utils.packet.PacketUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 

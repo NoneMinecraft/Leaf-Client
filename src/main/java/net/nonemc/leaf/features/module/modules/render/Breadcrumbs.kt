@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.entity.EntityLivingBase
 import net.nonemc.leaf.event.EventTarget
@@ -8,7 +8,7 @@ import net.nonemc.leaf.event.WorldEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.EntityUtils
+import net.nonemc.leaf.utils.entity.EntityUtils
 import net.nonemc.leaf.utils.render.ColorUtils.rainbow
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue

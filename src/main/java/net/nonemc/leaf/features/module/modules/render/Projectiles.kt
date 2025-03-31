@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.block.material.Material
 import net.minecraft.client.renderer.Tessellator
@@ -11,7 +11,7 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.RotationUtils
+import net.nonemc.leaf.utils.rotation.RotationUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import org.lwjgl.opengl.GL11
@@ -75,7 +75,7 @@ class Projectiles : Module() {
             size = 0.25F
         }
 
-        // Yaw and pitch of player
+        // Yaw and pitch of entity
         val yaw = if (RotationUtils.targetRotation != null) {
             RotationUtils.targetRotation.yaw
         } else {

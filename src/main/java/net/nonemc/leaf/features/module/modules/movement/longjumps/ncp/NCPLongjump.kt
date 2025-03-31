@@ -1,9 +1,9 @@
-package net.nonemc.leaf.features.module.modules.movement.longjumps.ncp
+﻿package net.nonemc.leaf.features.module.modules.movement.longjumps.ncp
 
 import net.nonemc.leaf.event.JumpEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.longjumps.LongJumpMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.value.FloatValue
 
 class NCPLongjump : LongJumpMode("NCP") {

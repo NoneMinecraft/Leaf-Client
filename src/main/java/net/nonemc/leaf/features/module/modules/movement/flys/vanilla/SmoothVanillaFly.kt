@@ -1,10 +1,10 @@
-package net.nonemc.leaf.features.module.modules.movement.flys.vanilla
+﻿package net.nonemc.leaf.features.module.modules.movement.flys.vanilla
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.modules.movement.flys.FlyMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 

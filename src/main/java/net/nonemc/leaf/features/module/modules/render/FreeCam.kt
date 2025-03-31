@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.client.entity.EntityOtherPlayerMP
 import net.minecraft.network.play.client.C03PacketPlayer
@@ -10,8 +10,8 @@ import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.PacketUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
+import net.nonemc.leaf.utils.packet.PacketUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 

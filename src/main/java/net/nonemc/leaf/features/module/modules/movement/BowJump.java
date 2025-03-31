@@ -15,8 +15,8 @@ import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.features.module.ModuleCategory;
 import net.nonemc.leaf.features.module.ModuleInfo;
 import net.nonemc.leaf.ui.font.Fonts;
-import net.nonemc.leaf.utils.MovementUtils;
-import net.nonemc.leaf.utils.PacketUtils;
+import net.nonemc.leaf.utils.entity.MovementUtils;
+import net.nonemc.leaf.utils.packet.PacketUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.value.BoolValue;
 import net.nonemc.leaf.value.FloatValue;
@@ -60,12 +60,14 @@ public class BowJump extends Module {
 
     @EventTarget
     public void onPacket(PacketEvent event) {
-        if (event.getPacket() instanceof C09PacketHeldItemChange c09) {
+        if (event.getPacket() instanceof C09PacketHeldItemChange) {
+            C09PacketHeldItemChange c09 = (C09PacketHeldItemChange) event.getPacket();
             lastSlot = c09.getSlotId();
             event.cancelEvent();
         }
 
-        if (event.getPacket() instanceof C03PacketPlayer c03) {
+        if (event.getPacket() instanceof C03PacketPlayer) {
+            C03PacketPlayer c03 = (C03PacketPlayer) event.getPacket();
             if (bowState < 3) c03.setMoving(false);
         }
     }

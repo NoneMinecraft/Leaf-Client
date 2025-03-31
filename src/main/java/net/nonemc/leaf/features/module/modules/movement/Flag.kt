@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -9,7 +9,7 @@ import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.event.WorldEvent
-import net.nonemc.leaf.features.MainLib.ChatPrint
+import net.nonemc.leaf.features.Util.ChatPrint
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo

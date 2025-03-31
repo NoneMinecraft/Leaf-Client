@@ -1,12 +1,13 @@
 package net.nonemc.leaf.features.module.modules.render
 
+import net.minecraft.block.state.IBlockState
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.RenderHelper
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import net.minecraft.util.*
-import net.minecraft.block.state.IBlockState
 import net.minecraft.init.Blocks
+import net.minecraft.util.BlockPos
+import net.minecraft.util.MathHelper
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
@@ -25,6 +26,7 @@ class Projector : Module() {
     private val radius = IntegerValue("Radius", 5, 1, 20)
 
     private data class BlockData(val pos: BlockPos, val state: IBlockState)
+
     private val block = mutableListOf<BlockData>()
 
     override fun onEnable() {
@@ -48,9 +50,11 @@ class Projector : Module() {
             }
         }
     }
+
     override fun onDisable() {
         block.clear()
     }
+
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
         if (block.isEmpty()) return

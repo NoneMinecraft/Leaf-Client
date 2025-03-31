@@ -1,19 +1,10 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
-package net.nonemc.leaf.features.module.modules.movement.speeds.ncp
+﻿package net.nonemc.leaf.features.module.modules.movement.speeds.ncp
 
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 
 class NCPLatest : SpeedMode("NCPLatest") {
 
-
-    override fun onEnable() {
-        super.onEnable()
-    }
 
     override fun onDisable() {
         mc.thePlayer.jumpMovementFactor = 0.02f

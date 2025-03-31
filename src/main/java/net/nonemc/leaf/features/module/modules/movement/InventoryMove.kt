@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -7,19 +7,15 @@ package net.nonemc.leaf.features.module.modules.movement
 import net.minecraft.client.gui.GuiChat
 import net.minecraft.client.gui.inventory.GuiContainer
 import net.minecraft.client.settings.GameSettings
-import net.minecraft.network.play.client.C03PacketPlayer
-import net.minecraft.network.play.client.C0BPacketEntityAction
-import net.minecraft.network.play.client.C0DPacketCloseWindow
-import net.minecraft.network.play.client.C0EPacketClickWindow
-import net.minecraft.network.play.client.C16PacketClientStatus
+import net.minecraft.network.play.client.*
 import net.minecraft.network.play.server.S2DPacketOpenWindow
 import net.minecraft.network.play.server.S2EPacketCloseWindow
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.PacketUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
+import net.nonemc.leaf.utils.packet.PacketUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.ListValue
 import org.lwjgl.input.Keyboard
@@ -216,7 +212,7 @@ class InventoryMove : Module() {
         invOpen = false
     }
 
-    override val tag: String?
+    override val tag: String
         get() = bypassValue.get()
 
 }

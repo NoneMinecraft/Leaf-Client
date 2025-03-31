@@ -1,4 +1,4 @@
-/*
+﻿/*
  * FDPClient Hacked Client
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/SkidderMC/FDPClient/
@@ -7,7 +7,7 @@ package net.nonemc.leaf.features.module.modules.movement.speeds.aac
 
 import net.nonemc.leaf.event.MoveEvent
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 
 class AACHop438 : SpeedMode("AACHop4.3.8") {
     override fun onUpdate() {

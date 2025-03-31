@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -10,8 +10,8 @@ import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.features.module.modules.movement.flys.FlyMode
-import net.nonemc.leaf.utils.ClassUtils
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.misc.ClassUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue

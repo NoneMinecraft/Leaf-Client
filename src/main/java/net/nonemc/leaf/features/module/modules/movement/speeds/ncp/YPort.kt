@@ -1,4 +1,4 @@
-/*
+﻿/*
  * FDPClient Hacked Client
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
  * https://github.com/UnlegitMC/FDPClient/
@@ -14,7 +14,7 @@ import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
 import net.nonemc.leaf.event.MoveEvent
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.cos

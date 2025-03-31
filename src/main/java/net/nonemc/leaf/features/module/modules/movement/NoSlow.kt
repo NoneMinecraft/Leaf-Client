@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.movement
+﻿package net.nonemc.leaf.features.module.modules.movement
 
 import net.minecraft.item.*
 import net.minecraft.network.Packet
@@ -16,8 +16,8 @@ import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.PacketUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
+import net.nonemc.leaf.utils.packet.PacketUtils
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
@@ -171,7 +171,7 @@ object NoSlow : Module() {
         delay: Boolean,
         delayValue: Long,
         onGround: Boolean,
-        watchDog: Boolean = false
+        watchDog: Boolean = false,
     ) {
         val digging = C07PacketPlayerDigging(
             C07PacketPlayerDigging.Action.RELEASE_USE_ITEM,
@@ -210,7 +210,7 @@ object NoSlow : Module() {
     }
 
     private fun sendPacket2(packetType: String) {
-        usingItemFunc()
+        val isUsingItem = usingItemFunc()
         when (packetType.lowercase()) {
             "aac5" -> {
                 mc.netHandler.addToSendQueue(
@@ -597,10 +597,12 @@ object NoSlow : Module() {
 
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
+        var count = 0
+        var lastItem: ItemStack? = null
         val isBlocking =
             mc.thePlayer.isUsingItem && mc.thePlayer.heldItem != null && mc.thePlayer.heldItem.item is ItemSword
         val player = mc.thePlayer ?: return
-        player.currentEquippedItem
+        val currentItem = player.currentEquippedItem
         if (mc.thePlayer == null || mc.theWorld == null || (onlyGround.get() && !mc.thePlayer.onGround))
             return
 

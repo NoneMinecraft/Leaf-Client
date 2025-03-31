@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.client.renderer.GlStateManager
 import net.nonemc.leaf.Leaf
@@ -7,7 +7,7 @@ import net.nonemc.leaf.event.Render2DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.utils.render.ColorUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
@@ -83,9 +83,7 @@ class Crosshair : Module() {
         )
         GL11.glPopMatrix()
         GlStateManager.resetColor()
-        val target = Leaf.combatManager.target/* ?: RaycastUtils.raycastEntity(Reach.hitReach.toDouble()) {
-            it is EntityLivingBase
-        } as EntityLivingBase? */
+        val target = Leaf.combatManager.target
         if (hitMarkerValue.get() && target != null && target.hurtTime > 0) {
             GL11.glPushMatrix()
             GlStateManager.enableBlend()

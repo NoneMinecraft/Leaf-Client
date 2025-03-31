@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.movement.speeds.intave
+﻿package net.nonemc.leaf.features.module.modules.movement.speeds.intave
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.PacketEvent

@@ -1,16 +1,11 @@
-/*
- * FDPClient Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge by LiquidBounce.
- * https://github.com/SkidderMC/FDPClient/
- */
-package net.nonemc.leaf.features.module.modules.movement.speeds.aac
+﻿package net.nonemc.leaf.features.module.modules.movement.speeds.aac
 
 import net.minecraft.block.BlockAir
 import net.minecraft.network.play.client.C03PacketPlayer.C04PacketPlayerPosition
 import net.minecraft.util.BlockPos
 import net.minecraft.util.MathHelper
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.utils.block.BlockUtils.getBlock
 import net.nonemc.leaf.value.FloatValue
 

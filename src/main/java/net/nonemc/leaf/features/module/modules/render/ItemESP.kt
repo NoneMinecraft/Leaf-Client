@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.entity.item.EntityItem
@@ -10,8 +10,9 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.Colors
+import net.nonemc.leaf.utils.render.ColorUtils
 import net.nonemc.leaf.utils.render.ColorUtils.rainbow
+import net.nonemc.leaf.utils.render.GetColorUtils
 import net.nonemc.leaf.utils.render.RenderUtils
 import net.nonemc.leaf.utils.render.shader.shaders.GlowShader
 import net.nonemc.leaf.utils.render.shader.shaders.OutlineShader
@@ -253,7 +254,7 @@ class ItemESP : Module() {
                             endx - 0.5,
                             endy - 0.5,
                             1.0,
-                            Colors.getColor(0, 0, 0, 0),
+                            GetColorUtils.getColor(0, 0, 0, 0),
                             Color(255, 255, 255).rgb
                         )
                         RenderUtils.rectangleBordered(
@@ -262,8 +263,8 @@ class ItemESP : Module() {
                             endx + 0.5,
                             endy + 0.5,
                             1.0,
-                            Colors.getColor(0, 0),
-                            Colors.getColor(0, 150)
+                            GetColorUtils.getColor(0, 0),
+                            GetColorUtils.getColor(0, 150)
                         )
                         RenderUtils.rectangleBordered(
                             x + 1.5,
@@ -271,8 +272,8 @@ class ItemESP : Module() {
                             endx - 1.5,
                             endy - 1.5,
                             1.0,
-                            Colors.getColor(0, 0),
-                            Colors.getColor(0, 150)
+                            GetColorUtils.getColor(0, 0),
+                            GetColorUtils.getColor(0, 150)
                         )
                         val health = 20f
                         val progress = health / 20f
@@ -280,7 +281,7 @@ class ItemESP : Module() {
                         RenderUtils.rectangleBordered(
                             x - 6.5, y - 0.5, x - 2.5,
                             endy, 1.0, Color(30, 255, 30).rgb,
-                            Colors.getColor(0, 150)
+                            GetColorUtils.getColor(0, 150)
                         )
                         //RenderUtils.rectangle((x - 5.5), (endy - 1.0), (x - 3.5),
                         //         healthLocation,  customColor.getRGB());
@@ -291,7 +292,7 @@ class ItemESP : Module() {
                                 RenderUtils.rectangle(
                                     x - 6.5, endy - 0.5 + dThing,
                                     x - 2.5, endy - 0.5 + dThing - 1.0,
-                                    Colors.getColor(0)
+                                    GetColorUtils.getColor(0)
                                 )
                             }
                         }

@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.movement.flys.other
+﻿package net.nonemc.leaf.features.module.modules.movement.flys.other
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.nonemc.leaf.event.EventState

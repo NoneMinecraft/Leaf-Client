@@ -23,10 +23,11 @@ import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.features.module.ModuleCategory;
 import net.nonemc.leaf.features.module.ModuleInfo;
 import net.nonemc.leaf.ui.font.GameFontRenderer;
-import net.nonemc.leaf.utils.MobsUtils;
+import net.nonemc.leaf.utils.entity.MobsUtils;
 import net.nonemc.leaf.utils.item.ItemUtils;
 import net.nonemc.leaf.utils.render.BlendUtils;
 import net.nonemc.leaf.utils.render.ColorUtils;
+import net.nonemc.leaf.utils.render.GetColorUtils;
 import net.nonemc.leaf.utils.render.RenderUtils;
 import net.nonemc.leaf.value.BoolValue;
 import net.nonemc.leaf.value.FloatValue;
@@ -50,7 +51,6 @@ import java.util.List;
 @ModuleInfo(name = "ESP2D", category = ModuleCategory.RENDER)
 public final class ESP2D extends Module {
 
-    public static List collectedEntities = new ArrayList();
     public final BoolValue outline = new BoolValue("Outline", true);
     public final ListValue boxMode = new ListValue("Mode", new String[]{"Box", "Corners"}, "Box");
     public final BoolValue healthBar = new BoolValue("Health-bar", true);
@@ -78,6 +78,7 @@ public final class ESP2D extends Module {
     private final FloatValue brightnessValue = new FloatValue("Brightness", 1F, 0F, 1F);
     private final FloatValue fontScaleValue = new FloatValue("Font-Scale", 0.5F, 0F, 1F);
     private final BoolValue colorTeam = new BoolValue("Team", false);
+    public static List collectedEntities = new ArrayList();
     private final IntBuffer viewport;
     private final FloatBuffer modelview;
     private final FloatBuffer projection;
@@ -96,12 +97,9 @@ public final class ESP2D extends Module {
         this.black = Color.BLACK.getRGB();
     }
 
-    public static boolean shouldCancelNameTag(EntityLivingBase entity) {
-        return Leaf.moduleManager.getModule(ESP2D.class) != null && Leaf.moduleManager.getModule(ESP2D.class).getState() && Leaf.moduleManager.getModule(ESP2D.class).tagsValue.get() && collectedEntities.contains(entity);
-    }
-
     public Color getColor(final Entity entity) {
-        if (entity instanceof EntityLivingBase entityLivingBase) {
+        if (entity instanceof EntityLivingBase) {
+            final EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
 
             if (entityLivingBase.hurtTime > 0)
                 return Color.RED;
@@ -140,6 +138,10 @@ public final class ESP2D extends Module {
         }
     }
 
+    public static boolean shouldCancelNameTag(EntityLivingBase entity) {
+        return Leaf.moduleManager.getModule(ESP2D.class) != null && Leaf.moduleManager.getModule(ESP2D.class).getState() && Leaf.moduleManager.getModule(ESP2D.class).tagsValue.get() && collectedEntities.contains(entity);
+    }
+
     @Override
     public void onDisable() {
         collectedEntities.clear();
@@ -170,9 +172,9 @@ public final class ESP2D extends Module {
             Entity entity = (Entity) collectedEntities.get(i);
             int color = getColor(entity).getRGB();
             if (RenderUtils.isInViewFrustrum(entity)) {
-                double x = RenderUtils.interpolate(entity.posX, entity.lastTickPosX, (double) partialTicks);
-                double y = RenderUtils.interpolate(entity.posY, entity.lastTickPosY, (double) partialTicks);
-                double z = RenderUtils.interpolate(entity.posZ, entity.lastTickPosZ, (double) partialTicks);
+                double x = RenderUtils.interpolate(entity.posX, entity.lastTickPosX, partialTicks);
+                double y = RenderUtils.interpolate(entity.posY, entity.lastTickPosY, partialTicks);
+                double z = RenderUtils.interpolate(entity.posZ, entity.lastTickPosZ, partialTicks);
                 double width = (double) entity.width / 1.5D;
                 double height = (double) entity.height + (entity.isSneaking() ? -0.3D : 0.2D);
                 AxisAlignedBB aabb = new AxisAlignedBB(x - width, y, z - width, x + width, y + height, z + width);
@@ -408,6 +410,6 @@ public final class ESP2D extends Module {
         GL11.glGetFloat(2982, this.modelview);
         GL11.glGetFloat(2983, this.projection);
         GL11.glGetInteger(2978, this.viewport);
-        return GLU.gluProject((float) x, (float) y, (float) z, this.modelview, this.projection, this.viewport, this.vector) ? new Vector3d((double) (this.vector.get(0) / (float) scaleFactor), (double) (((float) Display.getHeight() - this.vector.get(1)) / (float) scaleFactor), (double) this.vector.get(2)) : null;
+        return GLU.gluProject((float) x, (float) y, (float) z, this.modelview, this.projection, this.viewport, this.vector) ? new Vector3d(this.vector.get(0) / (float) scaleFactor, ((float) Display.getHeight() - this.vector.get(1)) / (float) scaleFactor, this.vector.get(2)) : null;
     }
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -18,7 +18,7 @@ import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.utils.block.BlockUtils.getBlock
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.BoolValue
@@ -92,9 +92,9 @@ class HighJump : Module() {
             }
 
             "matrixWater" -> {
-                if (mc.thePlayer.isInWater()) {
+                if (mc.thePlayer.isInWater) {
                     if (mc.theWorld.getBlockState(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1, mc.thePlayer.posZ))
-                            .getBlock() == Block.getBlockById(9)
+                            .block == Block.getBlockById(9)
                     ) {
                         mc.thePlayer.motionY = 0.18
                     } else if (mc.theWorld.getBlockState(
@@ -103,7 +103,7 @@ class HighJump : Module() {
                                 mc.thePlayer.posY,
                                 mc.thePlayer.posZ
                             )
-                        ).getBlock() == Block.getBlockById(9)
+                        ).block == Block.getBlockById(9)
                     ) {
                         mc.thePlayer.motionY = heightValue.get().toDouble()
                         mc.thePlayer.onGround = true

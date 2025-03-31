@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.client.renderer.GlStateManager.*
 import net.minecraft.entity.EntityLivingBase
@@ -87,10 +87,10 @@ class NameTags : Module() {
     }
 
     private fun renderNameTag(entity: EntityLivingBase, tag: String) {
-        if (onlyTarget.get() && entity != Leaf.combatManager.target && entity.getName() != entityKeep) {
+        if (onlyTarget.get() && entity != Leaf.combatManager.target && entity.name != entityKeep) {
             return
         } else if (onlyTarget.get() && entity == Leaf.combatManager.target) {
-            entityKeep = entity.getName()
+            entityKeep = entity.name
             targetTicks++
             if (targetTicks >= 5) {
                 targetTicks = 4
@@ -113,18 +113,18 @@ class NameTags : Module() {
         // Push
         glPushMatrix()
 
-        // Translate to player position
+        // Translate to entity position
         val renderManager = mc.renderManager
         val timer = mc.timer
 
-        glTranslated( // Translate to player position with render pos and interpolate it
+        glTranslated( // Translate to entity position with render pos and interpolate it
             entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * timer.renderPartialTicks - renderManager.renderPosX,
             entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * timer.renderPartialTicks - renderManager.renderPosY + entity.eyeHeight.toDouble() + translateY.get()
                 .toDouble(),
             entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * timer.renderPartialTicks - renderManager.renderPosZ
         )
 
-        // Rotate view to player
+        // Rotate view to entity
         glRotatef(-mc.renderManager.playerViewY, 0F, 1F, 0F)
         glRotatef(mc.renderManager.playerViewX, 1F, 0F, 0F)
 
@@ -265,7 +265,7 @@ class NameTags : Module() {
                 var foundPotion = false
                 if (potionValue.get() && entity is EntityPlayer) {
                     val potions =
-                        (entity.getActivePotionEffects() as Collection<PotionEffect>).map { Potion.potionTypes[it.getPotionID()] }
+                        (entity.getActivePotionEffects() as Collection<PotionEffect>).map { Potion.potionTypes[it.potionID] }
                             .filter { it.hasStatusIcon() }
                     if (!potions.isEmpty()) {
                         foundPotion = true
@@ -282,8 +282,8 @@ class NameTags : Module() {
                         enableRescaleNormal()
                         for (potion in potions) {
                             color(1.0F, 1.0F, 1.0F, 1.0F)
-                            mc.getTextureManager().bindTexture(inventoryBackground)
-                            val i1 = potion.getStatusIconIndex()
+                            mc.textureManager.bindTexture(inventoryBackground)
+                            val i1 = potion.statusIconIndex
                             drawTexturedModalRect(
                                 minX + index * 20,
                                 -22,

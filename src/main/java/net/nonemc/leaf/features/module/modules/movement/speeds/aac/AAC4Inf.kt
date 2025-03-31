@@ -1,7 +1,7 @@
-package net.nonemc.leaf.features.module.modules.movement.speeds.aac
+﻿package net.nonemc.leaf.features.module.modules.movement.speeds.aac
 
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 
 class AAC4Inf : SpeedMode("AAC4Inf") {
     override fun onUpdate() {

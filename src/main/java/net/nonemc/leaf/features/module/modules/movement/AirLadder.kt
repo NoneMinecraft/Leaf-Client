@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.movement
+﻿package net.nonemc.leaf.features.module.modules.movement
 
 import net.minecraft.block.BlockLadder
 import net.minecraft.block.BlockVine

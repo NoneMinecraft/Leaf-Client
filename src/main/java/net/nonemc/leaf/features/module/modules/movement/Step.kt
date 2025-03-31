@@ -1,9 +1,12 @@
-package net.nonemc.leaf.features.module.modules.movement
+﻿package net.nonemc.leaf.features.module.modules.movement
 
 import net.minecraft.network.play.client.C03PacketPlayer
 import net.minecraft.stats.StatList
 import net.nonemc.leaf.Leaf
-import net.nonemc.leaf.event.*
+import net.nonemc.leaf.event.EventState
+import net.nonemc.leaf.event.EventTarget
+import net.nonemc.leaf.event.StepEvent
+import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo

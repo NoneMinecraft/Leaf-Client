@@ -1,9 +1,9 @@
-package net.nonemc.leaf.features.module.modules.movement.longjumps
+﻿package net.nonemc.leaf.features.module.modules.movement.longjumps
 
 import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.modules.movement.LongJump
-import net.nonemc.leaf.utils.ClassUtils
+import net.nonemc.leaf.utils.misc.ClassUtils
 import net.nonemc.leaf.utils.MinecraftInstance
 import net.nonemc.leaf.value.Value
 

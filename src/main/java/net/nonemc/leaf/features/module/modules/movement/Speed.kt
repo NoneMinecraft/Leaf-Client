@@ -1,18 +1,17 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
 package net.nonemc.leaf.features.module.modules.movement
 
-import net.nonemc.leaf.Leaf
 import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.features.module.modules.movement.speeds.SpeedMode
-import net.nonemc.leaf.utils.ClassUtils
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.misc.ClassUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.ListValue
 import org.lwjgl.input.Keyboard
@@ -76,11 +75,7 @@ class Speed : Module() {
         if (mc.thePlayer.isSneaking || (mc.thePlayer.isInWater && noWater.get())) {
             return
         }
-
         mode.onMove(event)
-        if (event != null) {
-            Leaf.moduleManager[TargetStrafe::class.java]!!.doMove(event)
-        }
     }
 
     @EventTarget

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -10,8 +10,8 @@ import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.features.module.modules.movement.longjumps.LongJumpMode
-import net.nonemc.leaf.utils.ClassUtils
-import net.nonemc.leaf.utils.MovementUtils
+import net.nonemc.leaf.utils.misc.ClassUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.ListValue
 
@@ -23,7 +23,7 @@ class LongJump : Module() {
             .sortedBy { it.modeName }
 
     private val mode: LongJumpMode
-        get() = modes.find { modeValue.equals(it.modeName) } ?: throw NullPointerException() // this should not happen
+        get() = modes.find { modeValue.equals(it.modeName) } ?: throw NullPointerException()
 
     val modeValue: ListValue = object : ListValue("Mode", modes.map { it.modeName }.toTypedArray(), "NCP") {
         override fun onChange(oldValue: String, newValue: String) {
@@ -113,11 +113,6 @@ class LongJump : Module() {
 
     override val tag: String
         get() = modeValue.get()
-
-    /**
-     * 读取mode中的value并和本体中的value合并
-     * 所有的value必须在这个之前初始化
-     */
     override val values = super.values.toMutableList()
         .also { modes.map { mode -> mode.values.forEach { value -> it.add(value.displayable { modeValue.equals(mode.modeName) }) } } }
 }

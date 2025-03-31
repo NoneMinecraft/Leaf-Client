@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.entity.EntityLivingBase
 import net.nonemc.leaf.event.EventTarget
@@ -7,7 +7,7 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.EntityUtils
+import net.nonemc.leaf.utils.entity.EntityUtils
 import net.nonemc.leaf.utils.extensions.hurtPercent
 import net.nonemc.leaf.utils.render.ColorUtils
 import net.nonemc.leaf.utils.render.RenderUtils
@@ -118,8 +118,7 @@ class PointerESP : Module() {
                 val rotY = -(pos2 * cos - pos1 * sin)
                 val rotX = -(pos1 * cos + pos2 * sin)
                 val angle = (atan2(rotY, rotX) * 180 / Math.PI).toFloat() + 90f
-                RenderUtils.glColor(
-                    if (entity.hurtTime > 0) {
+                RenderUtils.glColor(if (entity.hurtTime > 0) {
                     if (smoothDamageColorValue.get()) {
                         val percent = entity.hurtPercent.let {
                             if (it > 0.5) {

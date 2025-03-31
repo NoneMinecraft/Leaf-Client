@@ -1,7 +1,8 @@
-package net.nonemc.leaf.features.module.modules.movement
+﻿package net.nonemc.leaf.features.module.modules.movement
 
 import net.minecraft.network.play.client.C0BPacketEntityAction
 import net.minecraft.potion.Potion
+import net.nonemc.leaf.data.Rotation
 import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.event.PacketEvent
 import net.nonemc.leaf.event.UpdateEvent
@@ -9,9 +10,8 @@ import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
 import net.nonemc.leaf.features.module.modules.combat.Aura.sprintValue
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.Rotation
-import net.nonemc.leaf.utils.RotationUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
+import net.nonemc.leaf.utils.rotation.RotationUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue

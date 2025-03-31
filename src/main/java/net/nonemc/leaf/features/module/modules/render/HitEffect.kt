@@ -1,4 +1,4 @@
-package net.nonemc.leaf.features.module.modules.render
+﻿package net.nonemc.leaf.features.module.modules.render
 
 import net.minecraft.block.Block
 import net.minecraft.client.audio.PositionedSoundRecord
@@ -14,8 +14,8 @@ import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.EntityUtils
-import net.nonemc.leaf.utils.misc.RandomUtils
+import net.nonemc.leaf.utils.entity.EntityUtils
+import net.nonemc.leaf.utils.math.RandomUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Leaf Hacked Client
  * Code by NoneMinecraft
  */
@@ -14,15 +14,16 @@ import net.nonemc.leaf.event.*
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.MovementUtils
-import net.nonemc.leaf.utils.PacketUtils
+import net.nonemc.leaf.utils.entity.MovementUtils
+import net.nonemc.leaf.utils.packet.PacketUtils
 import net.nonemc.leaf.utils.block.BlockUtils
 import net.nonemc.leaf.utils.block.BlockUtils.getBlock
 import net.nonemc.leaf.utils.timer.MSTimer
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
-import kotlin.math.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 @ModuleInfo(name = "Jesus", category = ModuleCategory.MOVEMENT)
 class Jesus : Module() {
@@ -73,13 +74,13 @@ class Jesus : Module() {
             }
 
             "jump" -> {
-                if (BlockUtils.getBlock(blockPos) === Blocks.water && mc.thePlayer.onGround) {
+                if (getBlock(blockPos) === Blocks.water && mc.thePlayer.onGround) {
                     mc.thePlayer.motionY = jumpMotionValue.get().toDouble()
                 }
             }
 
             "aac" -> {
-                if (!mc.thePlayer.onGround && BlockUtils.getBlock(blockPos) === Blocks.water || mc.thePlayer.isInWater) {
+                if (!mc.thePlayer.onGround && getBlock(blockPos) === Blocks.water || mc.thePlayer.isInWater) {
                     if (!mc.thePlayer.isSprinting) {
                         mc.thePlayer.motionX *= 0.99999
                         mc.thePlayer.motionY *= 0.0
@@ -114,9 +115,9 @@ class Jesus : Module() {
                         return
                     }
                     val block =
-                        BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1, mc.thePlayer.posZ))
+                        getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1, mc.thePlayer.posZ))
                     val blockUp =
-                        BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1.1, mc.thePlayer.posZ))
+                        getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + 1.1, mc.thePlayer.posZ))
                     if (blockUp is BlockLiquid) {
                         mc.thePlayer.motionY = 0.1
                     } else if (block is BlockLiquid) {
@@ -170,7 +171,7 @@ class Jesus : Module() {
             }
 
             "aac4.2.1" -> {
-                if (!mc.thePlayer.onGround && BlockUtils.getBlock(blockPos) === Blocks.water || mc.thePlayer.isInWater) {
+                if (!mc.thePlayer.onGround && getBlock(blockPos) === Blocks.water || mc.thePlayer.isInWater) {
                     mc.thePlayer.motionY *= 0.0
                     mc.thePlayer.jumpMovementFactor = 0.08f
                     if (mc.thePlayer.fallDistance > 0) {
@@ -304,7 +305,7 @@ class Jesus : Module() {
             return
         }
 
-        val block = BlockUtils.getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.01, mc.thePlayer.posZ))
+        val block = getBlock(BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - 0.01, mc.thePlayer.posZ))
         if ((noJumpValue.get() || modeValue.get().equals("Vulcan")) && block is BlockLiquid) {
             event.cancelEvent()
         }
