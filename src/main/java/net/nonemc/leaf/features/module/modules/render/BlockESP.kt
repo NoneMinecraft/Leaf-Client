@@ -9,11 +9,11 @@ import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.block.BlockUtils.getBlock
-import net.nonemc.leaf.utils.block.BlockUtils.getBlockName
-import net.nonemc.leaf.utils.render.ColorUtils.rainbow
-import net.nonemc.leaf.utils.render.RenderUtils
-import net.nonemc.leaf.utils.timer.MSTimer
+import net.nonemc.leaf.libs.block.BlockLib.getBlock
+import net.nonemc.leaf.libs.block.BlockLib.getBlockName
+import net.nonemc.leaf.libs.render.ColorUtils.rainbow
+import net.nonemc.leaf.libs.render.RenderUtils
+import net.nonemc.leaf.libs.timer.MSTimer
 import net.nonemc.leaf.value.*
 import java.awt.Color
 

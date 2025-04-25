@@ -8,9 +8,9 @@ import net.nonemc.leaf.event.WorldEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.entity.EntityUtils
-import net.nonemc.leaf.utils.render.ColorUtils.rainbow
-import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.libs.entity.EntityTypeLib
+import net.nonemc.leaf.libs.render.ColorUtils.rainbow
+import net.nonemc.leaf.libs.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
@@ -192,7 +192,7 @@ class Breadcrumbs : Module() {
         }
         if (drawTargetsValue.get()) {
             mc.theWorld.loadedEntityList.forEach {
-                if (EntityUtils.isSelected(it, true)) {
+                if (EntityTypeLib.isSelected(it, true)) {
                     updatePoints(it as EntityLivingBase)
                 }
             }

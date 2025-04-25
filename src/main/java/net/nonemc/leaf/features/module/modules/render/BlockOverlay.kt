@@ -9,11 +9,11 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.ui.font.Fonts
-import net.nonemc.leaf.utils.block.BlockUtils.canBeClicked
-import net.nonemc.leaf.utils.block.BlockUtils.getBlock
-import net.nonemc.leaf.utils.render.ColorUtils
-import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.font.Fonts
+import net.nonemc.leaf.libs.block.BlockLib.canBeClicked
+import net.nonemc.leaf.libs.block.BlockLib.getBlock
+import net.nonemc.leaf.libs.render.ColorUtils
+import net.nonemc.leaf.libs.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue

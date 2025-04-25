@@ -7,9 +7,9 @@ import net.nonemc.leaf.event.UpdateEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.misc.FallingPlayer
-import net.nonemc.leaf.utils.render.ColorUtils
-import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.libs.entity.EntityFallLib
+import net.nonemc.leaf.libs.render.ColorUtils
+import net.nonemc.leaf.libs.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
@@ -38,7 +38,7 @@ class PrevFallPos : Module() {
     @EventTarget
     fun onUpdate(event: UpdateEvent) {
         pos = if (!mc.thePlayer.onGround) {
-            val fallingPlayer = FallingPlayer(mc.thePlayer)
+            val fallingPlayer = EntityFallLib(mc.thePlayer)
             val collLoc = fallingPlayer.findCollision(60)
             if (abs((collLoc?.y ?: 0) - mc.thePlayer.posY) > (fallDistValue.get() + 1)) {
                 collLoc

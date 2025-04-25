@@ -11,8 +11,8 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.rotation.RotationUtils
-import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.libs.rotation.RotationBaseLib
+import net.nonemc.leaf.libs.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import org.lwjgl.opengl.GL11
 import java.awt.Color
@@ -21,7 +21,6 @@ import java.awt.Color
 class Projectiles : Module() {
 
     private val dynamicBowPower = BoolValue("DynamicBowPower", true)
-
     @EventTarget
     fun onRender3D(event: Render3DEvent) {
         mc.thePlayer.heldItem ?: return
@@ -76,14 +75,14 @@ class Projectiles : Module() {
         }
 
         // Yaw and pitch of entity
-        val yaw = if (RotationUtils.targetRotation != null) {
-            RotationUtils.targetRotation.yaw
+        val yaw = if (RotationBaseLib.targetRotation != null) {
+            RotationBaseLib.targetRotation.yaw
         } else {
             mc.thePlayer.rotationYaw
         }
 
-        val pitch = if (RotationUtils.targetRotation != null) {
-            RotationUtils.targetRotation.pitch
+        val pitch = if (RotationBaseLib.targetRotation != null) {
+            RotationBaseLib.targetRotation.pitch
         } else {
             mc.thePlayer.rotationPitch
         }

@@ -3,8 +3,8 @@
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.render.ColorUtils
-import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.libs.render.ColorUtils
+import net.nonemc.leaf.libs.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
 import org.lwjgl.opengl.GL11

@@ -11,9 +11,9 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.render.RenderUtils
-import net.nonemc.leaf.utils.render.shader.shaders.GlowShader
-import net.nonemc.leaf.utils.render.shader.shaders.OutlineShader
+import net.nonemc.leaf.libs.render.RenderUtils
+import net.nonemc.leaf.libs.render.shader.shaders.GlowShader
+import net.nonemc.leaf.libs.render.shader.shaders.OutlineShader
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.ListValue
@@ -29,8 +29,6 @@ class StorageESP : Module() {
     )
     private val outlineWidthValue =
         FloatValue("Outline-Width", 3f, 0.5f, 5f).displayable { modeValue.equals("Outline") }
-    private val chestValue = BoolValue("Chest", true)
-    private val enderChestValue = BoolValue("EnderChest", true)
     private val furnaceValue = BoolValue("Furnace", true)
     private val dispenserValue = BoolValue("Dispenser", true)
     private val hopperValue = BoolValue("Hopper", true)

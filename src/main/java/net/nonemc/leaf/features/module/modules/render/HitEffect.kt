@@ -14,8 +14,8 @@ import net.nonemc.leaf.event.EventTarget
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.entity.EntityUtils
-import net.nonemc.leaf.utils.math.RandomUtils
+import net.nonemc.leaf.libs.random.randomFloat
+import net.nonemc.leaf.libs.entity.EntityTypeLib
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
@@ -33,7 +33,7 @@ class HitEffect : Module() {
 
     @EventTarget
     fun onAttack(event: AttackEvent) {
-        if (timingValue.equals("Attack") && EntityUtils.isSelected(event.targetEntity, true)) {
+        if (timingValue.equals("Attack") && EntityTypeLib.isSelected(event.targetEntity, true)) {
             displayEffectFor(event.targetEntity as EntityLivingBase)
         }
     }
@@ -82,9 +82,9 @@ class HitEffect : Module() {
                             entity.posX,
                             entity.posY + entity.height / 2,
                             entity.posZ,
-                            entity.motionX + RandomUtils.nextFloat(-0.5f, 0.5f),
-                            entity.motionY + RandomUtils.nextFloat(-0.5f, 0.5f),
-                            entity.motionZ + RandomUtils.nextFloat(-0.5f, 0.5f),
+                            entity.motionX + randomFloat(-0.5f, 0.5f),
+                            entity.motionY + randomFloat(-0.5f, 0.5f),
+                            entity.motionZ + randomFloat(-0.5f, 0.5f),
                             blockState
                         )
                     }

@@ -10,8 +10,8 @@ import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.entity.MovementUtils
-import net.nonemc.leaf.utils.packet.PacketUtils
+import net.nonemc.leaf.libs.entity.EntityMoveLib
+import net.nonemc.leaf.libs.packet.PacketLib
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 
@@ -78,7 +78,7 @@ class FreeCam : Module() {
             mc.thePlayer.motionZ = 0.0
             if (mc.gameSettings.keyBindJump.isKeyDown) mc.thePlayer.motionY += value.toDouble()
             if (mc.gameSettings.keyBindSneak.isKeyDown) mc.thePlayer.motionY -= value.toDouble()
-            MovementUtils.strafe(value)
+            EntityMoveLib.strafe(value)
         }
     }
 
@@ -89,7 +89,7 @@ class FreeCam : Module() {
             if (packet is C03PacketPlayer.C04PacketPlayerPosition || packet is C03PacketPlayer.C05PacketPlayerLook || packet is C03PacketPlayer.C06PacketPlayerPosLook) {
                 if (packetCount >= 20) {
                     packetCount = 0
-                    PacketUtils.sendPacketNoEvent(
+                    PacketLib.sendPacketNoEvent(
                         C03PacketPlayer.C06PacketPlayerPosLook(
                             fakePlayer!!.posX,
                             fakePlayer!!.posY,
@@ -101,7 +101,7 @@ class FreeCam : Module() {
                     )
                 } else {
                     packetCount++
-                    PacketUtils.sendPacketNoEvent(C03PacketPlayer(fakePlayer!!.onGround))
+                    PacketLib.sendPacketNoEvent(C03PacketPlayer(fakePlayer!!.onGround))
                 }
                 event.cancelEvent()
             }
@@ -116,7 +116,7 @@ class FreeCam : Module() {
             motionY = 0.0
             motionZ = 0.0
             // apply the flag to bypass some anticheat
-            PacketUtils.sendPacketNoEvent(
+            PacketLib.sendPacketNoEvent(
                 C03PacketPlayer.C06PacketPlayerPosLook(
                     fakePlayer!!.posX,
                     fakePlayer!!.posY,

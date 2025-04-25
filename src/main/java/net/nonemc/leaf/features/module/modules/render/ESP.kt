@@ -11,15 +11,15 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.ui.font.GameFontRenderer.Companion.getColorIndex
-import net.nonemc.leaf.utils.entity.EntityUtils
-import net.nonemc.leaf.utils.extensions.drawCenteredString
-import net.nonemc.leaf.utils.render.ColorUtils
-import net.nonemc.leaf.utils.render.RenderUtils
-import net.nonemc.leaf.utils.render.WorldToScreen
-import net.nonemc.leaf.utils.render.shader.FramebufferShader
-import net.nonemc.leaf.utils.render.shader.shaders.GlowShader
-import net.nonemc.leaf.utils.render.shader.shaders.OutlineShader
+import net.nonemc.leaf.font.GameFontRenderer.Companion.getColorIndex
+import net.nonemc.leaf.libs.entity.EntityTypeLib
+import net.nonemc.leaf.libs.extensions.drawCenteredString
+import net.nonemc.leaf.libs.render.ColorUtils
+import net.nonemc.leaf.libs.render.RenderUtils
+import net.nonemc.leaf.libs.render.WorldToScreen
+import net.nonemc.leaf.libs.render.shader.FramebufferShader
+import net.nonemc.leaf.libs.render.shader.shaders.GlowShader
+import net.nonemc.leaf.libs.render.shader.shaders.OutlineShader
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
@@ -98,7 +98,7 @@ class ESP : Module() {
         }
 
         for (entity in mc.theWorld.loadedEntityList) {
-            if (EntityUtils.isSelected(entity, true)) {
+            if (EntityTypeLib.isSelected(entity, true)) {
                 val entityLiving = entity as EntityLivingBase
                 val color = getColor(entityLiving)
                 when (mode) {
@@ -304,7 +304,7 @@ class ESP : Module() {
             for (i in 0..1) {
                 shader.startDraw(partialTicks)
                 for (entity in mc.theWorld.loadedEntityList) {
-                    if (EntityUtils.isSelected(entity, false)) {
+                    if (EntityTypeLib.isSelected(entity, false)) {
                         val entityLivingBase = entity as EntityLivingBase
                         if (firstRun && entityLivingBase.hurtTime > 0) {
                             hurtingEntities.add(entityLivingBase)
@@ -347,7 +347,7 @@ class ESP : Module() {
         // search
         val entityMap: MutableMap<Color, ArrayList<EntityLivingBase>> = HashMap()
         for (entity in mc.theWorld.loadedEntityList) {
-            if (EntityUtils.isSelected(entity, false)) {
+            if (EntityTypeLib.isSelected(entity, false)) {
                 val entityLiving = entity as EntityLivingBase
                 val color = getColor(entityLiving)
                 if (!entityMap.containsKey(color)) {
@@ -373,7 +373,7 @@ class ESP : Module() {
     fun getColor(entity: Entity): Color {
         if (entity is EntityLivingBase) {
             if (entity.hurtTime > 0) return Color.RED
-            if (EntityUtils.isFriend(entity)) return Color.BLUE
+            if (EntityTypeLib.isFriend(entity)) return Color.BLUE
             if (colorModeValue.get() == "Name") {
                 val chars = entity.displayName.formattedText.toCharArray()
                 for (i in chars.indices) {

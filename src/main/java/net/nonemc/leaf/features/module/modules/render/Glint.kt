@@ -3,7 +3,7 @@
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.render.ColorUtils
+import net.nonemc.leaf.libs.render.ColorUtils
 import net.nonemc.leaf.value.IntegerValue
 import net.nonemc.leaf.value.ListValue
 import java.awt.Color

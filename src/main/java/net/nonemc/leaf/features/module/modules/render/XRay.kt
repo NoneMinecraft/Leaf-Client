@@ -8,6 +8,8 @@ import net.nonemc.leaf.features.module.EnumAutoDisableType
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
+import net.nonemc.leaf.file.saveConfig
+import net.nonemc.leaf.file.xrayConfig
 
 @ModuleInfo(
     name = "XRay",
@@ -65,7 +67,7 @@ class XRay : Module() {
                                 }
 
                                 xrayBlocks.add(block)
-                                Leaf.fileManager.saveConfig(Leaf.fileManager.xrayConfig)
+                              saveConfig(xrayConfig)
                                 alert("§7Added block §8${block.localizedName}§7.")
                                 playEdit()
                             } catch (exception: NumberFormatException) {
@@ -101,7 +103,7 @@ class XRay : Module() {
                                 }
 
                                 xrayBlocks.remove(block)
-                                Leaf.fileManager.saveConfig(Leaf.fileManager.xrayConfig)
+                                saveConfig(xrayConfig)
                                 alert("§7Removed block §8${block.localizedName}§7.")
                                 playEdit()
                             } catch (exception: NumberFormatException) {

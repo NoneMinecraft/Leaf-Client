@@ -9,8 +9,8 @@ import net.nonemc.leaf.event.WorldEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.entity.EntityUtils
-import net.nonemc.leaf.utils.render.ColorUtils
+import net.nonemc.leaf.libs.entity.EntityTypeLib
+import net.nonemc.leaf.libs.render.ColorUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.IntegerValue
 import org.lwjgl.opengl.GL11
@@ -21,7 +21,6 @@ import kotlin.math.abs
 
 @ModuleInfo(name = "DamageParticle", category = ModuleCategory.RENDER)
 class DamageParticle : Module() {
-
     private val aliveTicksValue = IntegerValue("AliveTicks", 20, 10, 50)
     private val sizeValue = IntegerValue("Size", 3, 1, 7)
     private val colorRedValue = IntegerValue("Red", 68, 0, 255).displayable { !colorRainbowValue.get() }
@@ -37,7 +36,7 @@ class DamageParticle : Module() {
     fun onUpdate(event: UpdateEvent) {
         synchronized(particles) {
             for (entity in mc.theWorld.loadedEntityList) {
-                if (entity is EntityLivingBase && EntityUtils.isSelected(entity, true)) {
+                if (entity is EntityLivingBase && EntityTypeLib.isSelected(entity, true)) {
                     val lastHealth = healthData.getOrDefault(entity.entityId, entity.maxHealth)
                     healthData[entity.entityId] = entity.health
                     if (lastHealth == entity.health) continue

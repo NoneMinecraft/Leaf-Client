@@ -7,10 +7,10 @@ import net.nonemc.leaf.event.Render3DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.entity.EntityUtils
-import net.nonemc.leaf.utils.extensions.hurtPercent
-import net.nonemc.leaf.utils.render.ColorUtils
-import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.libs.entity.EntityTypeLib
+import net.nonemc.leaf.libs.extensions.hurtPercent
+import net.nonemc.leaf.libs.render.ColorUtils
+import net.nonemc.leaf.libs.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
@@ -108,7 +108,7 @@ class PointerESP : Module() {
         GL11.glEnable(GL11.GL_LINE_SMOOTH)
 
         for (entity in mc.theWorld.loadedEntityList) {
-            if (EntityUtils.isSelected(entity, true) && entity is EntityLivingBase) {
+            if (EntityTypeLib.isSelected(entity, true) && entity is EntityLivingBase) {
                 val entX = entity.posX + (entity.posX - entity.lastTickPosX) * mc.timer.renderPartialTicks
                 val entZ = entity.posZ + (entity.posZ - entity.lastTickPosZ) * mc.timer.renderPartialTicks
                 val pos1 = (entX - playerPosX) * 0.2

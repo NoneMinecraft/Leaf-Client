@@ -7,9 +7,9 @@ import net.nonemc.leaf.event.Render2DEvent
 import net.nonemc.leaf.features.module.Module
 import net.nonemc.leaf.features.module.ModuleCategory
 import net.nonemc.leaf.features.module.ModuleInfo
-import net.nonemc.leaf.utils.entity.MovementUtils
-import net.nonemc.leaf.utils.render.ColorUtils
-import net.nonemc.leaf.utils.render.RenderUtils
+import net.nonemc.leaf.libs.entity.EntityMoveLib
+import net.nonemc.leaf.libs.render.ColorUtils
+import net.nonemc.leaf.libs.render.RenderUtils
 import net.nonemc.leaf.value.BoolValue
 import net.nonemc.leaf.value.FloatValue
 import net.nonemc.leaf.value.IntegerValue
@@ -43,7 +43,7 @@ class Crosshair : Module() {
         val width = widthValue.get()
         val size = sizeValue.get()
         val gap = gapValue.get()
-        val isMoving = dynamicValue.get() && MovementUtils.isMoving()
+        val isMoving = dynamicValue.get() && EntityMoveLib.isMoving()
         GL11.glPushMatrix()
         RenderUtils.drawBorderedRect(
             sr.scaledWidth / 2f - width,

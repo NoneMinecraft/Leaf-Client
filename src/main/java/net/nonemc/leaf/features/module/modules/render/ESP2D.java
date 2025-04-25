@@ -1,8 +1,10 @@
 package net.nonemc.leaf.features.module.modules.render;
 
+import kotlin.jvm.JvmStatic;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,10 +12,20 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityGhast;
+import net.minecraft.entity.monster.EntityGolem;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityBat;
+import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.nonemc.leaf.Leaf;
@@ -22,13 +34,12 @@ import net.nonemc.leaf.event.Render2DEvent;
 import net.nonemc.leaf.features.module.Module;
 import net.nonemc.leaf.features.module.ModuleCategory;
 import net.nonemc.leaf.features.module.ModuleInfo;
-import net.nonemc.leaf.ui.font.GameFontRenderer;
-import net.nonemc.leaf.utils.entity.MobsUtils;
-import net.nonemc.leaf.utils.item.ItemUtils;
-import net.nonemc.leaf.utils.render.BlendUtils;
-import net.nonemc.leaf.utils.render.ColorUtils;
-import net.nonemc.leaf.utils.render.GetColorUtils;
-import net.nonemc.leaf.utils.render.RenderUtils;
+import net.nonemc.leaf.features.module.modules.misc.AntiBot;
+import net.nonemc.leaf.features.module.modules.misc.Teams;
+import net.nonemc.leaf.font.GameFontRenderer;
+import net.nonemc.leaf.libs.render.BlendUtils;
+import net.nonemc.leaf.libs.render.ColorUtils;
+import net.nonemc.leaf.libs.render.RenderUtils;
 import net.nonemc.leaf.value.BoolValue;
 import net.nonemc.leaf.value.FloatValue;
 import net.nonemc.leaf.value.IntegerValue;
@@ -47,6 +58,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import static net.nonemc.leaf.file.FileConfigManagerKt.getFriendsConfig;
 
 @ModuleInfo(name = "ESP2D", category = ModuleCategory.RENDER)
 public final class ESP2D extends Module {
@@ -88,6 +101,59 @@ public final class ESP2D extends Module {
 
     private final DecimalFormat dFormat = new DecimalFormat("0.0");
 
+    public static boolean targetInvisible = false;
+    public static boolean targetPlayer = true;
+    public static boolean targetMobs = true;
+    public static boolean targetAnimals = false;
+    public static boolean targetDead = false;
+
+    public static boolean isSelected(final Entity entity, final boolean canAttackCheck) {
+        if (entity instanceof EntityLivingBase && (targetDead || entity.isEntityAlive()) && entity != mc.thePlayer) {
+            if (targetInvisible || !entity.isInvisible()) {
+                if (targetPlayer && entity instanceof EntityPlayer) {
+                    final EntityPlayer entityPlayer = (EntityPlayer) entity;
+
+                    if (canAttackCheck) {
+                        if (AntiBot.isBot(entityPlayer))
+                            return false;
+
+                        if (entityPlayer.isSpectator())
+                            return false;
+
+                        final Teams teams = Leaf.moduleManager.getModule(Teams.class);
+                        return !teams.getState() || !teams.isInYourTeam(entityPlayer);
+                    }
+
+                    return true;
+                }
+
+                return targetMobs && isMob(entity) || targetAnimals && isAnimal(entity);
+
+            }
+        }
+        return false;
+    }
+
+    public static boolean isFriend(final Entity entity) {
+        return entity instanceof EntityPlayer && entity.getName() != null &&
+                getFriendsConfig().isFriend(ColorUtils.stripColor(entity.getName()));
+    }
+
+    public static boolean isAnimal(final Entity entity) {
+        return entity instanceof EntityAnimal || entity instanceof EntitySquid || entity instanceof EntityGolem ||
+                entity instanceof EntityBat;
+    }
+
+    public static boolean isMob(final Entity entity) {
+        return entity instanceof EntityMob || entity instanceof EntityVillager || entity instanceof EntitySlime ||
+                entity instanceof EntityGhast || entity instanceof EntityDragon;
+    }
+
+    public static String getName(final NetworkPlayerInfo networkPlayerInfoIn) {
+        return networkPlayerInfoIn.getDisplayName() != null ? networkPlayerInfoIn.getDisplayName().getFormattedText() :
+                ScorePlayerTeam.formatPlayerName(networkPlayerInfoIn.getPlayerTeam(), networkPlayerInfoIn.getGameProfile().getName());
+    }
+
     public ESP2D() {
         this.viewport = GLAllocation.createDirectIntBuffer(16);
         this.modelview = GLAllocation.createDirectFloatBuffer(16);
@@ -104,7 +170,7 @@ public final class ESP2D extends Module {
             if (entityLivingBase.hurtTime > 0)
                 return Color.RED;
 
-            if (MobsUtils.isFriend(entityLivingBase))
+            if (isFriend(entityLivingBase))
                 return Color.BLUE;
 
             if (colorTeam.get()) {
@@ -138,15 +204,18 @@ public final class ESP2D extends Module {
         }
     }
 
-    public static boolean shouldCancelNameTag(EntityLivingBase entity) {
-        return Leaf.moduleManager.getModule(ESP2D.class) != null && Leaf.moduleManager.getModule(ESP2D.class).getState() && Leaf.moduleManager.getModule(ESP2D.class).tagsValue.get() && collectedEntities.contains(entity);
-    }
-
     @Override
     public void onDisable() {
         collectedEntities.clear();
     }
-
+    @JvmStatic
+    public static int getItemDurability(ItemStack stack) {
+        if (stack == null) {
+            return 0;
+        } else {
+            return stack.getMaxDamage() - stack.getItemDamage();
+        }
+    }
     @EventTarget
     public void onRender2D(Render2DEvent event) {
         GL11.glPushMatrix();
@@ -289,7 +358,7 @@ public final class ESP2D extends Module {
                                         RenderUtils.newDrawRect(endPosX + 2.0D,
                                                 endPosY + 0.5D - theHeight * (m - 1) - 0.25D,
                                                 endPosX + 3.0D,
-                                                endPosY + 0.5D - theHeight * (m - 1) - 0.25D - (constHeight - 0.25D) * MathHelper.clamp_double((double) ItemUtils.getItemDurability(armorStack) / (double) armorStack.getMaxDamage(), 0D, 1D), new Color(0, 255, 255).getRGB());
+                                                endPosY + 0.5D - theHeight * (m - 1) - 0.25D - (constHeight - 0.25D) * MathHelper.clamp_double((double) getItemDurability(armorStack) / (double) armorStack.getMaxDamage(), 0D, 1D), new Color(0, 255, 255).getRGB());
                                     }
                                 }
                             } else {
@@ -321,7 +390,7 @@ public final class ESP2D extends Module {
                             if (armorStack != null && armorStack.getItem() != null) {
                                 renderItemStack(armorStack, endPosX + (armor ? 4.0D : 2.0D), posY + (yDist * (4 - j)) + (yDist / 2.0D) - 5.0D);
                                 if (armorDur.get())
-                                    drawScaledCenteredString(ItemUtils.getItemDurability(armorStack) + "", endPosX + (armor ? 4.0D : 2.0D) + 4.5D, posY + (yDist * (4 - j)) + (yDist / 2.0D) + 4.0D, fontScaleValue.get(), -1);
+                                    drawScaledCenteredString(getItemDurability(armorStack) + "", endPosX + (armor ? 4.0D : 2.0D) + 4.5D, posY + (yDist * (4 - j)) + (yDist / 2.0D) + 4.0D, fontScaleValue.get(), -1);
                             }
                         }
                     }
@@ -399,7 +468,7 @@ public final class ESP2D extends Module {
 
         for (int playerEntitiesSize = playerEntities.size(); i < playerEntitiesSize; ++i) {
             Entity entity = (Entity) playerEntities.get(i);
-            if (MobsUtils.isSelected(entity, false) || (localPlayer.get() && entity instanceof EntityPlayerSP && mc.gameSettings.thirdPersonView != 0) || (droppedItems.get() && entity instanceof EntityItem)) {
+            if (isSelected(entity, false) || (localPlayer.get() && entity instanceof EntityPlayerSP && mc.gameSettings.thirdPersonView != 0) || (droppedItems.get() && entity instanceof EntityItem)) {
                 collectedEntities.add(entity);
             }
         }
