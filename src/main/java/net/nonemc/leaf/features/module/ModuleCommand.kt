@@ -2,15 +2,10 @@
 
 import net.minecraft.block.Block
 import net.nonemc.leaf.features.command.Command
-import net.nonemc.leaf.utils.block.BlockUtils
-import net.nonemc.leaf.utils.misc.StringUtils
+import net.nonemc.leaf.libs.block.BlockLib
+import net.nonemc.leaf.libs.string.StringLib
 import net.nonemc.leaf.value.*
 
-/**
- * Module command
- *
- * @author SenkJu
- */
 class ModuleCommand(val module: Module, val values: List<Value<*>> = module.values) :
     Command(module.name.lowercase(), emptyArray()) {
 
@@ -19,9 +14,6 @@ class ModuleCommand(val module: Module, val values: List<Value<*>> = module.valu
             throw IllegalArgumentException("Values are empty!")
     }
 
-    /**
-     * Execute commands with provided [args]
-     */
     override fun execute(args: Array<String>) {
         val valueNames = values
             .filter { it !is FontValue }
@@ -77,7 +69,7 @@ class ModuleCommand(val module: Module, val values: List<Value<*>> = module.valu
                         }
 
                         value.set(id)
-                        alert("§7${module.name} §8${args[1].lowercase()}§7 was set to §8${BlockUtils.getBlockName(id)}§7.")
+                        alert("§7${module.name} §8${args[1].lowercase()}§7 was set to §8${BlockLib.getBlockName(id)}§7.")
                         playEdit()
                         return
                     }
@@ -97,7 +89,7 @@ class ModuleCommand(val module: Module, val values: List<Value<*>> = module.valu
                         value.set(args[2])
                     }
 
-                    is TextValue -> value.set(StringUtils.toCompleteString(args, 2))
+                    is TextValue -> value.set(StringLib.toCompleteString(args, 2))
                 }
 
                 alert("§7${module.name} §8${args[1]}§7 was set to §8${value.get()}§7.")

@@ -1,9 +1,9 @@
 ﻿package net.nonemc.leaf.features.module
 
 import lombok.Getter
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.normal.Main
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.objects.Drag
-import net.nonemc.leaf.launch.data.modernui.clickgui.utils.render.Scroll
+import net.nonemc.leaf.ui.clickgui.utils.normal.Main
+import net.nonemc.leaf.ui.clickgui.utils.objects.Drag
+import net.nonemc.leaf.ui.clickgui.utils.render.Scroll
 
 enum class ModuleCategory(val displayName: String, val configName: String, val htmlIcon: String) {
     COMBAT("Combat", "Combat", "&#xe000;"),

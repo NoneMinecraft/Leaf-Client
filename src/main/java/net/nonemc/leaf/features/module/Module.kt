@@ -6,23 +6,21 @@ import net.nonemc.leaf.Leaf.displayChatMessage
 import net.nonemc.leaf.event.Listenable
 import net.nonemc.leaf.features.module.modules.client.HUD
 import net.nonemc.leaf.features.module.modules.client.SoundModule
-import net.nonemc.leaf.ui.client.hud.element.elements.Notification
-import net.nonemc.leaf.ui.client.hud.element.elements.NotifyType
+import net.nonemc.leaf.ui.hud.element.elements.Notification
+import net.nonemc.leaf.ui.hud.element.elements.NotifyType
 import net.nonemc.leaf.ui.language.LanguageManager
-import net.nonemc.leaf.utils.render.AnimationHelper
-import net.nonemc.leaf.utils.misc.ClassUtils
-import net.nonemc.leaf.utils.MinecraftInstance
-import net.nonemc.leaf.utils.render.Animation
-import net.nonemc.leaf.utils.render.ColorUtils.stripColor
-import net.nonemc.leaf.utils.render.EaseUtils
-import net.nonemc.leaf.utils.render.Translate
+import net.nonemc.leaf.libs.render.AnimationHelper
+import net.nonemc.leaf.libs.clazz.ClassReflect
+import net.nonemc.leaf.libs.base.MinecraftInstance
+import net.nonemc.leaf.libs.render.Animation
+import net.nonemc.leaf.libs.render.ColorUtils.stripColor
+import net.nonemc.leaf.libs.render.EaseUtils
+import net.nonemc.leaf.libs.render.Translate
 import net.nonemc.leaf.value.Value
 import org.lwjgl.input.Keyboard
 
 open class Module : MinecraftInstance(), Listenable {
     val translate = Translate(0F, 0F)
-    val tab = Translate(0f, 0f)
-    var expanded: Boolean = false
     val animation: AnimationHelper
     var name: String
     var localizedName = ""
@@ -96,8 +94,6 @@ open class Module : MinecraftInstance(), Listenable {
             // Call toggle
             onToggle(value)
 
-            // Play sound and add notification
-            if (!Leaf.isStarting) {
                 if (value) {
                     SoundModule.playSound(true)
                     Leaf.hud.addNotification(
@@ -117,7 +113,7 @@ open class Module : MinecraftInstance(), Listenable {
                         )
                     )
                 }
-            }
+
 
             // Call on enabled or disabled
             try {
@@ -235,7 +231,7 @@ open class Module : MinecraftInstance(), Listenable {
      * Get all values of module
      */
     open val values: List<Value<*>>
-        get() = ClassUtils.getValues(this.javaClass, this)
+        get() = ClassReflect.getValues(this.javaClass, this)
 
     /**
      * Get module by [valueName]
